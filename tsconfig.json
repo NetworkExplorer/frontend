@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,10 +17,20 @@
     "jsx": "react-jsx",
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@components": ["src/components"],
+      "@pages": ["src/pages"],
+      "@store": ["src/store"],
+      "@models": ["src/models"],
+      "@lib": ["src/lib"],
+      "@components/*": ["src/components/*"],
+      "@models/*": ["src/models/*"],
+      "@pages/*": ["src/pages/*"],
+      "@images/*": ["src/assets/images/*"],
+      "@store/*": ["src/store/*"],
+      "@lib/*": ["src/lib/*"]
+    }
   },
-  "include": [
-    "src"
-  ],
-  "extends": "./tsconfig.paths.json"
+  "include": ["src"]
 }
