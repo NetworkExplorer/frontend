@@ -1,4 +1,6 @@
-import { AppStateI } from "./types";
+import { AppDispatchTypes, AppStateI, AppActionTypes } from "./types";
+
+const Acts = AppActionTypes;
 
 const initState: AppStateI = {
   loading: false,
@@ -6,9 +8,22 @@ const initState: AppStateI = {
 
 export const appReducer = (
   state: AppStateI = initState,
-  action: any
+  action: AppDispatchTypes
 ): AppStateI => {
-  return { ...state };
+  switch (action.type) {
+    case Acts.SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case Acts.LOGIN:
+      return {
+        ...state,
+        user: action.payload,
+      };
+    default:
+      return { ...state };
+  }
 };
 
 export default appReducer;
