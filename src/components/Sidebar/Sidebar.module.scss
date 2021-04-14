@@ -1,0 +1,12 @@
+@import "/src/global/variables";
+
+.sidebar {
+  grid-area: s;
+  width: $headerHeight;
+  transition: $dur width ease;
+  background: $dark-bg;
+
+  &.opened {
+    background: $dark-bg-2;
+  }
+}

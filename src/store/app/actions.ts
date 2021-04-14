@@ -1,5 +1,4 @@
-import { Dispatch } from "redux";
-import { AppActionTypes, AppDispatchTypes, AppLoading } from "./types";
+import { AppActionTypes, AppLoading } from "./types";
 
 export const setLoading = (loading: boolean): AppLoading => ({
   type: AppActionTypes.SET_LOADING,

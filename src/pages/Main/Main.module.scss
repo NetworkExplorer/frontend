@@ -1,0 +1,15 @@
+#main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: grid;
+  grid-template:
+    "s f"
+    "s t"
+    / max-content 1fr;
+}

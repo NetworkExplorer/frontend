@@ -1,6 +1,32 @@
 @import "/src/global/variables";
 
 .header {
-  height: 4em;
+  height: $headerHeight;
   background-color: $dark-bg;
+  flex: 0 0 $headerHeight;
+  border-bottom: 1px solid #dadada;
+  color: $bg;
+  box-sizing: content-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .iconBtn {
+    color: inherit;
+    background: transparent;
+    width: $headerHeight;
+    height: $headerHeight;
+    font-size: inherit;
+    border-radius: 1px;
+
+    &,
+    & > * {
+      display: grid;
+      place-items: center;
+    }
+
+    &:hover {
+      background: $dark-bg-1;
+    }
+  }
 }
