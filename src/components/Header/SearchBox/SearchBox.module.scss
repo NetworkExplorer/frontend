@@ -1,4 +1,28 @@
+@import "/src/global/variables";
+
 .searchBox {
   flex-grow: 1;
   height: 100%;
+}
+
+.form {
+  height: 100%;
+  width: 100%;
+}
+
+.path {
+  height: 100%;
+  width: 100%;
+  border-radius: 0;
+  font-size: 1.5em;
+  line-height: $headerHeight;
+  color: white;
+  background: inherit;
+  transition-duration: 200ms;
+  font-family: monospace;
+
+  &:focus {
+    box-shadow: none;
+    background: $dark-bg-2;
+  }
 }

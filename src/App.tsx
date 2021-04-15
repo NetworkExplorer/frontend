@@ -23,8 +23,8 @@ export function App(): JSX.Element {
           <Switch>
             <Route exact path="/" component={MainPage}></Route>
             {/* TODO add pages for login/register */}
-            <Route path="login"></Route>
-            <Route path="register"></Route>
+            <Route path="/login"></Route>
+            <Route path="/register"></Route>
           </Switch>
         </ConnectedRouter>
       </div>

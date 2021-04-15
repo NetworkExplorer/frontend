@@ -9,11 +9,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "./SearchBox/SearchBox";
 import IconButton from "@components/IconButton/IconButton";
+import { useDispatch } from "@store";
+import { setSidebar } from "@store/app";
 
 export const Header = (): JSX.Element => {
+  const dispatch = useDispatch();
   return (
     <header className={css.header}>
-      <IconButton className={css.iconBtn} icon={faBars}></IconButton>
+      <IconButton
+        className={css.iconBtn}
+        icon={faBars}
+        onClick={() => dispatch(setSidebar("TOGGLE"))}
+      ></IconButton>
       <SearchBox></SearchBox>
       <IconButton className={css.iconBtn} icon={faFilter}></IconButton>
       <IconButton className={css.iconBtn} icon={faDownload}></IconButton>

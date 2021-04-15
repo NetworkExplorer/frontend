@@ -1,0 +1,30 @@
+@import "/src/global/variables";
+
+.link {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: $headerHeight;
+  color: white !important;
+  text-decoration: none;
+  width: $headerOpen;
+  background: $dark-bg;
+  transition: $dur background ease;
+
+  &:focus,
+  &:visited {
+    color: white;
+  }
+
+  &:hover {
+    background: $dark-bg-2;
+  }
+}
+
+.iconWrapper {
+  height: $headerHeight;
+  width: $headerHeight;
+  display: grid;
+  place-items: center;
+}

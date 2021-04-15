@@ -5,8 +5,17 @@
   width: $headerHeight;
   transition: $dur width ease;
   background: $dark-bg;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  hr {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
 
   &.opened {
-    background: $dark-bg-2;
+    width: $headerOpen;
   }
 }
