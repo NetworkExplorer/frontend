@@ -1,13 +1,15 @@
 export interface AppStateI {
   loading: boolean;
   sidebarOpen: boolean;
+  terminalOpen: boolean;
   user?: User;
 }
 
 export enum AppActionTypes {
   SET_LOADING = "app/loading",
   LOGIN = "app/login",
-  SET_SIDEBAR = "app/set-sidebar"
+  SET_SIDEBAR = "app/set-sidebar",
+  SET_TERMINAL = "app/set-terminal"
 }
 
 const Acts = AppActionTypes;
@@ -33,4 +35,11 @@ export interface AppSetSidebar {
   payload: SidebarActions;
 }
 
-export type AppDispatchTypes = AppLoading | AppLogin | AppSetSidebar;
+export type TerminalActions = "TOGGLE" | "OPEN" | "CLOSED";
+
+export interface AppSetTerminal {
+  type: typeof Acts.SET_TERMINAL;
+  payload: TerminalActions;
+}
+
+export type AppDispatchTypes = AppLoading | AppLogin | AppSetSidebar | AppSetTerminal;

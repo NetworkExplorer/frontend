@@ -1,3 +1,5 @@
+@import "/src/global/variables";
+
 #main {
   display: flex;
   flex-direction: column;
@@ -10,6 +12,6 @@
   display: grid;
   grid-template:
     "s f"
-    "s t"
+    "s t" fit-content($terminalClosed)
     / max-content 1fr;
 }

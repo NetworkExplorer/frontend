@@ -1,6 +1,6 @@
 import { createBrowserHistory, History } from "history";
 import { applyMiddleware, combineReducers, createStore } from "redux";
-import { connectRouter, routerMiddleware } from "connected-react-router";
+import { connectRouter, routerMiddleware, RouterAction } from "connected-react-router";
 import { AppDispatchTypes, appReducer } from "./app";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -19,13 +19,11 @@ export const store = createStore(
 );
 
 export type RootState = ReturnType<typeof store.getState>;
-export type RootDispatch = typeof store.dispatch;
+export type RootDispatch = AppDispatchTypes | RouterAction;
 
-type StoreEvent = AppDispatchTypes;
-
-export function useDispatch(): (event: StoreEvent) => void {
+export function useDispatch(): (event: RootDispatch) => void {
   const dispatch = _useDispatch()
-  return (event: StoreEvent) => {
+  return (event: RootDispatch) => {
     dispatch(event)
   }
 }

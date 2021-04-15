@@ -1,0 +1,72 @@
+@import "/src/global/variables";
+
+$terminalDur: 400ms;
+
+.terminal {
+  width: 100%;
+  transition: $terminalDur height ease;
+  height: $terminalClosed;
+  background: $dark-bg-2;
+  color: $bg;
+  will-change: height;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.opened {
+    height: $terminalOpened;
+    .toggleBtn div {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.topPart {
+  height: $terminalClosed;
+  width: 100%;
+  background: $dark-bg;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+
+  p {
+    flex-grow: 1;
+    padding-left: 0.5em;
+    height: 100%;
+    line-height: $terminalClosed;
+    user-select: none;
+  }
+
+  & > button {
+    width: $terminalClosed;
+    height: $terminalClosed;
+    background: inherit;
+    font-size: inherit;
+    color: inherit;
+
+    &:hover {
+      background: $dark-bg-2;
+    }
+
+    &,
+    & > div {
+      display: grid;
+      place-items: center;
+    }
+  }
+}
+
+.closeBtn:hover {
+  color: $red;
+}
+
+.toggleBtn div {
+  transition: $terminalDur transform ease;
+}
+
+.content {
+  flex-grow: 1;
+  width: 100%;
+  padding: 0.5em;
+}

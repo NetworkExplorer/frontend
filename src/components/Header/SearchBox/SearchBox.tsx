@@ -1,13 +1,16 @@
 import { RootDispatch, RootState } from "@store";
+import { push } from "connected-react-router";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
+import { Dispatch } from "redux";
 import css from "./SearchBox.module.scss";
 
 // eslint-disable-next-line
 const mapState = (state: RootState) => ({});
 
-// eslint-disable-next-line
-const mapDispatch = (dispatch: RootDispatch) => ({});
+const mapDispatch = (dispatch: Dispatch<RootDispatch>) => ({
+  push: (url: string) => dispatch(push(url)),
+});
 
 const connector = connect(mapState, mapDispatch);
 
@@ -50,5 +53,5 @@ class SearchBoxUI extends Component<Props, State> {
   }
 }
 
-export const SearchBox = SearchBoxUI;
+export const SearchBox = connector(SearchBoxUI);
 export default SearchBox;

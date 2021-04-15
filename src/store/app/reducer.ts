@@ -4,7 +4,8 @@ const Acts = AppActionTypes;
 
 const initState: AppStateI = {
   loading: false,
-  sidebarOpen: false
+  sidebarOpen: false,
+  terminalOpen: false,
 };
 
 export const appReducer = (
@@ -28,6 +29,14 @@ export const appReducer = (
       return {
         ...state,
         sidebarOpen: sidebar
+      }
+    }
+    case Acts.SET_TERMINAL: {
+      let terminal = state.terminalOpen;
+      if (action.payload === "TOGGLE") terminal = !terminal;
+      return {
+        ...state,
+        terminalOpen: terminal
       }
     }
     default:

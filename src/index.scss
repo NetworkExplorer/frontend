@@ -34,8 +34,8 @@ input {
   padding: 10px;
   color: $color;
   background-color: $dark-bg-2;
-  border-radius: $radius;
-  transition: $dur background ease;
+  // border-radius: $radius;
+  transition: $dur background ease, $dur color ease;
   outline: none;
 }
 

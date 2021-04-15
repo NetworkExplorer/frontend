@@ -11,6 +11,7 @@
   width: $headerOpen;
   background: $dark-bg;
   transition: $dur background ease;
+  user-select: none;
 
   &:focus,
   &:visited {

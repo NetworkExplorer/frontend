@@ -1,4 +1,4 @@
-import { AppActionTypes, AppLoading, AppSetSidebar, SidebarActions } from "./types";
+import { AppActionTypes, AppLoading, AppSetSidebar, AppSetTerminal, SidebarActions, TerminalActions } from "./types";
 
 export const setLoading = (loading: boolean): AppLoading => ({
   type: AppActionTypes.SET_LOADING,
@@ -7,6 +7,11 @@ export const setLoading = (loading: boolean): AppLoading => ({
 
 export const setSidebar = (action: SidebarActions): AppSetSidebar => ({
   type: AppActionTypes.SET_SIDEBAR,
+  payload: action
+})
+
+export const setTerminal = (action: TerminalActions): AppSetTerminal => ({
+  type: AppActionTypes.SET_TERMINAL,
   payload: action
 })
 

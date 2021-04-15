@@ -16,6 +16,7 @@ export const Sidebar = (): JSX.Element => {
       sidebarOpen,
     })
   );
+  //eslint-disable-next-line
   const dispatch = useDispatch();
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
