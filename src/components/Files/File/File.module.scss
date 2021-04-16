@@ -1,0 +1,67 @@
+$fileHeight: 3.5em;
+
+.file {
+  padding: 0 20px;
+  width: 100%;
+  height: $fileHeight;
+
+  & > * > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.fileWrapper {
+  max-width: 80em;
+  border-top: 1px solid rgba(#444, 0.5);
+  // margin: 0 5px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  gap: 5px;
+}
+
+.fileIcon {
+  width: $fileHeight;
+  height: $fileHeight;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 0;
+
+  img {
+    height: 100%;
+  }
+}
+
+.name {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+.date {
+  width: 6.5em;
+  text-align: center;
+}
+
+.dateSingleLine {
+  composes: date;
+  line-height: normal;
+}
+
+.size {
+  width: 5em;
+}
+
+.header {
+  background: #dadada;
+
+  .fileWrapper {
+    border-top: none;
+  }
+}

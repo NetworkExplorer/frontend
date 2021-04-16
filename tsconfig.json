@@ -29,7 +29,8 @@
       "@pages/*": ["src/pages/*"],
       "@images/*": ["src/assets/images/*"],
       "@store/*": ["src/store/*"],
-      "@lib/*": ["src/lib/*"]
+      "@lib/*": ["src/lib/*"],
+      "@icons/*": ["src/assets/icons"]
     }
   },
   "include": ["src"]

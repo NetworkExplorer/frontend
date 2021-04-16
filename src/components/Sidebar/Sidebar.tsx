@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
 import { RootState, useDispatch } from "@store";
+import { setSidebar } from "@store/app";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen } = useSelector(
@@ -16,7 +17,6 @@ export const Sidebar = (): JSX.Element => {
       sidebarOpen,
     })
   );
-  //eslint-disable-next-line
   const dispatch = useDispatch();
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
@@ -38,7 +38,7 @@ export const Sidebar = (): JSX.Element => {
           name="Terminal"
           icon={faTerminal}
           path="/"
-          // TODO onClick={}
+          onClick={() => dispatch(setSidebar("TOGGLE"))}
         ></SidebarLink>
       </div>
       <div>

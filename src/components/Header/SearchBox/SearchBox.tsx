@@ -45,7 +45,13 @@ class SearchBoxUI extends Component<Props, State> {
     return (
       <div className={css.searchBox}>
         <form className={css.form} onSubmit={this.handleSubmit}>
-          <input className={css.path} value={path} onChange={this.handlePath} />
+          <label className={css.path}>
+            <input
+              // className={css.path}
+              value={path}
+              onChange={this.handlePath}
+            />
+          </label>
           <div className={css.results}></div>
         </form>
       </div>

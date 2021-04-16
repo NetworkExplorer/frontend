@@ -14,15 +14,43 @@
   height: 100%;
   width: 100%;
   border-radius: 0;
-  font-size: 1.5em;
-  line-height: $headerHeight;
-  color: white;
-  background: inherit;
-  transition-duration: 200ms;
-  font-family: monospace;
+  display: block;
+  position: relative;
+  background: transparent;
 
-  &:focus {
-    box-shadow: none;
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    content: "";
     background: $dark-bg-2;
+    transition: $dur transform ease;
+    transform: scaleX(0);
+    transform-origin: left;
+    // z-index: -1;
+  }
+
+  &:focus-within:before {
+    transform: scaleX(1);
+  }
+
+  input {
+    z-index: 1;
+    color: white;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    font-family: monospace;
+    line-height: $headerHeight;
+    font-size: 1.5em;
+    background: transparent;
+    top: 0;
+    left: 0;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 }

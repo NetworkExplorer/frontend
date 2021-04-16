@@ -11,6 +11,7 @@
   justify-content: space-between;
   border-right: 1px solid black;
   will-change: width;
+  border-top: 1px solid $sepColor;
 
   hr {
     margin-top: 0.5em;
