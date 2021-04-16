@@ -42,4 +42,4 @@ export interface AppSetTerminal {
   payload: TerminalActions;
 }
 
-export type AppDispatchTypes = AppLoading | AppLogin | AppSetSidebar | AppSetTerminal;
+export type AppActions = AppLoading | AppLogin | AppSetSidebar | AppSetTerminal;

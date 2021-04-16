@@ -21,10 +21,10 @@ export function App(): JSX.Element {
       <div id={css.appWrapper}>
         <ConnectedRouter history={history}>
           <Switch>
-            <Route exact path="/" component={MainPage}></Route>
             {/* TODO add pages for login/register */}
             <Route path="/login"></Route>
             <Route path="/register"></Route>
+            <Route path="/" component={MainPage}></Route>
           </Switch>
         </ConnectedRouter>
       </div>

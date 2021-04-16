@@ -2,7 +2,6 @@ import css from "./Terminal.module.scss";
 import React, { Component } from "react";
 import { RootDispatch, RootState } from "@store";
 import { connect, ConnectedProps } from "react-redux";
-import { Dispatch } from "redux";
 import { setTerminal, TerminalActions } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -11,7 +10,7 @@ const mapState = ({ appReducer: { terminalOpen } }: RootState) => ({
   terminalOpen,
 });
 
-const mapDispatch = (dispatch: Dispatch<RootDispatch>) => ({
+const mapDispatch = (dispatch: RootDispatch) => ({
   setTerminal: (action: TerminalActions) => dispatch(setTerminal(action)),
 });
 

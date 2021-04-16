@@ -16,7 +16,7 @@ interface Props {
 function FileIcon({ file, className }: Props): JSX.Element {
   let imp = "empty";
   const icons = iconsImp as { [key: string]: string };
-  if (file.type == "dir") {
+  if (file.type == "FOLDER") {
     imp = "folder";
   } else {
     for (const m of EXTRA_MAPPINGS) {

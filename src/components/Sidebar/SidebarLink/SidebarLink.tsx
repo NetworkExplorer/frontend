@@ -21,7 +21,7 @@ export default function SidebarLink({
 }: Props): JSX.Element {
   if (path) {
     return (
-      <Link to={path} className={css.link} {...props}>
+      <Link to={path} className={css.link} {...props} title={name}>
         <div className={css.iconWrapper} aria-hidden="true">
           <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
         </div>

@@ -2,13 +2,12 @@ import { RootDispatch, RootState } from "@store";
 import { push } from "connected-react-router";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import { Dispatch } from "redux";
 import css from "./SearchBox.module.scss";
 
 // eslint-disable-next-line
-const mapState = (state: RootState) => ({});
+const mapState = ({ router: { location } }: RootState) => ({ location });
 
-const mapDispatch = (dispatch: Dispatch<RootDispatch>) => ({
+const mapDispatch = (dispatch: RootDispatch) => ({
   push: (url: string) => dispatch(push(url)),
 });
 
@@ -19,24 +18,39 @@ type Props = PropsFromState;
 
 interface State {
   path: string;
+  focused: boolean;
 }
 
 class SearchBoxUI extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    console.log(this.props.location);
     this.state = {
-      path: "/some/path",
+      path: this.props.location.pathname,
+      focused: false,
     };
+  }
+
+  componentDidUpdate() {
+    if (
+      !this.state.focused &&
+      this.state.path != this.props.location.pathname
+    ) {
+      this.setState({ path: this.props.location.pathname });
+    }
   }
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     e.stopPropagation();
+    if (this.state.path != this.props.location.pathname) {
+      this.props.push(this.state.path.trim());
+    }
   };
 
   handlePath = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
-      path: e.target.value,
+      path: e.target.value.trim(),
     });
   };
 
@@ -50,6 +64,8 @@ class SearchBoxUI extends Component<Props, State> {
               // className={css.path}
               value={path}
               onChange={this.handlePath}
+              onFocus={() => this.setState({ focused: true })}
+              onBlur={() => this.setState({ focused: false })}
             />
           </label>
           <div className={css.results}></div>

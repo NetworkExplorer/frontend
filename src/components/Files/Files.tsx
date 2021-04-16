@@ -1,37 +1,52 @@
 import { FileI } from "@lib";
+import { RootDispatch, RootState } from "@store";
+import { getFolder } from "@store/files";
 import React, { Component } from "react";
+import { connect, ConnectedProps } from "react-redux";
 import { File } from "./File/File";
 import css from "./Files.module.scss";
 
-export class Files extends Component {
-  files: FileI[] = [
-    {
-      type: "file",
-      name: "yo.ts",
-      owner: "me",
-      size: 20000,
-      modified: new Date(),
-    },
-    {
-      type: "dir",
-      name: "yod.txt",
-      owner: "me",
-      size: 20000,
-      modified: new Date(),
-    },
-    {
-      type: "file",
-      name: "yo.css",
-      owner: "me",
-      size: 20000,
-      modified: new Date(),
-    },
-  ];
+const mapState = ({
+  filesReducer: { folder },
+  router: {
+    location: { pathname },
+  },
+}: RootState) => ({
+  folder,
+  pathname,
+});
+
+const mapDispatch = (dispatch: RootDispatch) => ({
+  getFolder: (path: string) => dispatch(getFolder(path)),
+});
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromState = ConnectedProps<typeof connector>;
+type Props = PropsFromState;
+
+class FilesUI extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.props.getFolder(this.props.pathname);
+  }
+
+  componentDidUpdate() {
+    // TODO
+  }
+
+  // shouldComponentUpdate(nextProps: Props, nextState: any, nextContent: any) {
+  // TODO
+  // }
+
   render(): JSX.Element {
     return (
       <div className={css.files}>
         <File file={{ name: "", owner: "", size: 0, type: "header" }}></File>
-        {this.files.map((f) => (
+        {this.props?.folder?.files.map((f) => (
           <File key={f.name} file={f}></File>
         ))}
       </div>
@@ -39,5 +54,6 @@ export class Files extends Component {
   }
 }
 
+export const Files = connector(FilesUI);
 export default Files;
 export * from "./File/File";

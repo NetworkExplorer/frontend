@@ -1,4 +1,4 @@
-import { AppDispatchTypes, AppStateI, AppActionTypes } from "./types";
+import { AppActions, AppStateI, AppActionTypes } from "./types";
 
 const Acts = AppActionTypes;
 
@@ -10,7 +10,7 @@ const initState: AppStateI = {
 
 export const appReducer = (
   state: AppStateI = initState,
-  action: AppDispatchTypes
+  action: AppActions
 ): AppStateI => {
   switch (action.type) {
     case Acts.SET_LOADING:
