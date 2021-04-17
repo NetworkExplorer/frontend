@@ -1,4 +1,4 @@
-import { RootDispatch, RootState } from "@store";
+import { history, RootDispatch, RootState } from "@store";
 import { push } from "connected-react-router";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -22,9 +22,10 @@ interface State {
 }
 
 class SearchBoxUI extends Component<Props, State> {
+  inputRef = React.createRef<HTMLInputElement>();
+
   constructor(props: Props) {
     super(props);
-    console.log(this.props.location);
     this.state = {
       path: this.props.location.pathname,
       focused: false,
@@ -32,11 +33,8 @@ class SearchBoxUI extends Component<Props, State> {
   }
 
   componentDidUpdate() {
-    if (
-      !this.state.focused &&
-      this.state.path != this.props.location.pathname
-    ) {
-      this.setState({ path: this.props.location.pathname });
+    if (!this.state.focused && this.state.path != window.location.pathname) {
+      this.setState({ path: window.location.pathname });
     }
   }
 
@@ -44,7 +42,10 @@ class SearchBoxUI extends Component<Props, State> {
     e.preventDefault();
     e.stopPropagation();
     if (this.state.path != this.props.location.pathname) {
-      this.props.push(this.state.path.trim());
+      this.inputRef.current?.blur();
+      this.setState({ focused: false }, () => {
+        this.props.push(this.state.path.trim());
+      });
     }
   };
 
@@ -61,6 +62,7 @@ class SearchBoxUI extends Component<Props, State> {
         <form className={css.form} onSubmit={this.handleSubmit}>
           <label className={css.path}>
             <input
+              ref={this.inputRef}
               // className={css.path}
               value={path}
               onChange={this.handlePath}

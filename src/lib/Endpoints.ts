@@ -2,14 +2,19 @@ import { FolderRes } from "./responses";
 
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
-  baseURL = ENV === "development" ? "http://localhost:16091/api/v1" : "";
+  API_URL = "/api/v1";
+  BASE = ENV === "development" ? "http://localhost:16091" : "";
+
+  get baseURL(): string {
+    return this.BASE + this.API_URL
+  }
+
   private static _instance: Endpoints;
 
   /**
    * gets the singleton instance for the Endpoints class
    */
   static getInstance(): Endpoints {
-    console.log(ENV)
     if (!this._instance) this._instance = new Endpoints();
 
     return this._instance;
@@ -37,8 +42,6 @@ export class Endpoints {
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
     body = {}
   ): Promise<any> => {
-    console.log(ENV)
-    console.log(this.baseURL)
     let options: RequestInit = {
       method,
       headers: {
@@ -78,6 +81,10 @@ export class Endpoints {
   async getFolder(path: string): Promise<FolderRes> {
     if (!path.startsWith("/")) {
       path = "/" + path;
+    }
+    const url = new URL(`${this.baseURL}/folder${path}`);
+    if (!url.pathname.startsWith(`${this.API_URL}/folder`)) {
+      throw new Error("invalid path");
     }
     return await this.fetchFromAPI(`${this.baseURL}/folder${path}`);
   }

@@ -4,6 +4,7 @@ const Acts = FilesActionTypes;
 
 const initState: FilesStateI = {
   folder: undefined,
+  loading: false
 };
 
 export const filesReducer = (
@@ -15,6 +16,11 @@ export const filesReducer = (
       return {
         ...state,
         folder: action.payload
+      }
+    case Acts.SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload
       }
     default:
       return { ...state };

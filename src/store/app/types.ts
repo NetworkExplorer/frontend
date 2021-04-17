@@ -1,23 +1,22 @@
+import { BubbleI } from "@models";
+
 export interface AppStateI {
   loading: boolean;
   sidebarOpen: boolean;
   terminalOpen: boolean;
   user?: User;
+  bubbles: Map<string, BubbleI>
 }
 
 export enum AppActionTypes {
-  SET_LOADING = "app/loading",
   LOGIN = "app/login",
   SET_SIDEBAR = "app/set-sidebar",
-  SET_TERMINAL = "app/set-terminal"
+  SET_TERMINAL = "app/set-terminal",
+  ADD_BUBBLE = "app/add-bubble",
+  REMOVE_BUBBLE = "app/remove-bubble",
 }
 
 const Acts = AppActionTypes;
-
-export interface AppLoading {
-  type: typeof Acts.SET_LOADING;
-  payload: boolean;
-}
 
 export type User = {
   username: string;
@@ -42,4 +41,17 @@ export interface AppSetTerminal {
   payload: TerminalActions;
 }
 
-export type AppActions = AppLoading | AppLogin | AppSetSidebar | AppSetTerminal;
+export interface AppAddBubble {
+  type: typeof Acts.ADD_BUBBLE;
+  payload: {
+    key: string;
+    bubble: BubbleI;
+  }
+}
+
+export interface AppRemoveBubble {
+  type: typeof Acts.REMOVE_BUBBLE;
+  payload: string
+}
+
+export type AppActions = AppLogin | AppSetSidebar | AppSetTerminal | AppAddBubble | AppRemoveBubble;

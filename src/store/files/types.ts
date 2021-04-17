@@ -1,18 +1,21 @@
 import { FolderRes } from "@lib/responses";
-import { Action, ActionCreator } from "redux";
+import { RootActions } from "@store";
+import { ActionCreator } from "redux";
 import { ThunkAction } from "redux-thunk";
 
 export type FilesThunk<ReturnType = void> = ActionCreator<
-  ThunkAction<ReturnType, FilesStateI, unknown, Action<string>>
+  ThunkAction<ReturnType, FilesStateI, unknown, RootActions>
 >;
 
 export interface FilesStateI {
   folder?: FolderRes;
+  loading: boolean;
 }
 
 export enum FilesActionTypes {
   LOAD_FOLDER = "files/load-folder",
   SET_ERROR = "files/set-error",
+  SET_LOADING = "files/set-loading"
 }
 
 const Acts = FilesActionTypes;
@@ -27,4 +30,9 @@ export interface FilesSetError {
   payload: string;
 }
 
-export type FilesActions = FilesLoadFolder | FilesSetError;
+export interface FilesSetLoading {
+  type: typeof Acts.SET_LOADING;
+  payload: boolean;
+}
+
+export type FilesActions = FilesLoadFolder | FilesSetError | FilesSetLoading;

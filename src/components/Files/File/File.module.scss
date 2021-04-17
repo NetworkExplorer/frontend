@@ -1,3 +1,4 @@
+@import "/src/global/variables";
 $fileHeight: 3.5em;
 
 .file {
@@ -13,6 +14,7 @@ $fileHeight: 3.5em;
   }
 }
 
+$hoverColor: rgba(#444, 0.5);
 .fileWrapper {
   max-width: 80em;
   border-top: 1px solid rgba(#444, 0.5);
@@ -23,6 +25,12 @@ $fileHeight: 3.5em;
   flex-direction: row;
   height: 100%;
   gap: 5px;
+  transition: $dur background ease;
+  cursor: pointer;
+
+  &:hover {
+    background: $hoverColor;
+  }
 }
 
 .fileIcon {
@@ -63,5 +71,10 @@ $fileHeight: 3.5em;
 
   .fileWrapper {
     border-top: none;
+    cursor: default !important;
+
+    &:hover {
+      background: inherit;
+    }
   }
 }

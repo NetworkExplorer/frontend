@@ -18,6 +18,7 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "baseUrl": "./",
+    "downlevelIteration": true,
     "paths": {
       "@components": ["src/components"],
       "@pages": ["src/pages"],

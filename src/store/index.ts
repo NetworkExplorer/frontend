@@ -21,13 +21,13 @@ export const store = createStore(
 );
 
 export type RootState = ReturnType<typeof store.getState>;
-type Actions = AppActions | RouterAction | FilesActions;
-export type RootDispatch = ThunkDispatch<any, any, Actions | AnyAction>;
+export type RootActions = AppActions | RouterAction | FilesActions;
+export type RootDispatch = ThunkDispatch<any, any, RootActions | AnyAction>;
 // export type RootDispatch = AppDispatchTypes | RouterAction | FilesDispatchTypes;
 
-export function useDispatch(): (event: Actions) => void {
+export function useAppDispatch(): (event: RootActions) => void {
   const dispatch = _useDispatch()
-  return (event: Actions) => {
+  return (event: RootActions) => {
     dispatch(event)
   }
 }

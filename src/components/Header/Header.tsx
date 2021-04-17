@@ -9,11 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "./SearchBox/SearchBox";
 import IconButton from "@components/IconButton/IconButton";
-import { useDispatch } from "@store";
+import { useAppDispatch } from "@store";
 import { setSidebar } from "@store/app";
 
 export const Header = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return (
     <header className={css.header}>
       <IconButton

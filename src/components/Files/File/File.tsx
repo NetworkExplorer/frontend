@@ -22,7 +22,7 @@ export function File({ file }: Props): JSX.Element {
   }
 
   return (
-    <div className={css.file}>
+    <div className={css.file} data-file={JSON.stringify(file)}>
       <div className={css.fileWrapper}>
         <FileIcon file={file}></FileIcon>
         <div className={css.name}>{file.name}</div>

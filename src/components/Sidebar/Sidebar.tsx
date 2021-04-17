@@ -8,7 +8,7 @@ import {
 import { useSelector } from "react-redux";
 import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
-import { RootState, useDispatch } from "@store";
+import { RootState, useAppDispatch } from "@store";
 import { setSidebar } from "@store/app";
 
 export const Sidebar = (): JSX.Element => {
@@ -17,7 +17,7 @@ export const Sidebar = (): JSX.Element => {
       sidebarOpen,
     })
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
       <div>

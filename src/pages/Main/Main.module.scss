@@ -9,9 +9,15 @@
 
 .mainContent {
   flex-grow: 1;
-  display: grid;
-  grid-template:
-    "s f"
-    "s t" fit-content($terminalClosed)
-    / max-content 1fr;
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - #{$headerHeight});
+  max-height: calc(100% - #{$headerHeight});
+}
+
+.right {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
