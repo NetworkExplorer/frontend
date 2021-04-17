@@ -1,0 +1,167 @@
+@import "/src/global/variables";
+
+$bubblePadding: 10px;
+$expandedHeight: 8em;
+$bubbleHeight: 2.5em;
+$content: calc(#{$bubbleHeight} - 2px);
+
+.wrapper {
+  font-size: 0.9em;
+  border: 1px solid $dark-bg-2;
+  width: 100%;
+  height: $bubbleHeight;
+  --b: rgba(var(--bg), 0.8);
+  border-radius: calc(#{$radius} * 1.25);
+  margin-top: $bubblePadding;
+  animation: bubble-fade var(--fade) ease;
+  z-index: var(--index);
+  // display: flex;
+  transition: $dur height ease;
+  flex-direction: column;
+  color: white;
+  padding: 0;
+
+  &.fading {
+    animation: bubble-fade-reverse var(--fade) ease both;
+  }
+
+  .content {
+    height: $content;
+    display: flex;
+    flex-direction: row;
+    background: var(--b);
+    border-radius: $radius;
+    justify-content: center;
+    border-bottom: 1px #{"rgb(var(--bc))"} solid;
+    transition: var(--dur) border-radius ease;
+    width: 100%;
+
+    .icon {
+      color: inherit;
+      height: $content;
+      width: $content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: none;
+      font-size: inherit;
+      border-radius: $radius;
+      padding: 0;
+      pointer-events: all;
+    }
+
+    .title {
+      vertical-align: middle;
+      flex-grow: 1;
+      flex-shrink: 0;
+      text-align: left;
+      // font-size: 0.9em;
+      padding: 0 5px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      height: $bubbleHeight;
+    }
+
+    .expand {
+      box-shadow: none;
+      svg {
+        transform: rotate(0);
+        transition: $dur transform ease;
+        pointer-events: none;
+      }
+    }
+  }
+
+  // https://flatuicolors.com/palette/defo
+  &.error {
+    .content,
+    .message {
+      background: rgba(231, 76, 60, 0.8);
+    }
+  }
+
+  &.warning {
+    .content,
+    .message {
+      background: rgba(241, 196, 15, 0.8);
+    }
+  }
+
+  &.information {
+    .content,
+    .message {
+      background: rgba(252, 152, 219, 0.8);
+    }
+  }
+
+  &.success {
+    .content,
+    .message {
+      background: rgba(46, 204, 113, 0.8);
+    }
+  }
+
+  .message {
+    height: 0;
+    background: var(--b);
+    border-radius: 0 0 $radius $radius;
+    width: 100%;
+    transition: $dur height ease, $dur border-width ease;
+    padding: 0;
+    overflow: hidden;
+    padding: 0 0.25em;
+  }
+
+  &.expanded {
+    height: $expandedHeight;
+
+    .content {
+      border-radius: $radius $radius 0 0;
+    }
+
+    .expand svg {
+      transform: rotate(-180deg);
+    }
+
+    .message {
+      height: calc(#{$expandedHeight} - #{$bubbleHeight});
+      border-width: 1px;
+      border-top-width: 0;
+    }
+  }
+}
+
+@keyframes bubble-fade {
+  0% {
+    transform: translateY(100%);
+    opacity: 0.2;
+    height: 0;
+    margin-top: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    height: 100%;
+    margin-top: $bubblePadding;
+  }
+}
+
+// this has to be done, otherwise the animation either does not work or it is very laggy
+@keyframes bubble-fade-reverse {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+    height: 100%;
+    margin-top: $bubblePadding;
+  }
+
+  100% {
+    transform: translateY(100%);
+    opacity: 0.2;
+    height: 0;
+    margin-top: 0;
+  }
+}

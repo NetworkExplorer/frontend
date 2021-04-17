@@ -1,4 +1,4 @@
-import { history, RootDispatch, RootState } from "@store";
+import { RootDispatch, RootState } from "@store";
 import { push } from "connected-react-router";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";

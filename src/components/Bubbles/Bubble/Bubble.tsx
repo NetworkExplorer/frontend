@@ -11,7 +11,7 @@ import { RootDispatch } from "@store";
 import { removeBubble } from "@store/app";
 import React, { Component, CSSProperties } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import "./Bubble.scss";
+import css from "./Bubble.module.scss";
 
 const mapState = () => ({});
 
@@ -35,7 +35,7 @@ interface State {
 }
 
 class BubbleUI extends Component<Props, State> {
-  private FADE: string;
+  private FADE = "250ms";
   private timeout1 = -1;
   private timeout2 = -1;
 
@@ -45,9 +45,6 @@ class BubbleUI extends Component<Props, State> {
       fading: false,
       expanded: false,
     };
-    this.FADE = window
-      .getComputedStyle(document.documentElement)
-      .getPropertyValue("--dur");
   }
 
   componentDidMount(): void {
@@ -105,14 +102,14 @@ class BubbleUI extends Component<Props, State> {
     } as CSSProperties;
     return (
       <div
-        className={`bubble-wrapper ${
-          fading ? "bubble-fading" : ""
-        } bubble-${type.toLowerCase()} ${expanded ? "bubble-expanded" : ""}`}
+        className={`${css.wrapper} ${fading ? css.fading : ""} ${
+          css[type.toLowerCase()]
+        } ${expanded ? css.expanded : ""}`}
         style={style}
         onClick={() => this.startRemove(0)}
       >
-        <div className="bubble-content">
-          <div className="bubble-icon">
+        <div className={css.content}>
+          <div className={css.icon}>
             {type === "ERROR" && (
               <FontAwesomeIcon icon={faExclamation}></FontAwesomeIcon>
             )}
@@ -126,10 +123,10 @@ class BubbleUI extends Component<Props, State> {
               <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
             )}
           </div>
-          <div className="bubble-title">{title}</div>
+          <div className={css.title}>{title}</div>
           {message?.trim() && (
             <button
-              className="bubble-icon bubble-expand"
+              className={`${css.icon} ${css.expand}`}
               onClick={this.toggleExpand}
             >
               <FontAwesomeIcon
@@ -139,7 +136,7 @@ class BubbleUI extends Component<Props, State> {
             </button>
           )}
         </div>
-        {message?.trim() && <div className="bubble-message">{message}</div>}
+        {message?.trim() && <div className={css.message}>{message}</div>}
       </div>
     );
   }

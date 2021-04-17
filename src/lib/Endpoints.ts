@@ -5,6 +5,10 @@ export class Endpoints {
   API_URL = "/api/v1";
   BASE = ENV === "development" ? "http://localhost:16091" : "";
 
+  get dev(): boolean {
+    return ENV === "development";
+  }
+
   get baseURL(): string {
     return this.BASE + this.API_URL
   }
@@ -55,26 +59,18 @@ export class Endpoints {
       const res = await fetch(url, options);
       if (!resWasOk(res, url, body)) {
         // console.error(res);
-        // console.error(`response was bad for ${url}`);
         // maybe add some other error handling here
         throw new Error("something went wrong")
       }
       const data = await res.json();
       if (data && !data?.error) {
-        // console.log(data);
         return data;
       } else {
         throw new Error("something went wrong")
       }
     } catch (e) {
-      console.error("fetch error for: " + url);
-      console.error("exception: " + e);
+      this.dev && console.error("exception: " + e);
       throw new Error("could not connect to server")
-      // reject({
-      //   ...e,
-      //   title: "Connection fail",
-      //   message: "could not connect to server",
-      // });
     }
   };
 
@@ -98,9 +94,6 @@ export class Endpoints {
  */
 export function resWasOk(res: Response, url: string, body = {}): boolean {
   if (!res.ok) {
-    console.error(
-      `response was bad for ${url.replace(Endpoints.getBase(), "")}`
-    );
     console.error("request body", JSON.stringify(body));
   }
   return res.ok;

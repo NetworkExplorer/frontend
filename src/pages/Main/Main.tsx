@@ -1,4 +1,4 @@
-import { Files, Header, Sidebar, Terminal } from "@components";
+import { Bubbles, Files, Header, Sidebar, Terminal } from "@components";
 import { RootDispatch, RootState } from "@store";
 import { getFolder } from "@store/files";
 import React, { useEffect } from "react";
@@ -23,6 +23,7 @@ const MainPageUI = (): JSX.Element => {
           <Terminal></Terminal>
         </div>
       </div>
+      <Bubbles></Bubbles>
     </div>
   );
 };

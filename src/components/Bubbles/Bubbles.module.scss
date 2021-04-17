@@ -1,13 +1,11 @@
+@import "/src/global/variables";
+
 #bubbles {
-  --bubble-width: 20em;
-  --bubble-height: 2.5em;
-  --bubble-padding: 10px;
-  --expanded-height: 8em;
   position: fixed;
-  width: var(--bubble-width);
+  width: 20em;
   right: 2em;
   bottom: 2em;
-  transition: var(--dur) height ease;
+  transition: $dur height ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
