@@ -12,6 +12,7 @@
   border-right: 1px solid black;
   will-change: width;
   border-top: 1px solid $sepColor;
+  flex-shrink: 0;
 
   hr {
     margin-top: 0.5em;

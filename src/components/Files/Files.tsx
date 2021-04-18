@@ -53,7 +53,11 @@ class FilesUI extends Component<Props> {
     if (!dataAttr) return;
     const file: FileI = JSON.parse(dataAttr);
     if (file.type === "FOLDER") {
-      this.props.push(`${this.props.pathname}/${file.name}`);
+      if (window.location.pathname === "/") {
+        this.props.push(`./${file.name}`);
+      } else {
+        this.props.push(`${window.location.pathname}/${file.name}`);
+      }
     }
   };
 
@@ -71,7 +75,7 @@ class FilesUI extends Component<Props> {
     return (
       <div className={css.files}>
         <File file={{ name: "", owner: "", size: 0, type: "header" }}></File>
-        {this.props.pathname != "/" && (
+        {window.location.pathname != "/" && (
           <File
             file={{ name: "..", owner: "", size: 0, type: "FOLDER" }}
           ></File>
