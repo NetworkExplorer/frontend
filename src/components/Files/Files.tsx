@@ -1,6 +1,5 @@
-import Loading from "@components/Loading/Loading";
 import { RootDispatch, RootState } from "@store";
-import { getFolder } from "@store/files";
+import { clearSelection, getFolder } from "@store/files";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { File } from "./File/File";
@@ -8,9 +7,14 @@ import css from "./Files.module.scss";
 import fileCSS from "./File/File.module.scss";
 import { FileI } from "@lib";
 import { push } from "connected-react-router";
+import { ContextMenu, Loading, Prompt } from "@components";
 
 const mapState = ({
-  filesReducer: { folder, loading },
+  filesReducer: {
+    folder,
+    loading,
+    menu: { isOpen },
+  },
   router: {
     location: { pathname },
   },
@@ -18,11 +22,13 @@ const mapState = ({
   folder,
   pathname,
   loading,
+  isOpen,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   getFolder: (path: string) => dispatch(getFolder(path)),
   push: (path: string) => dispatch(push(path)),
+  clearSelection: () => dispatch(clearSelection()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -54,8 +60,10 @@ class FilesUI extends Component<Props> {
     const file: FileI = JSON.parse(dataAttr);
     if (file.type === "FOLDER") {
       if (window.location.pathname === "/") {
-        this.props.push(`./${file.name}`);
+        this.props.push(`/${file.name}`);
       } else {
+        let url = window.location.pathname;
+        if (url.endsWith("/")) url = url.substring(0, url.length - 1);
         this.props.push(`${window.location.pathname}/${file.name}`);
       }
     }
@@ -71,19 +79,43 @@ class FilesUI extends Component<Props> {
     return this.findFileEl(el.parentElement);
   };
 
+  handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
+    if (!this.props.isOpen) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      this.props.clearSelection();
+    }
+  };
+
   render(): JSX.Element {
     return (
-      <div className={css.files}>
-        <File file={{ name: "", owner: "", size: 0, type: "header" }}></File>
-        {window.location.pathname != "/" && (
+      <div className={css.wrapper}>
+        <div className={css.files} onClick={this.handleClick}>
           <File
-            file={{ name: "..", owner: "", size: 0, type: "FOLDER" }}
+            file={{
+              name: "",
+              owner: "",
+              size: 0,
+              type: "header",
+            }}
           ></File>
-        )}
-        {this.props?.folder?.files.map((f) => (
-          <File key={f.name} file={f}></File>
-        ))}
+          {window.location.pathname != "/" && (
+            <File
+              file={{
+                name: "..",
+                owner: "",
+                size: 0,
+                type: "FOLDER",
+              }}
+            ></File>
+          )}
+          {this.props?.folder?.files.map((f) => (
+            <File key={f.name} file={f}></File>
+          ))}
+        </div>
         <Loading loading={this.props.loading} className={css.loading}></Loading>
+        <ContextMenu></ContextMenu>
+        <Prompt></Prompt>
       </div>
     );
   }

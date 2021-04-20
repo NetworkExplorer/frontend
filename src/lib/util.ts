@@ -17,7 +17,7 @@ export function convertFiles(files: FileI[]): FileI[] {
     .map((f) => ({
       ...f,
       created: f.created ? new Date(f.created) : undefined,
-      modified: f.modified ? new Date(f.modified) : undefined
+      modified: f.modified ? new Date(f.modified) : undefined,
     }))
     .sort((a, b) => {
       if (a.type === b.type) {

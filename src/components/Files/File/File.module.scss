@@ -11,10 +11,11 @@ $fileHeight: 3.5em;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    user-select: none;
   }
 }
 
-$hoverColor: rgba(#444, 0.5);
+$hoverColor: rgba(#444, 0.2);
 .fileWrapper {
   max-width: 80em;
   border-top: 1px solid rgba(#444, 0.5);
@@ -25,7 +26,7 @@ $hoverColor: rgba(#444, 0.5);
   flex-direction: row;
   height: 100%;
   gap: 5px;
-  transition: $dur background ease;
+  transition: 150ms background ease;
   cursor: pointer;
 
   &:hover {
@@ -50,6 +51,7 @@ $hoverColor: rgba(#444, 0.5);
   flex-grow: 1;
   display: flex;
   align-items: flex-start;
+  user-select: text;
 }
 
 .date {
@@ -76,5 +78,13 @@ $hoverColor: rgba(#444, 0.5);
     &:hover {
       background: inherit;
     }
+  }
+}
+
+.selected {
+  background: rgb(173, 216, 230);
+
+  &:hover {
+    background: rgba(92, 178, 231, 0.8);
   }
 }

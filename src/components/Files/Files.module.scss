@@ -1,5 +1,12 @@
 @import "/src/global/variables";
 
+.wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
 .files {
   height: 100%;
   width: 100%;

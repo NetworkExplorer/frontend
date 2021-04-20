@@ -1,6 +1,6 @@
 import { convertFiles, Endpoints } from "@lib";
 import { addBubble } from "@store/app";
-import { FilesActionTypes, FilesSetLoading, FilesThunk } from "./types";
+import { ContextMenuProps, FilesActionTypes, FilesAddSelection, FilesClearSelection, FilesRemoveSelection, FilesSelectFile, FilesSetContextMenu, FilesSetLoading, FilesShiftSelection, FilesThunk } from "./types";
 
 export const setLoading = (loading: boolean): FilesSetLoading => ({
   type: FilesActionTypes.SET_LOADING,
@@ -17,6 +17,9 @@ export const getFolder: FilesThunk = (path: string) => async (
     dispatch({
       type: FilesActionTypes.LOAD_FOLDER,
       payload: res
+    })
+    dispatch({
+      type: FilesActionTypes.CLEAR_SELECTION,
     })
 
     return dispatch(setLoading(false));
@@ -38,3 +41,32 @@ export const getFolder: FilesThunk = (path: string) => async (
     }))
   }
 };
+
+export const addSelection = (name: string): FilesAddSelection => ({
+  type: FilesActionTypes.ADD_SELECTION,
+  payload: name
+})
+
+export const selectFile = (name: string): FilesSelectFile => ({
+  type: FilesActionTypes.SELECT_FILE,
+  payload: name
+})
+
+export const shiftSelection = (name: string): FilesShiftSelection => ({
+  type: FilesActionTypes.SHIFT_SELECTION,
+  payload: name
+})
+
+export const clearSelection = (): FilesClearSelection => ({
+  type: FilesActionTypes.CLEAR_SELECTION,
+})
+
+export const removeSelection = (name: string): FilesRemoveSelection => ({
+  type: FilesActionTypes.REMOVE_SELECTION,
+  payload: name
+})
+
+export const setContextMenu = (menu: ContextMenuProps): FilesSetContextMenu => ({
+  type: FilesActionTypes.SET_CONTEXT_MENU,
+  payload: menu
+})

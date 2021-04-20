@@ -1,3 +1,4 @@
+import { PromptProps } from "@components";
 import { BubbleI } from "@models";
 
 export interface AppStateI {
@@ -5,7 +6,8 @@ export interface AppStateI {
   sidebarOpen: boolean;
   terminalOpen: boolean;
   user?: User;
-  bubbles: Map<string, BubbleI>
+  bubbles: Map<string, BubbleI>;
+  prompt?: PromptProps;
 }
 
 export enum AppActionTypes {
@@ -14,6 +16,7 @@ export enum AppActionTypes {
   SET_TERMINAL = "app/set-terminal",
   ADD_BUBBLE = "app/add-bubble",
   REMOVE_BUBBLE = "app/remove-bubble",
+  SET_PROMPT = "app/set-prompt",
 }
 
 const Acts = AppActionTypes;
@@ -54,4 +57,9 @@ export interface AppRemoveBubble {
   payload: string
 }
 
-export type AppActions = AppLogin | AppSetSidebar | AppSetTerminal | AppAddBubble | AppRemoveBubble;
+export interface AppSetPrompt {
+  type: typeof Acts.SET_PROMPT;
+  payload?: PromptProps;
+}
+
+export type AppActions = AppLogin | AppSetSidebar | AppSetTerminal | AppAddBubble | AppRemoveBubble | AppSetPrompt;

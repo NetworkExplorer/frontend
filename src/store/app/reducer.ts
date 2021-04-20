@@ -7,7 +7,8 @@ const initState: AppStateI = {
   loading: false,
   sidebarOpen: false,
   terminalOpen: false,
-  bubbles: new Map()
+  bubbles: new Map(),
+  prompt: undefined
 };
 
 export const appReducer = (
@@ -55,6 +56,11 @@ export const appReducer = (
       return { ...state, bubbles: copy };
       // return state;
     }
+    case AppActionTypes.SET_PROMPT:
+      return {
+        ...state,
+        prompt: action.payload
+      }
     default:
       return { ...state };
   }

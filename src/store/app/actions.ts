@@ -1,5 +1,6 @@
+import { PromptProps } from "@components";
 import { BubbleI } from "@models";
-import { AppActionTypes, AppAddBubble, AppRemoveBubble, AppSetSidebar, AppSetTerminal, SidebarActions, TerminalActions } from "./types";
+import { AppActionTypes, AppAddBubble, AppRemoveBubble, AppSetPrompt, AppSetSidebar, AppSetTerminal, SidebarActions, TerminalActions } from "./types";
 
 export const setSidebar = (action: SidebarActions): AppSetSidebar => ({
   type: AppActionTypes.SET_SIDEBAR,
@@ -28,6 +29,13 @@ export const removeBubble = (key: string): AppRemoveBubble => {
     payload: key,
   };
 };
+
+export const setPrompt = (prompt?: PromptProps): AppSetPrompt => {
+  return {
+    type: AppActionTypes.SET_PROMPT,
+    payload: prompt
+  }
+}
 
 // export const GetPokemon = () => async (
 //   dispatch: Dispatch<AppDispatchTypes>
