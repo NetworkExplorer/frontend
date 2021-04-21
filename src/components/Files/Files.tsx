@@ -64,7 +64,7 @@ class FilesUI extends Component<Props> {
       } else {
         let url = window.location.pathname;
         if (url.endsWith("/")) url = url.substring(0, url.length - 1);
-        this.props.push(`${window.location.pathname}/${file.name}`);
+        this.props.push(`${url}/${file.name}`);
       }
     }
   };

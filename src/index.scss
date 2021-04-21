@@ -75,3 +75,9 @@ hr {
   border-bottom: 1px solid $sepColor;
   margin: 0 0.75em;
 }
+
+.hidden {
+  display: none;
+  height: 0;
+  width: 0;
+}

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
 import { RootState, useAppDispatch } from "@store";
-import { setSidebar } from "@store/app";
+import { setTerminal } from "@store/app";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen } = useSelector(
@@ -37,8 +37,7 @@ export const Sidebar = (): JSX.Element => {
         <SidebarLink
           name="Terminal"
           icon={faTerminal}
-          path="/"
-          onClick={() => dispatch(setSidebar("TOGGLE"))}
+          onClick={() => dispatch(setTerminal("TOGGLE"))}
         ></SidebarLink>
       </div>
       <div>

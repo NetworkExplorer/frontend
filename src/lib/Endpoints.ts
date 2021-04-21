@@ -10,7 +10,7 @@ export class Endpoints {
   }
 
   get baseURL(): string {
-    return this.BASE + this.API_URL
+    return this.BASE + this.API_URL;
   }
 
   private static _instance: Endpoints;
@@ -60,17 +60,17 @@ export class Endpoints {
       if (!resWasOk(res, url, body)) {
         // console.error(res);
         // maybe add some other error handling here
-        throw new Error("something went wrong")
+        throw new Error("something went wrong");
       }
       const data = await res.json();
       if (data && !data?.error) {
         return data;
       } else {
-        throw new Error("something went wrong")
+        throw new Error("something went wrong");
       }
     } catch (e) {
       this.dev && console.error("exception: " + e);
-      throw new Error("could not connect to server")
+      throw new Error("could not connect to server");
     }
   };
 
@@ -83,6 +83,38 @@ export class Endpoints {
       throw new Error("invalid path");
     }
     return await this.fetchFromAPI(`${this.baseURL}/folder${path}`);
+  }
+
+  getFile(file: string, downloadName: string): void {
+    if (file.startsWith("/")) {
+      file = file.substring(1);
+    }
+    const url = `${this.baseURL}/download/file?file=${file}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = downloadName;
+    a.className = "hidden";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  getFiles(paths: string[], downloadName = "download.zip"): void {
+    const pathsStr = paths
+      .map((f) => {
+        if (f.startsWith("/")) return f.substring(1);
+        return f;
+      })
+      .join(",");
+
+    const url = `${this.baseURL}/download/files?files=${pathsStr}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = downloadName;
+    a.className = "hidden";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 }
 

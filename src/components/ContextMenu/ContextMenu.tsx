@@ -16,6 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
+import { Endpoints } from "@lib";
+import download from "downloadjs";
 
 const mapState = ({
   filesReducer: {
@@ -250,15 +252,23 @@ const ContextMenuUI = ({
   }
 
   function onFilesDownload(): void {
-    // TODO multiple files download
+    if (selected.size <= 0) return;
+    let url = window.location.pathname;
+    if (url.startsWith("/")) url = url.substring(1);
+    if (!url.endsWith("/")) url = url + "/";
+    // TODO save files as objects not as strings
   }
 
   function onFilesDelete(): void {
-    // TODO multiple files delete
+    if (selected.size <= 0) return;
   }
 
   function onFileDownload(): void {
-    // TODO file download
+    if (!file) return;
+    let url = window.location.pathname;
+    if (url.startsWith("/")) url = url.substring(1);
+    if (!url.endsWith("/")) url = url + "/";
+    Endpoints.getInstance().getFile(url + file.name, file.name);
   }
 
   function onFolderDownload(): void {

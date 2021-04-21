@@ -33,8 +33,11 @@ class SearchBoxUI extends Component<Props, State> {
   }
 
   componentDidUpdate() {
-    if (!this.state.focused && this.state.path != window.location.pathname) {
-      this.setState({ path: window.location.pathname });
+    if (
+      !this.state.focused &&
+      this.state.path != decodeURI(window.location.pathname)
+    ) {
+      this.setState({ path: decodeURI(window.location.pathname) });
     }
   }
 
@@ -51,7 +54,7 @@ class SearchBoxUI extends Component<Props, State> {
 
   handlePath = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
-      path: e.target.value.trim(),
+      path: e.target.value,
     });
   };
 
