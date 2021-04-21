@@ -1,6 +1,6 @@
 import css from "./File.module.scss";
 import React from "react";
-import iconsImp from "../../../assets/icons";
+import iconsImp from "@icons";
 import { FileI } from "@lib";
 
 const EXTRA_MAPPINGS = [
@@ -13,7 +13,7 @@ const EXTRA_MAPPINGS = [
   { before: /\.(mp4|vlc|mov|mkv|amv|svi|mv4|flv|f4v|qt|webm)/, after: "video" },
   {
     before: /\.(m4a|mp3|wav|aac|3gp|aiff|flac|ogg|oga|mogg|opus|wma)/,
-    after: "audio",
+    after: "music",
   },
 ];
 
