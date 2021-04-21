@@ -5,7 +5,16 @@ import { FileI } from "@lib";
 
 const EXTRA_MAPPINGS = [
   { before: /\.(tsx|ts)$/, after: "js" },
-  { before: /\.(jpeg)$/, after: "jpg" },
+  { before: /\.(jpeg|jpg|png|tif|bmp|tif|gif|webp)$/, after: "image" },
+  { before: /\.(xls)/, after: "xlsx" },
+  { before: /\.(ppt)/, after: "pptx" },
+  { before: /\.(doc)/, after: "docx" },
+  { before: /\.(sh|ps1|ps2|bat)/, after: "shell" },
+  { before: /\.(mp4|vlc|mov|mkv|amv|svi|mv4|flv|f4v|qt|webm)/, after: "video" },
+  {
+    before: /\.(m4a|mp3|wav|aac|3gp|aiff|flac|ogg|oga|mogg|opus|wma)/,
+    after: "audio",
+  },
 ];
 
 interface Props {
