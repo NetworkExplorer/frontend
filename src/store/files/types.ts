@@ -19,8 +19,8 @@ export interface FilesStateI {
   folder?: FolderRes;
   loading: boolean;
   selection: {
-    lastSelection?: string;
-    selected: Set<string>;
+    lastSelection?: FileI;
+    selected: Set<FileI>;
   },
   menu: ContextMenuProps
 }
@@ -50,22 +50,22 @@ export interface FilesSetLoading {
 
 export interface FilesSelectFile {
   type: typeof Acts.SELECT_FILE;
-  payload: string;
+  payload: FileI;
 }
 
 export interface FilesAddSelection {
   type: typeof Acts.ADD_SELECTION;
-  payload: string;
+  payload: FileI;
 }
 
 export interface FilesRemoveSelection {
   type: typeof Acts.REMOVE_SELECTION;
-  payload: string;
+  payload: FileI;
 }
 
 export interface FilesShiftSelection {
   type: typeof Acts.SHIFT_SELECTION;
-  payload: string;
+  payload: FileI;
 }
 
 export interface FilesClearSelection {

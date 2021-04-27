@@ -44,15 +44,15 @@ export function File({ file }: Props): JSX.Element {
     ev.stopPropagation();
     ev.preventDefault();
     if (ev.ctrlKey) {
-      if (selected.has(file.name)) {
-        dispatch(removeSelection(file.name));
+      if (selected.has(file)) {
+        dispatch(removeSelection(file));
       } else {
-        dispatch(addSelection(file.name));
+        dispatch(addSelection(file));
       }
     } else if (ev.shiftKey) {
-      dispatch(shiftSelection(file.name));
+      dispatch(shiftSelection(file));
     } else {
-      dispatch(selectFile(file.name));
+      dispatch(selectFile(file));
     }
   }
 
@@ -67,8 +67,8 @@ export function File({ file }: Props): JSX.Element {
         y: ev.clientY,
       })
     );
-    if (!selected.has(file.name)) {
-      dispatch(selectFile(file.name));
+    if (!selected.has(file)) {
+      dispatch(selectFile(file));
     }
   }
 
@@ -76,7 +76,7 @@ export function File({ file }: Props): JSX.Element {
     <div className={css.file} data-file={JSON.stringify(file)}>
       <div
         className={`${css.fileWrapper} ${
-          selected.has(file.name) ? css.selected : ""
+          selected.has(file) ? css.selected : ""
         }`}
         onClick={handleClick}
         onContextMenu={onContextMenu}

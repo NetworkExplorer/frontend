@@ -17,7 +17,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Endpoints } from "@lib";
-import download from "downloadjs";
 
 const mapState = ({
   filesReducer: {
@@ -75,13 +74,15 @@ const ContextMenuUI = ({
       ...items,
       {
         label: "Download Files/Folders",
-        func: onFileDownload,
+        func: onFilesDownload,
         icon: faDownload,
         name: css.downloadFiles,
       },
       {
         label: "Delete Files/Folders",
-        func: onFileDownload,
+        func: () => {
+          return; // TODO
+        },
         icon: faDownload,
         name: css.downloadFiles,
       },
@@ -256,7 +257,12 @@ const ContextMenuUI = ({
     let url = window.location.pathname;
     if (url.startsWith("/")) url = url.substring(1);
     if (!url.endsWith("/")) url = url + "/";
-    // TODO save files as objects not as strings
+
+    const urls = [];
+    for (const f of selected) {
+      urls.push(url + f.name);
+    }
+    Endpoints.getInstance().getFiles(urls);
   }
 
   function onFilesDelete(): void {

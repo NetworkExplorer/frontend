@@ -1,3 +1,4 @@
+import { FileI } from "@lib";
 import { FilesStateI, FilesActionTypes, FilesActions } from "./types";
 
 const Acts = FilesActionTypes;
@@ -7,7 +8,7 @@ const initState: FilesStateI = {
   loading: false,
   selection: {
     lastSelection: undefined,
-    selected: new Set<string>()
+    selected: new Set<FileI>()
   },
   menu: {
     isOpen: false,
@@ -69,10 +70,10 @@ export const filesReducer = (
       let nowI = -1;
       for (const idx in files) {
         const i = Number(idx);
-        if (files[i].name === state.selection.lastSelection) {
+        if (files[i].name === state.selection.lastSelection?.name) {
           lastI = i;
         }
-        if (files[i].name === action.payload) {
+        if (files[i].name === action.payload.name) {
           nowI = i;
         }
       }
@@ -84,7 +85,7 @@ export const filesReducer = (
         nowI = lastI;
         lastI = temp;
       }
-      files.filter((_, i) => lastI <= i && i <= nowI).forEach((f) => selection.add(f.name));
+      files.filter((_, i) => lastI <= i && i <= nowI).forEach((f) => selection.add(f));
 
       return {
         ...state,
@@ -100,7 +101,7 @@ export const filesReducer = (
         ...state,
         selection: {
           lastSelection: undefined,
-          selected: new Set<string>()
+          selected: new Set<FileI>()
         }
       }
     case Acts.SET_CONTEXT_MENU:

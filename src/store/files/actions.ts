@@ -1,4 +1,4 @@
-import { convertFiles, Endpoints } from "@lib";
+import { convertFiles, Endpoints, FileI } from "@lib";
 import { addBubble } from "@store/app";
 import { ContextMenuProps, FilesActionTypes, FilesAddSelection, FilesClearSelection, FilesRemoveSelection, FilesSelectFile, FilesSetContextMenu, FilesSetLoading, FilesShiftSelection, FilesThunk } from "./types";
 
@@ -42,28 +42,28 @@ export const getFolder: FilesThunk = (path: string) => async (
   }
 };
 
-export const addSelection = (name: string): FilesAddSelection => ({
+export const addSelection = (file: FileI): FilesAddSelection => ({
   type: FilesActionTypes.ADD_SELECTION,
-  payload: name
+  payload: file
 })
 
-export const selectFile = (name: string): FilesSelectFile => ({
+export const selectFile = (file: FileI): FilesSelectFile => ({
   type: FilesActionTypes.SELECT_FILE,
-  payload: name
+  payload: file
 })
 
-export const shiftSelection = (name: string): FilesShiftSelection => ({
+export const shiftSelection = (file: FileI): FilesShiftSelection => ({
   type: FilesActionTypes.SHIFT_SELECTION,
-  payload: name
+  payload: file
 })
 
 export const clearSelection = (): FilesClearSelection => ({
   type: FilesActionTypes.CLEAR_SELECTION,
 })
 
-export const removeSelection = (name: string): FilesRemoveSelection => ({
+export const removeSelection = (file: FileI): FilesRemoveSelection => ({
   type: FilesActionTypes.REMOVE_SELECTION,
-  payload: name
+  payload: file
 })
 
 export const setContextMenu = (menu: ContextMenuProps): FilesSetContextMenu => ({
