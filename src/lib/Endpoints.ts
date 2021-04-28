@@ -1,4 +1,6 @@
+import SockJS from "sockjs-client";
 import { FolderRes } from "./responses";
+import { Stomp } from "@stomp/stompjs";
 
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
@@ -30,15 +32,30 @@ export class Endpoints {
 
   private constructor() {
     console.log("Created Endpoints object");
-    if (ENV === "development")
+    if (ENV === "development") {
       // so that you can you can recreate the instance when hot reloading fails
       (window as any).reCreateEndpoints = this.reCreateInstance;
+      (window as any).endpoints = this;
+    }
   }
 
   reCreateInstance(): void {
     if (ENV === "development") {
       Endpoints._instance = new Endpoints();
     }
+  }
+
+  static testWS(): void {
+    const sock = new SockJS("http://localhost:16091/websocket");
+    const stompClient = Stomp.over(sock);
+    stompClient.connect({}, function (frame: any) {
+      // setConnected(true);
+      console.log('Connected: ' + frame);
+      stompClient.subscribe('/user/queue/output', function (greeting) {
+        console.log(greeting.body);
+      });
+      stompClient.send('/app/exec', {}, "dir")
+    });
   }
 
   fetchFromAPI = async (
