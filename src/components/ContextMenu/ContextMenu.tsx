@@ -80,9 +80,7 @@ const ContextMenuUI = ({
       },
       {
         label: "Delete Files/Folders",
-        func: () => {
-          return; // TODO
-        },
+        func: onFilesDelete,
         icon: faDownload,
         name: css.downloadFiles,
       },
@@ -156,7 +154,7 @@ const ContextMenuUI = ({
       position: "fixed",
     };
   }
-  const click = (e: MouseEvent) => {
+  const click = () => {
     // TODO also listen to escape
     if (isOpen) {
       setContextMenu({ isOpen: false });
@@ -176,6 +174,7 @@ const ContextMenuUI = ({
     setPrompt({
       fieldName: "folder name",
       initial: file.name,
+      //eslint-disable-next-line
       callback: (val) => {
         // addBubble("rename-error", {
         //   title: "Could not rename folder",
@@ -192,6 +191,7 @@ const ContextMenuUI = ({
     setPrompt({
       fieldName: "file name",
       initial: file.name,
+      //eslint-disable-next-line
       callback: (val) => {
         // TODO rename
         // addBubble("rename-error", {
@@ -241,6 +241,7 @@ const ContextMenuUI = ({
     setPrompt({
       fieldName: "folder name",
       initial: "",
+      //eslint-disable-next-line
       callback: (value: string) => {
         // addBubble("mkdir-error", {
         //   title: err.title || "Failed to create directory",

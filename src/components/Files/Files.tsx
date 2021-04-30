@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { File } from "./File/File";
 import css from "./Files.module.scss";
 import fileCSS from "./File/File.module.scss";
-import { FileI } from "@lib";
+import { FileI, findElInTree } from "@lib";
 import { push } from "connected-react-router";
 import { ContextMenu, Loading, Prompt } from "@components";
 
@@ -52,7 +52,7 @@ class FilesUI extends Component<Props> {
 
   doubleClick = (e: MouseEvent) => {
     const target: HTMLElement = e.target as HTMLElement;
-    const fileEl = this.findFileEl(target);
+    const fileEl = findElInTree(fileCSS.file, target);
     if (!fileEl) return;
 
     const dataAttr = fileEl.getAttribute("data-file");
@@ -67,16 +67,6 @@ class FilesUI extends Component<Props> {
         this.props.push(`${url}/${file.name}`);
       }
     }
-  };
-
-  findFileEl = (el?: HTMLElement | null): HTMLElement | undefined => {
-    if (!el || el === document.documentElement) {
-      return undefined;
-    }
-    if (el.classList.contains(fileCSS.file)) {
-      return el;
-    }
-    return this.findFileEl(el.parentElement);
   };
 
   handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {

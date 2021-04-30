@@ -29,3 +29,13 @@ export function convertFiles(files: FileI[]): FileI[] {
       return 1;
     });
 }
+
+export function findElInTree(className: string, el?: HTMLElement | null): HTMLElement | undefined {
+  if (!el || el === document.documentElement) {
+    return undefined;
+  }
+  if (el.classList.contains(className)) {
+    return el;
+  }
+  return findElInTree(className, el.parentElement);
+}
