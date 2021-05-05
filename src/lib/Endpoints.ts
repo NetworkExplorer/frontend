@@ -61,13 +61,15 @@ export class Endpoints {
   fetchFromAPI = async (
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    body = {}
+    body = {},
+    options: RequestInit = {}
   ): Promise<any> => {
-    let options: RequestInit = {
+    options = {
       method,
       headers: {
         "Content-Type": "application/json",
       },
+      ...options,
     };
     if (method !== "GET") {
       options = { ...options, body: JSON.stringify(body) };
@@ -132,6 +134,19 @@ export class Endpoints {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+  }
+
+  uploadFile(file: File, path: string): XMLHttpRequest {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('path', path);
+
+    const request = new XMLHttpRequest();
+    request.open('POST', `${this.baseURL}/upload`);
+
+    request.send(formData);
+    return request;
+    // return this.fetchFromAPI(`${this.baseURL}/upload`, "POST", formData);
   }
 }
 

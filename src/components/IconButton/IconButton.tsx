@@ -7,19 +7,24 @@ interface Props {
   btnWrapper?: string;
   icon: IconProp;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  name: string;
 }
 
-export default function IconButton({
+export function IconButton({
   className,
   btnWrapper,
   icon,
   onClick,
+  name,
 }: Props): JSX.Element {
   return (
-    <button className={className} onClick={onClick}>
+    <button className={className} onClick={onClick} title={name} role="button">
       <div className={btnWrapper}>
         <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
       </div>
+      <span hidden>{name}</span>
     </button>
   );
 }
+
+export default IconButton;

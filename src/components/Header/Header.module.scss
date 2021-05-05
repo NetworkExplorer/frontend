@@ -9,20 +9,61 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  // overflow: hidden;
 
   .iconBtn {
     color: inherit;
-    background: transparent;
+    background: $dark-bg;
     width: $headerHeight;
     height: $headerHeight;
     font-size: inherit;
     border-radius: 1px;
 
     &,
-    & > * {
+    & > div {
       display: grid;
       place-items: center;
     }
+
+    &:hover {
+      background: $dark-bg-2;
+    }
+  }
+}
+
+.uploadChooser {
+  height: $headerHeight;
+  width: $headerHeight * 2;
+  position: absolute;
+  top: $headerHeight;
+  transform: translate($headerHeight * -0.5, -110%);
+  z-index: -1;
+  transition: $dur transform;
+  display: flex;
+  flex-direction: row;
+  background: $dark-bg-1;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.5);
+
+  &.chooserOpen {
+    transform: translate($headerHeight * -0.5, 10%);
+  }
+
+  & > button {
+    display: flex;
+    flex-direction: column;
+    background: $dark-bg-1;
+    justify-content: center;
+    align-items: center;
+    height: $headerHeight;
+    width: $headerHeight;
+    font-size: inherit;
+    color: inherit;
 
     &:hover {
       background: $dark-bg-2;

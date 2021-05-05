@@ -9,7 +9,7 @@ $menu-item-height: 2.75em;
   border-radius: 10px;
   overflow: hidden;
   height: 0;
-  transition: $dur height ease, $dur box-shadow, $dur top, $dur left;
+  transition: $dur height ease, $dur top, $dur left;
   will-change: height;
   display: flex;
   justify-content: flex-end;
@@ -46,7 +46,6 @@ $menu-item-height: 2.75em;
   }
 
   &.opened {
-    // height: auto;
     height: calc(var(--items) * #{$menu-item-height});
     box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.5);
   }
