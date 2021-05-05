@@ -141,10 +141,10 @@ const ContextMenuUI = ({
       const own = ownRef.current.getBoundingClientRect();
       const em = parseFloat(getComputedStyle(ownRef.current).fontSize) * 2.75;
       if (x + own.width > rect.width) {
-        x = x - own.width + (rect.width - x) - 20;
+        x = x - own.width + (rect.width - x) - 30;
       }
       if (y + em * contextStyles["--items"] > rect.height) {
-        y = y - em * contextStyles["--items"] + (rect.height - y) - 20;
+        y = y - em * contextStyles["--items"] + (rect.height - y) - 30;
       }
     }
     contextStyles = {
@@ -155,16 +155,26 @@ const ContextMenuUI = ({
     };
   }
   const click = () => {
-    // TODO also listen to escape
     if (isOpen) {
       setContextMenu({ isOpen: false });
       document.removeEventListener("click", click);
+      document.removeEventListener("keyup", keyUp);
+      setListening(false);
+    }
+  };
+
+  const keyUp = (ev: KeyboardEvent) => {
+    if (isOpen && ev.key === "Escape") {
+      setContextMenu({ isOpen: false });
+      document.removeEventListener("click", click);
+      document.removeEventListener("keyup", keyUp);
       setListening(false);
     }
   };
   useEffect(() => {
     if (!listening && isOpen) {
       document.addEventListener("click", click);
+      document.addEventListener("keyup", keyUp);
       setListening(true);
     }
   });

@@ -1,5 +1,10 @@
 import { RootDispatch, RootState } from "@store";
-import { clearSelection, getFolder } from "@store/files";
+import {
+  clearSelection,
+  ContextMenuProps,
+  getFolder,
+  setContextMenu,
+} from "@store/files";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { File } from "./File/File";
@@ -29,6 +34,7 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   getFolder: (path: string) => dispatch(getFolder(path)),
   push: (path: string) => dispatch(push(path)),
   clearSelection: () => dispatch(clearSelection()),
+  setContextMenu: (menu: ContextMenuProps) => dispatch(setContextMenu(menu)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -52,7 +58,7 @@ class FilesUI extends Component<Props> {
 
   doubleClick = (e: MouseEvent) => {
     const target: HTMLElement = e.target as HTMLElement;
-    const fileEl = findElInTree(fileCSS.file, target);
+    const fileEl = findElInTree(fileCSS.fileWrapper, target);
     if (!fileEl) return;
 
     const dataAttr = fileEl.getAttribute("data-file");
@@ -77,10 +83,25 @@ class FilesUI extends Component<Props> {
     }
   };
 
+  handleContextMenu = (ev: React.MouseEvent<HTMLDivElement>) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.props.setContextMenu({
+      isOpen: true,
+      file: undefined,
+      x: ev.clientX,
+      y: ev.clientY,
+    });
+  };
+
   render(): JSX.Element {
     return (
       <div className={css.wrapper}>
-        <div className={css.files} onClick={this.handleClick}>
+        <div
+          className={css.files}
+          onClick={this.handleClick}
+          onContextMenu={this.handleContextMenu}
+        >
           <File
             file={{
               name: "",
