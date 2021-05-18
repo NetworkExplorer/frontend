@@ -1,5 +1,5 @@
 import { FileI } from "@lib";
-import { FolderRes } from "@lib/responses";
+import { FolderResInner } from "@lib/responses";
 import { RootActions } from "@store";
 import { ActionCreator } from "redux";
 import { ThunkAction } from "redux-thunk";
@@ -16,13 +16,13 @@ export interface ContextMenuProps {
 }
 
 export interface FilesStateI {
-  folder?: FolderRes;
+  folder?: FolderResInner;
   loading: boolean;
   selection: {
     lastSelection?: FileI;
     selected: Set<FileI>;
-  },
-  menu: ContextMenuProps
+  };
+  menu: ContextMenuProps;
 }
 
 export enum FilesActionTypes {
@@ -33,14 +33,14 @@ export enum FilesActionTypes {
   REMOVE_SELECTION = "files/remove-selection",
   SHIFT_SELECTION = "files/shift-selection",
   CLEAR_SELECTION = "files/clear-selection",
-  SET_CONTEXT_MENU = "files/set-context-menu"
+  SET_CONTEXT_MENU = "files/set-context-menu",
 }
 
 const Acts = FilesActionTypes;
 
 export interface FilesLoadFolder {
   type: typeof Acts.LOAD_FOLDER;
-  payload: FolderRes;
+  payload: FolderResInner;
 }
 
 export interface FilesSetLoading {
@@ -77,4 +77,12 @@ export interface FilesSetContextMenu {
   payload: ContextMenuProps;
 }
 
-export type FilesActions = FilesLoadFolder | FilesSetLoading | FilesSelectFile | FilesAddSelection | FilesRemoveSelection | FilesShiftSelection | FilesClearSelection | FilesSetContextMenu;
+export type FilesActions =
+  | FilesLoadFolder
+  | FilesSetLoading
+  | FilesSelectFile
+  | FilesAddSelection
+  | FilesRemoveSelection
+  | FilesShiftSelection
+  | FilesClearSelection
+  | FilesSetContextMenu;

@@ -1,4 +1,5 @@
 import { Bubbles, Files, Header, Sidebar, Terminal } from "@components";
+import { normalizeURL } from "@lib";
 import { RootDispatch, RootState } from "@store";
 import { getFolder } from "@store/files";
 import React, { useEffect } from "react";
@@ -11,7 +12,7 @@ const MainPageUI = (): JSX.Element => {
   }));
   const dispatch = useDispatch<RootDispatch>();
   useEffect(() => {
-    dispatch(getFolder(state.location.pathname));
+    dispatch(getFolder(normalizeURL(window.location.pathname)));
   }, [state.location]);
   return (
     <div id={css.main}>

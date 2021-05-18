@@ -8,6 +8,7 @@ interface Props {
   icon: IconProp;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   name: string;
+  disabled?: boolean;
 }
 
 export function IconButton({
@@ -16,9 +17,16 @@ export function IconButton({
   icon,
   onClick,
   name,
+  disabled,
 }: Props): JSX.Element {
   return (
-    <button className={className} onClick={onClick} title={name} role="button">
+    <button
+      className={className}
+      onClick={onClick}
+      title={name}
+      role="button"
+      disabled={disabled}
+    >
       <div className={btnWrapper}>
         <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
       </div>

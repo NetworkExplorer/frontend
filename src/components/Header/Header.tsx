@@ -11,15 +11,30 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "./SearchBox/SearchBox";
 import { IconButton } from "@components";
-import { useAppDispatch } from "@store";
+import { RootState, useAppDispatch } from "@store";
 import { setSidebar } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Endpoints } from "@lib";
+import {
+  Endpoints,
+  FileI,
+  normalizeURL,
+  onFileDownload,
+  onFilesDownload,
+  onFolderDownload,
+} from "@lib";
+import { useSelector } from "react-redux";
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploadState, setUploadState] = useState(false);
+  const { selected } = useSelector(
+    ({
+      filesReducer: {
+        selection: { selected },
+      },
+    }: RootState) => ({ selected })
+  );
 
   const setDirectory = (dir: boolean) => {
     const dirAttr = [
@@ -44,15 +59,15 @@ export const Header = (): JSX.Element => {
     e.preventDefault();
     e.stopPropagation();
     const files = fileRef.current.files;
-    if (!files) {
+    if (!files || files.length === 0) {
       setUploadState(false);
       return;
     }
-    if (files.length == 0) {
-      setUploadState(false);
-    }
     for (const file of files) {
-      const req = await Endpoints.getInstance().uploadFile(file, "");
+      const req = await Endpoints.getInstance().uploadFile(
+        file,
+        normalizeURL(window.location.pathname, false)
+      );
       // upload progress event
       req.upload.addEventListener("progress", function (e) {
         // upload progress as percentage
@@ -81,24 +96,36 @@ export const Header = (): JSX.Element => {
     setUploadState(false);
   };
 
+  const onDownload = () => {
+    if (selected.size === 0) return;
+    if (selected.size === 1) {
+      const file: FileI = selected.values().next().value;
+      if (file.type === "FILE") {
+        onFileDownload(file);
+      } else if (file.type === "FOLDER") {
+        onFolderDownload(file);
+      }
+      return;
+    }
+
+    onFilesDownload(selected);
+  };
+
   return (
     <header className={css.header}>
       <IconButton
         className={css.iconBtn}
         icon={faBars}
         onClick={() => dispatch(setSidebar("TOGGLE"))}
-        name="menu"
+        name="Menu"
       ></IconButton>
       <SearchBox></SearchBox>
       <IconButton
         className={css.iconBtn}
-        icon={faFilter}
-        name="filter"
-      ></IconButton>
-      <IconButton
-        className={css.iconBtn}
         icon={faDownload}
-        name="download"
+        name="Download"
+        onClick={onDownload}
+        disabled={selected.size == 0}
       ></IconButton>
       <label>
         <input
@@ -112,7 +139,7 @@ export const Header = (): JSX.Element => {
           className={css.iconBtn}
           icon={faUpload}
           onClick={() => setUploadState(!uploadState)}
-          name="upload"
+          name="Upload"
         ></IconButton>
         <div
           className={`${css.uploadChooser} ${

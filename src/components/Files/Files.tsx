@@ -120,7 +120,7 @@ class FilesUI extends Component<Props> {
               }}
             ></File>
           )}
-          {this.props?.folder?.files.map((f) => (
+          {this.props?.folder?.files?.map((f) => (
             <File key={f.name} file={f}></File>
           ))}
         </div>

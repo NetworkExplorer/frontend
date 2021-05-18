@@ -21,9 +21,18 @@
     font-size: inherit;
     border-radius: 1px;
 
+    &:disabled {
+      opacity: 1;
+
+      & > * {
+        opacity: 0.6;
+      }
+    }
+
     &,
     & > div {
       display: grid;
+      transition: $dur * 2 opacity ease;
       place-items: center;
     }
 

@@ -1,6 +1,7 @@
 import SockJS from "sockjs-client";
-import { FolderRes } from "./responses";
+import { DefRes, FolderRes } from "./responses";
 import { Stomp } from "@stomp/stompjs";
+import { normalizeURL } from "./util";
 
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
@@ -50,18 +51,18 @@ export class Endpoints {
     const stompClient = Stomp.over(sock);
     stompClient.connect({}, function (frame: any) {
       // setConnected(true);
-      console.log('Connected: ' + frame);
-      stompClient.subscribe('/user/queue/output', function (greeting) {
+      console.log("Connected: " + frame);
+      stompClient.subscribe("/user/queue/output", function (greeting) {
         console.log(greeting.body);
       });
-      stompClient.send('/app/exec', {}, "dir")
+      stompClient.send("/app/exec", {}, "dir");
     });
   }
 
   fetchFromAPI = async (
     url: string,
     method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
-    body = {},
+    body: any = undefined,
     options: RequestInit = {}
   ): Promise<any> => {
     options = {
@@ -72,7 +73,7 @@ export class Endpoints {
       ...options,
     };
     if (method !== "GET") {
-      options = { ...options, body: JSON.stringify(body) };
+      options = { ...options, body: body ? JSON.stringify(body) : undefined };
     }
     try {
       const res = await fetch(url, options);
@@ -138,23 +139,44 @@ export class Endpoints {
 
   uploadFile(file: File, path: string): XMLHttpRequest {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('path', path);
+    formData.append("file", file);
+    formData.append("path", path);
 
     const request = new XMLHttpRequest();
-    request.open('POST', `${this.baseURL}/upload`);
+    request.open("POST", `${this.baseURL}/upload`);
 
     request.send(formData);
     return request;
     // return this.fetchFromAPI(`${this.baseURL}/upload`, "POST", formData);
   }
+
+  async mkdir(path: string): Promise<DefRes> {
+    return this.fetchFromAPI(
+      `${this.baseURL}/mkdir?path=${normalizeURL(path, false)}`,
+      "POST"
+    );
+  }
+
+  async delete(paths: string[]): Promise<DefRes> {
+    return this.fetchFromAPI(`${this.baseURL}/delete`, "DELETE", paths);
+  }
+
+  async move(from: string, to: string): Promise<DefRes> {
+    return this.fetchFromAPI(
+      `${this.baseURL}/rename?path=${normalizeURL(
+        from,
+        false
+      )}&newPath=${normalizeURL(to, false)}`,
+      "PUT"
+    );
+  }
 }
 
 /**
  * returns true if the response was ok and false if the response was bad
- * @param {Response} res the response to handle
- * @param {string} url the url that was requested
- * @param {string} body the body that was sent with it
+ * @param res the response to handle
+ * @param url the url that was requested
+ * @param body the body that was sent with it
  */
 export function resWasOk(res: Response, url: string, body = {}): boolean {
   if (!res.ok) {
