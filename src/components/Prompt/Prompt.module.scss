@@ -27,7 +27,7 @@
   overflow: hidden;
   z-index: 100;
   min-width: 18em;
-  min-height: 8em;
+  // min-height: 8em;
 
   .top {
     color: $bg;
@@ -85,6 +85,18 @@
 
     .cancel {
       color: #ff3b3b;
+    }
+  }
+}
+
+.delete {
+  .buttons {
+    .save {
+      color: #ff3b3b;
+    }
+
+    .cancel {
+      color: $bg;
     }
   }
 }

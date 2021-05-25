@@ -17,6 +17,7 @@ export function onRename(
     setPrompt({
       fieldName: file.type === "FILE" ? "file name" : "folder name",
       initial: file.name,
+      type: "INPUT",
       callback: (val) => {
         if (file.type !== "header") {
           const base = normalizeURL(window.location.pathname);
@@ -47,6 +48,7 @@ export function onCreateFolder(
     setPrompt({
       fieldName: "folder name",
       initial: "",
+      type: "INPUT",
       callback: async (value: string) => {
         try {
           await Endpoints.getInstance().mkdir(
@@ -76,26 +78,43 @@ export function onFilesDownload(selected: Set<FileI>): void {
   Endpoints.getInstance().getFiles(urls);
 }
 
-export async function onDelete(
+export function onDelete(
   selected: Set<FileI>,
+  setPrompt: PFunc,
   addBubble: BFunc
 ): Promise<void> {
-  if (selected.size <= 0) return;
+  if (selected.size <= 0) return Promise.resolve();
 
-  const files: string[] = [];
-  for (const file of selected) {
-    files.push(normalizeURL(window.location.pathname, false) + file.name);
-  }
+  return new Promise((resolve) => {
+    console.log("dd");
+    setPrompt({
+      fieldName: "delete",
+      type: "DELETE",
+      callback: async (value: string | "true") => {
+        console.log("dd");
+        if (value === "true") {
+          const files: string[] = [];
+          for (const file of selected) {
+            files.push(
+              normalizeURL(window.location.pathname, false) + file.name
+            );
+          }
 
-  try {
-    await Endpoints.getInstance().delete(files);
-  } catch (err) {
-    addBubble("mkdir-error", {
-      title: `Failed to files/folders"`,
-      message: err.message,
-      type: "ERROR",
+          try {
+            await Endpoints.getInstance().delete(files);
+          } catch (err) {
+            addBubble("mkdir-error", {
+              title: `Failed to files/folders"`,
+              message: err.message,
+              type: "ERROR",
+            });
+          }
+        }
+        resolve();
+        console.log("after");
+      },
     });
-  }
+  });
 }
 
 export function onFileDownload(file: FileI): void {

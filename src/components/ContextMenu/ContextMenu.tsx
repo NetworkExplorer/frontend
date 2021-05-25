@@ -111,7 +111,7 @@ const ContextMenuUI = ({
     },
   ];
 
-  const withReload = async (func: Promise<any>) => {
+  const withReload = async (func: Promise<any> | void) => {
     await func;
     getFolder();
   };
@@ -127,7 +127,7 @@ const ContextMenuUI = ({
       },
       {
         label: "Delete Files/Folders",
-        func: () => withReload(onDelete(selected, addBubble)),
+        func: () => withReload(onDelete(selected, setPrompt, addBubble)),
         icon: faDownload,
         name: css.downloadFiles,
       },
@@ -149,7 +149,7 @@ const ContextMenuUI = ({
       },
       {
         label: "Delete folder",
-        func: () => withReload(onDelete(selected, addBubble)),
+        func: () => withReload(onDelete(selected, setPrompt, addBubble)),
         name: css.delete,
         icon: faTrashAlt,
       },
@@ -171,7 +171,7 @@ const ContextMenuUI = ({
       },
       {
         label: "Delete file",
-        func: () => withReload(onDelete(selected, addBubble)),
+        func: () => withReload(onDelete(selected, setPrompt, addBubble)),
         name: css.delete,
         icon: faTrashAlt,
       },
@@ -223,6 +223,10 @@ const ContextMenuUI = ({
       document.addEventListener("click", click);
       document.addEventListener("keyup", keyUp);
       setListening(true);
+    } else {
+      document.removeEventListener("keyup", keyUp);
+      document.removeEventListener("click", click);
+      setListening(false);
     }
   }, [isOpen]);
 

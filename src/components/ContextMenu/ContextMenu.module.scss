@@ -5,27 +5,27 @@ $menu-item-height: 2.75em;
   position: absolute;
   bottom: calc(#{$plusHeight} + 10px);
   right: 0;
-  width: 14em;
+  width: 18em;
   border-radius: 2px;
   overflow: hidden;
   height: 0;
   transition: $dur height ease, $dur top, $dur left;
   will-change: height;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
   box-shadow: none;
 
   button {
-    color: $bg;
+    color: $dark-bg;
     width: 100%;
     border-radius: 0;
     flex-grow: 1;
     font-size: inherit;
     font-size: 0.9em;
     padding: 0;
-    background: $dark-bg-1;
+    background: $bg;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -34,7 +34,7 @@ $menu-item-height: 2.75em;
     padding: 0 0.5em;
 
     &:hover {
-      background: $dark-bg-2;
+      background: #bbb;
     }
   }
 
@@ -46,12 +46,14 @@ $menu-item-height: 2.75em;
   }
 
   &.opened {
+    $shadow: rgba(0, 0, 0, 0.5);
     height: calc(var(--items) * #{$menu-item-height});
-    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 5px 2px $shadow;
   }
 
   .delete {
     background: #af5750;
+    color: $bg;
 
     &:hover {
       background: $red;

@@ -1,21 +1,33 @@
-import { Bubbles, Files, Header, Sidebar, Terminal } from "@components";
-import { normalizeURL } from "@lib";
+import {
+  Bubbles,
+  Files,
+  Header,
+  PromptProps,
+  Sidebar,
+  Terminal,
+} from "@components";
+import { normalizeURL, onDelete } from "@lib";
 import { RootDispatch, RootState } from "@store";
 import { getFolder } from "@store/files";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import css from "./Main.module.scss";
 import { HotKeys, KeyMap } from "react-hotkeys";
-import { setSearch } from "@store/app";
+import { addBubble, setPrompt, setSearch } from "@store/app";
 import { Search } from "@components/Search/Search";
+import { BubbleI } from "@models";
 
 const keyMap: KeyMap = {
-  DELETE_NODE: ["del", "backspace"],
+  // DELETE: ["del", "backspace"],
   SEARCH: "Control+f",
 };
 
+type HandlerType = {
+  [key: string]: (keyEvent?: KeyboardEvent) => void;
+};
+
 const MainPageUI = (): JSX.Element => {
-  const state = useSelector(
+  const { location, selected } = useSelector(
     ({
       router: { location },
       filesReducer: {
@@ -29,24 +41,44 @@ const MainPageUI = (): JSX.Element => {
   const dispatch = useDispatch<RootDispatch>();
   useEffect(() => {
     dispatch(getFolder(normalizeURL(window.location.pathname)));
-  }, [state.location]);
+  }, [location]);
+  const [listening, setListening] = useState(false);
 
-  const handlers: {
-    [key: string]: (keyEvent?: KeyboardEvent) => void;
-  } = {
-    DELETE: (e) => {
+  const keyUp = async (e: KeyboardEvent) => {
+    if (e?.target) {
+      const el = e.target as HTMLElement;
+      if (el.tagName === "input" || el.isContentEditable) return;
+    }
+    if (e.key === "Backspace" || e.key === "Delete") {
       e?.preventDefault();
       e?.stopPropagation();
-    },
+      await onDelete(
+        selected,
+        (prompt?: PromptProps) => dispatch(setPrompt(prompt)),
+        (key: string, bubble: BubbleI) => dispatch(addBubble(key, bubble))
+      );
+      console.log("d");
+      dispatch(getFolder());
+    }
+  };
+  useEffect(() => {
+    if (!listening && selected.size > 0) {
+      setListening(true);
+      document.addEventListener("keyup", keyUp);
+    } else if (listening && selected.size === 0) {
+      document.removeEventListener("keyup", keyUp);
+      setListening(false);
+    }
+  }, [selected]);
+
+  const handlers: HandlerType = {
     SEARCH: (e) => {
       e?.preventDefault();
       e?.stopPropagation();
-      dispatch(
-        setSearch({
-          searching: true,
-          shouldFocus: true,
-        })
-      );
+      setSearch({
+        searching: true,
+        shouldFocus: true,
+      });
     },
   };
 

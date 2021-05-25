@@ -16,9 +16,10 @@ type PropsFromState = ConnectedProps<typeof connector>;
 type Props = PropsFromState;
 
 export interface PromptProps {
-  callback: (value: string) => void;
+  callback: (value: string | "true") => void;
   fieldName: string;
   initial?: string;
+  type: "INPUT" | "DELETE";
 }
 
 interface State {
@@ -28,6 +29,7 @@ interface State {
 
 class PromptUI extends React.Component<Props, State> {
   input = createRef<HTMLInputElement>();
+  okBtn = createRef<HTMLButtonElement>();
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -38,7 +40,11 @@ class PromptUI extends React.Component<Props, State> {
 
   componentDidUpdate() {
     const { prompt } = this.props;
-    prompt && this.input.current?.focus();
+    if (prompt?.type === "DELETE") {
+      this.okBtn.current?.focus();
+    } else if (prompt?.type === "INPUT") {
+      this.input.current?.focus();
+    }
     if (prompt && prompt.initial && prompt.initial !== this.state.initial) {
       this.setState({
         initial: prompt.initial,
@@ -49,7 +55,8 @@ class PromptUI extends React.Component<Props, State> {
         initial: undefined,
         value: "",
       });
-      this.input.current && this.input.current.blur();
+      this.input.current?.blur();
+      this.okBtn.current?.blur();
     }
   }
 
@@ -72,7 +79,11 @@ class PromptUI extends React.Component<Props, State> {
     } = this;
 
     return (
-      <div className={`${css.wrapper} ${prompt ? css.shown : ""}`}>
+      <div
+        className={`${css.wrapper} ${prompt ? css.shown : ""} ${
+          prompt?.type === "DELETE" ? css.delete : ""
+        }`}
+      >
         <div
           className={css.background}
           onClick={() => setPrompt(undefined)}
@@ -82,25 +93,31 @@ class PromptUI extends React.Component<Props, State> {
           onSubmit={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            prompt?.callback(value);
+            if (prompt?.type === "DELETE") {
+              prompt?.callback("true");
+            } else if (prompt?.type === "INPUT") {
+              prompt?.callback(value);
+            }
             setPrompt(undefined);
           }}
         >
-          <div className={css.top}>Enter a value for {prompt?.fieldName}!</div>
-          <div className={css.input}>
-            <input
-              type="text"
-              name={prompt?.fieldName}
-              placeholder={prompt?.fieldName}
-              ref={this.input}
-              onChange={this.onChange}
-              value={value}
-              onKeyUp={this.onKeyUp}
-            />
-          </div>
+          <div className={css.top}>Are you sure you want to delete?</div>
+          {prompt?.type === "INPUT" && (
+            <div className={css.input}>
+              <input
+                type="text"
+                name={prompt?.fieldName}
+                placeholder={prompt?.fieldName}
+                ref={this.input}
+                onChange={this.onChange}
+                value={value}
+                onKeyUp={this.onKeyUp}
+              />
+            </div>
+          )}
           <div className={css.buttons}>
-            <button type="submit" className={css.save}>
-              Save
+            <button type="submit" className={css.save} ref={this.okBtn}>
+              {prompt?.type === "DELETE" ? "Delete" : "Save"}
             </button>
             <button
               type="button"
