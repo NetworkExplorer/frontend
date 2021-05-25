@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import css from "./Main.module.scss";
 import { HotKeys, KeyMap } from "react-hotkeys";
 import { setSearch } from "@store/app";
+import { Search } from "@components/Search/Search";
 
 const keyMap: KeyMap = {
   DELETE_NODE: ["del", "backspace"],
@@ -14,9 +15,17 @@ const keyMap: KeyMap = {
 };
 
 const MainPageUI = (): JSX.Element => {
-  const state = useSelector(({ router: { location } }: RootState) => ({
-    location,
-  }));
+  const state = useSelector(
+    ({
+      router: { location },
+      filesReducer: {
+        selection: { selected },
+      },
+    }: RootState) => ({
+      location,
+      selected,
+    })
+  );
   const dispatch = useDispatch<RootDispatch>();
   useEffect(() => {
     dispatch(getFolder(normalizeURL(window.location.pathname)));
@@ -26,7 +35,8 @@ const MainPageUI = (): JSX.Element => {
     [key: string]: (keyEvent?: KeyboardEvent) => void;
   } = {
     DELETE: (e) => {
-      //
+      e?.preventDefault();
+      e?.stopPropagation();
     },
     SEARCH: (e) => {
       e?.preventDefault();
@@ -34,6 +44,7 @@ const MainPageUI = (): JSX.Element => {
       dispatch(
         setSearch({
           searching: true,
+          shouldFocus: true,
         })
       );
     },
@@ -47,6 +58,7 @@ const MainPageUI = (): JSX.Element => {
         <div className={css.right}>
           <Files></Files>
           <Terminal></Terminal>
+          <Search></Search>
         </div>
       </div>
       <Bubbles></Bubbles>

@@ -6,7 +6,7 @@ $menu-item-height: 2.75em;
   bottom: calc(#{$plusHeight} + 10px);
   right: 0;
   width: 14em;
-  border-radius: 10px;
+  border-radius: 2px;
   overflow: hidden;
   height: 0;
   transition: $dur height ease, $dur top, $dur left;

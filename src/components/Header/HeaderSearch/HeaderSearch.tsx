@@ -2,7 +2,7 @@ import { RootDispatch, RootState } from "@store";
 import { push } from "connected-react-router";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
-import css from "./SearchBox.module.scss";
+import css from "./HeaderSearch.module.scss";
 
 // eslint-disable-next-line
 const mapState = ({ router: { location } }: RootState) => ({ location });
@@ -21,7 +21,7 @@ interface State {
   focused: boolean;
 }
 
-class SearchBoxUI extends Component<Props, State> {
+class HeaderSearchUI extends Component<Props, State> {
   inputRef = React.createRef<HTMLInputElement>();
 
   constructor(props: Props) {
@@ -80,5 +80,5 @@ class SearchBoxUI extends Component<Props, State> {
   }
 }
 
-export const SearchBox = connector(SearchBoxUI);
-export default SearchBox;
+export const HeaderSearch = connector(HeaderSearchUI);
+export default HeaderSearch;

@@ -17,13 +17,15 @@ interface Props {
 }
 
 export function File({ file }: Props): JSX.Element {
-  const { selected } = useSelector(
+  const { selected, search } = useSelector(
     ({
       filesReducer: {
         selection: { selected },
       },
-    }: RootState) => ({ selected })
+      appReducer: { search },
+    }: RootState) => ({ selected, search })
   );
+
   const dispatch = useAppDispatch();
   if (file.type === "header") {
     return (
@@ -36,6 +38,10 @@ export function File({ file }: Props): JSX.Element {
         </div>
       </div>
     );
+  }
+
+  if (search.searching && !file.name.includes(search.searchText || "")) {
+    return <></>;
   }
 
   function handleClick(ev: React.MouseEvent<HTMLDivElement>) {

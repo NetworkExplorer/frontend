@@ -7,6 +7,7 @@ export interface BubbleI {
 
 export interface SearchI {
   searching: boolean;
+  shouldFocus: boolean;
   searchText?: string;
   searchingAll?: boolean;
 }

@@ -11,6 +11,7 @@ const initState: AppStateI = {
   prompt: undefined,
   search: {
     searchText: "",
+    shouldFocus: false,
     searching: false,
     searchingAll: false,
   },

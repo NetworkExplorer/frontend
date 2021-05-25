@@ -224,7 +224,7 @@ const ContextMenuUI = ({
       document.addEventListener("keyup", keyUp);
       setListening(true);
     }
-  });
+  }, [isOpen]);
 
   const fileChange = async (e: React.FormEvent) => {
     if (!fileRef.current) return;

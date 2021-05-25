@@ -9,7 +9,7 @@ import {
   faSearch,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
-import SearchBox from "./SearchBox/SearchBox";
+import HeaderSearch from "./HeaderSearch/HeaderSearch";
 import { IconButton } from "@components";
 import { RootState, useAppDispatch } from "@store";
 import { setSidebar } from "@store/app";
@@ -122,7 +122,7 @@ export const Header = (): JSX.Element => {
         onClick={() => dispatch(setSidebar("TOGGLE"))}
         name="Menu"
       ></IconButton>
-      <SearchBox></SearchBox>
+      <HeaderSearch></HeaderSearch>
       <IconButton
         className={css.iconBtn}
         icon={faDownload}
