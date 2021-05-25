@@ -42,7 +42,8 @@ const mapDispatch = (dispatch: RootDispatch) => ({
     dispatch(setContextMenu(contextMenu)),
   setPrompt: (prompt?: PromptProps) => dispatch(setPrompt(prompt)),
   addBubble: (key: string, bubble: BubbleI) => dispatch(addBubble(key, bubble)),
-  getFolder: (path?: string) => dispatch(getFolder(path)),
+  getFolder: (path?: string, loading = true) =>
+    dispatch(getFolder(path, loading)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -92,7 +93,7 @@ const ContextMenuUI = ({
   let items = [
     {
       label: "Create folder",
-      func: () => onCreateFolder(setPrompt, addBubble),
+      func: () => withReload(onCreateFolder(setPrompt, addBubble)),
       name: css.createFolder,
       icon: faFolderOpen,
     },
@@ -252,6 +253,7 @@ const ContextMenuUI = ({
 
         // req.response holds response from the server
         console.log(req.response);
+        getFolder(undefined, false);
       });
     }
   };

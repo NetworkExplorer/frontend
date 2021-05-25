@@ -9,7 +9,9 @@ import { useSelector } from "react-redux";
 import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
 import { RootState, useAppDispatch } from "@store";
-import { setTerminal } from "@store/app";
+import { addBubble, setPrompt, setTerminal } from "@store/app";
+import { onCreateFolder } from "@lib";
+import { getFolder } from "@store/files";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen } = useSelector(
@@ -31,8 +33,13 @@ export const Sidebar = (): JSX.Element => {
         <SidebarLink
           name="New Folder"
           icon={faFolderPlus}
-          path="/"
-          // TODO onClick={}
+          onClick={async () => {
+            await onCreateFolder(
+              (prompt) => dispatch(setPrompt(prompt)),
+              (key, bubble) => dispatch(addBubble(key, bubble))
+            );
+            dispatch(getFolder(undefined, false) as any);
+          }}
         ></SidebarLink>
         <SidebarLink
           name="Terminal"
@@ -44,8 +51,10 @@ export const Sidebar = (): JSX.Element => {
         <SidebarLink
           name="Sign out"
           icon={faSignOutAlt}
-          path="/"
-          // TODO onClick={}
+          // path="/"
+          onClick={() => {
+            //
+          }} // TODO
         ></SidebarLink>
       </div>
     </div>

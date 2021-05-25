@@ -8,7 +8,12 @@ const initState: AppStateI = {
   sidebarOpen: false,
   terminalOpen: false,
   bubbles: new Map(),
-  prompt: undefined
+  prompt: undefined,
+  search: {
+    searchText: "",
+    searching: false,
+    searchingAll: false,
+  },
 };
 
 export const appReducer = (
@@ -26,16 +31,16 @@ export const appReducer = (
       if (action.payload === "TOGGLE") sidebar = !sidebar;
       return {
         ...state,
-        sidebarOpen: sidebar
-      }
+        sidebarOpen: sidebar,
+      };
     }
     case Acts.SET_TERMINAL: {
       let terminal = state.terminalOpen;
       if (action.payload === "TOGGLE") terminal = !terminal;
       return {
         ...state,
-        terminalOpen: terminal
-      }
+        terminalOpen: terminal,
+      };
     }
     case AppActionTypes.ADD_BUBBLE: {
       if (state.bubbles.get(action.payload.key)) {
@@ -59,8 +64,16 @@ export const appReducer = (
     case AppActionTypes.SET_PROMPT:
       return {
         ...state,
-        prompt: action.payload
-      }
+        prompt: action.payload,
+      };
+    case AppActionTypes.SET_SEARCH:
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          ...action.payload,
+        },
+      };
     default:
       return { ...state };
   }

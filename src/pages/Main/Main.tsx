@@ -5,6 +5,13 @@ import { getFolder } from "@store/files";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import css from "./Main.module.scss";
+import { HotKeys, KeyMap } from "react-hotkeys";
+import { setSearch } from "@store/app";
+
+const keyMap: KeyMap = {
+  DELETE_NODE: ["del", "backspace"],
+  SEARCH: "Control+f",
+};
 
 const MainPageUI = (): JSX.Element => {
   const state = useSelector(({ router: { location } }: RootState) => ({
@@ -14,8 +21,26 @@ const MainPageUI = (): JSX.Element => {
   useEffect(() => {
     dispatch(getFolder(normalizeURL(window.location.pathname)));
   }, [state.location]);
+
+  const handlers: {
+    [key: string]: (keyEvent?: KeyboardEvent) => void;
+  } = {
+    DELETE: (e) => {
+      //
+    },
+    SEARCH: (e) => {
+      e?.preventDefault();
+      e?.stopPropagation();
+      dispatch(
+        setSearch({
+          searching: true,
+        })
+      );
+    },
+  };
+
   return (
-    <div id={css.main}>
+    <HotKeys id={css.main} keyMap={keyMap} handlers={handlers}>
       <Header></Header>
       <div className={css.mainContent}>
         <Sidebar></Sidebar>
@@ -25,7 +50,7 @@ const MainPageUI = (): JSX.Element => {
         </div>
       </div>
       <Bubbles></Bubbles>
-    </div>
+    </HotKeys>
   );
 };
 

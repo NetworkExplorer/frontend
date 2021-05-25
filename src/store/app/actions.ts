@@ -1,16 +1,26 @@
 import { PromptProps } from "@components";
-import { BubbleI } from "@models";
-import { AppActionTypes, AppAddBubble, AppRemoveBubble, AppSetPrompt, AppSetSidebar, AppSetTerminal, SidebarActions, TerminalActions } from "./types";
+import { BubbleI, SearchI } from "@models";
+import {
+  AppActionTypes,
+  AppAddBubble,
+  AppRemoveBubble,
+  AppSetPrompt,
+  AppSetSearch,
+  AppSetSidebar,
+  AppSetTerminal,
+  SidebarActions,
+  TerminalActions,
+} from "./types";
 
 export const setSidebar = (action: SidebarActions): AppSetSidebar => ({
   type: AppActionTypes.SET_SIDEBAR,
-  payload: action
-})
+  payload: action,
+});
 
 export const setTerminal = (action: TerminalActions): AppSetTerminal => ({
   type: AppActionTypes.SET_TERMINAL,
-  payload: action
-})
+  payload: action,
+});
 
 export const addBubble = (key: string, bubble: BubbleI): AppAddBubble => {
   bubble.when = new Date();
@@ -23,31 +33,17 @@ export const addBubble = (key: string, bubble: BubbleI): AppAddBubble => {
   };
 };
 
-export const removeBubble = (key: string): AppRemoveBubble => {
-  return {
-    type: AppActionTypes.REMOVE_BUBBLE,
-    payload: key,
-  };
-};
+export const removeBubble = (key: string): AppRemoveBubble => ({
+  type: AppActionTypes.REMOVE_BUBBLE,
+  payload: key,
+});
 
-export const setPrompt = (prompt?: PromptProps): AppSetPrompt => {
-  return {
-    type: AppActionTypes.SET_PROMPT,
-    payload: prompt
-  }
-}
+export const setPrompt = (prompt?: PromptProps): AppSetPrompt => ({
+  type: AppActionTypes.SET_PROMPT,
+  payload: prompt,
+});
 
-// export const GetPokemon = () => async (
-//   dispatch: Dispatch<AppDispatchTypes>
-// ) => {
-//   try {
-//     dispatch({
-//       type: AppActionTypes.SET_LOADING,
-//       payload: true,
-//     });
-
-//     // async stuff here
-//   } catch (e) {
-//     console.log('error')
-//   }
-// };
+export const setSearch = (search: SearchI): AppSetSearch => ({
+  type: AppActionTypes.SET_SEARCH,
+  payload: search,
+});

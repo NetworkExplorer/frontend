@@ -8,11 +8,11 @@ const initState: FilesStateI = {
   loading: false,
   selection: {
     lastSelection: undefined,
-    selected: new Set<FileI>()
+    selected: new Set<FileI>(),
   },
   menu: {
     isOpen: false,
-  }
+  },
 };
 
 export const filesReducer = (
@@ -23,22 +23,26 @@ export const filesReducer = (
     case Acts.LOAD_FOLDER:
       return {
         ...state,
-        folder: action.payload
-      }
+        folder: action.payload,
+      };
     case Acts.SET_LOADING:
       return {
         ...state,
-        loading: action.payload
-      }
+        loading: action.payload,
+      };
     case Acts.SELECT_FILE: {
       return {
         ...state,
         selection: {
           ...state.selection,
           lastSelection: action.payload,
-          selected: new Set([action.payload])
-        }
-      }
+          selected: new Set([action.payload]),
+        },
+        menu: {
+          ...state.menu,
+          file: action.payload,
+        },
+      };
     }
     case Acts.ADD_SELECTION: {
       return {
@@ -46,9 +50,9 @@ export const filesReducer = (
         selection: {
           ...state.selection,
           lastSelection: action.payload,
-          selected: new Set(state.selection.selected).add(action.payload)
-        }
-      }
+          selected: new Set(state.selection.selected).add(action.payload),
+        },
+      };
     }
     case Acts.REMOVE_SELECTION: {
       const removed = new Set(state.selection.selected);
@@ -58,9 +62,9 @@ export const filesReducer = (
         selection: {
           ...state.selection,
           lastSelection: undefined,
-          selected: removed
-        }
-      }
+          selected: removed,
+        },
+      };
     }
     case Acts.SHIFT_SELECTION: {
       if (!state.folder) return state;
@@ -85,33 +89,44 @@ export const filesReducer = (
         nowI = lastI;
         lastI = temp;
       }
-      files.filter((_, i) => lastI <= i && i <= nowI).forEach((f) => selection.add(f));
+      files
+        .filter((_, i) => lastI <= i && i <= nowI)
+        .forEach((f) => selection.add(f));
 
       return {
         ...state,
         selection: {
           ...state.selection,
           lastSelection: action.payload,
-          selected: selection
-        }
-      }
+          selected: selection,
+        },
+      };
     }
     case Acts.CLEAR_SELECTION:
       return {
         ...state,
         selection: {
           lastSelection: undefined,
-          selected: new Set<FileI>()
-        }
-      }
+          selected: new Set<FileI>(),
+        },
+      };
     case Acts.SET_CONTEXT_MENU:
       return {
         ...state,
         menu: {
           ...state.menu,
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
+    case Acts.ADD_FILES:
+      if (!state.folder) return state;
+      return {
+        ...state,
+        folder: {
+          ...state.folder,
+          files: [...state.folder.files, ...action.payload],
+        },
+      };
     default:
       return { ...state };
   }

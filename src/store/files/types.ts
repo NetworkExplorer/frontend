@@ -34,6 +34,7 @@ export enum FilesActionTypes {
   SHIFT_SELECTION = "files/shift-selection",
   CLEAR_SELECTION = "files/clear-selection",
   SET_CONTEXT_MENU = "files/set-context-menu",
+  ADD_FILES = "files/set-file",
 }
 
 const Acts = FilesActionTypes;
@@ -77,6 +78,11 @@ export interface FilesSetContextMenu {
   payload: ContextMenuProps;
 }
 
+export interface FilesAddFiles {
+  type: typeof Acts.ADD_FILES;
+  payload: FileI[];
+}
+
 export type FilesActions =
   | FilesLoadFolder
   | FilesSetLoading
@@ -85,4 +91,5 @@ export type FilesActions =
   | FilesRemoveSelection
   | FilesShiftSelection
   | FilesClearSelection
-  | FilesSetContextMenu;
+  | FilesSetContextMenu
+  | FilesAddFiles;

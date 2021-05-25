@@ -3,6 +3,7 @@ import { addBubble } from "@store/app";
 import {
   ContextMenuProps,
   FilesActionTypes,
+  FilesAddFiles,
   FilesAddSelection,
   FilesClearSelection,
   FilesRemoveSelection,
@@ -18,42 +19,44 @@ export const setLoading = (loading: boolean): FilesSetLoading => ({
   payload: loading,
 });
 
-export const getFolder: FilesThunk = (path?: string) => async (dispatch) => {
-  dispatch(setLoading(true));
-  path = path || normalizeURL(window.location.pathname);
-  try {
-    const res = await Endpoints.getInstance().getFolder(path);
-    res.data.files = convertFiles(res.data.files);
-    dispatch({
-      type: FilesActionTypes.LOAD_FOLDER,
-      payload: res.data,
-    });
-    dispatch({
-      type: FilesActionTypes.CLEAR_SELECTION,
-    });
+export const getFolder: FilesThunk =
+  (path?: string, loading = true) =>
+  async (dispatch) => {
+    loading && dispatch(setLoading(true));
+    path = path || normalizeURL(window.location.pathname);
+    try {
+      const res = await Endpoints.getInstance().getFolder(path);
+      res.data.files = convertFiles(res.data.files);
+      dispatch({
+        type: FilesActionTypes.LOAD_FOLDER,
+        payload: res.data,
+      });
+      dispatch({
+        type: FilesActionTypes.CLEAR_SELECTION,
+      });
 
-    dispatch(clearSelection());
-    return dispatch(setLoading(false));
-  } catch (e) {
-    dispatch({
-      type: FilesActionTypes.LOAD_FOLDER,
-      payload: {
-        name: "n/a",
-        files: [],
-        size: 0,
-        type: "FOLDER",
-      },
-    });
-    dispatch(setLoading(false));
-    return dispatch(
-      addBubble("getFolder-error", {
-        title: `could not navigate to folder ${path}`,
-        type: "ERROR",
-        message: e.message,
-      })
-    );
-  }
-};
+      dispatch(clearSelection());
+      return dispatch(setLoading(false));
+    } catch (e) {
+      dispatch({
+        type: FilesActionTypes.LOAD_FOLDER,
+        payload: {
+          name: "n/a",
+          files: [],
+          size: 0,
+          type: "FOLDER",
+        },
+      });
+      dispatch(setLoading(false));
+      return dispatch(
+        addBubble("getFolder-error", {
+          title: `could not navigate to folder ${path}`,
+          type: "ERROR",
+          message: e.message,
+        })
+      );
+    }
+  };
 
 export const addSelection = (file: FileI): FilesAddSelection => ({
   type: FilesActionTypes.ADD_SELECTION,
@@ -84,4 +87,9 @@ export const setContextMenu = (
 ): FilesSetContextMenu => ({
   type: FilesActionTypes.SET_CONTEXT_MENU,
   payload: menu,
+});
+
+export const addFiles = (files: FileI[]): FilesAddFiles => ({
+  type: FilesActionTypes.ADD_FILES,
+  payload: files,
 });

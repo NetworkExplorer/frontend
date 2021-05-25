@@ -39,24 +39,29 @@ export function onRename(
   });
 }
 
-export function onCreateFolder(setPrompt: PFunc, addBubble: BFunc): void {
-  setPrompt({
-    fieldName: "folder name",
-    initial: "",
-    //eslint-disable-next-line
-    callback: async (value: string) => {
-      try {
-        await Endpoints.getInstance().mkdir(
-          normalizeURL(window.location.pathname) + value
-        );
-      } catch (err) {
-        addBubble("mkdir-error", {
-          title: `Failed to create directory "${value}"`,
-          message: err.message,
-          type: "ERROR",
-        });
-      }
-    },
+export function onCreateFolder(
+  setPrompt: PFunc,
+  addBubble: BFunc
+): Promise<void> {
+  return new Promise((resolve) => {
+    setPrompt({
+      fieldName: "folder name",
+      initial: "",
+      callback: async (value: string) => {
+        try {
+          await Endpoints.getInstance().mkdir(
+            normalizeURL(window.location.pathname) + value
+          );
+        } catch (err) {
+          addBubble("mkdir-error", {
+            title: `Failed to create directory "${value}"`,
+            message: err.message,
+            type: "ERROR",
+          });
+        }
+        resolve();
+      },
+    });
   });
 }
 
@@ -102,5 +107,5 @@ export function onFileDownload(file: FileI): void {
 export function onFolderDownload(file: FileI): void {
   if (!file) return;
   const url = normalizeURL(window.location.pathname);
-  Endpoints.getInstance().getFile(url + file.name, `${file.name}.zip`);
+  Endpoints.getInstance().getFiles([url + file.name], `${file.name}.zip`);
 }

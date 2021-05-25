@@ -4,3 +4,9 @@ export interface BubbleI {
   message?: string;
   when?: Date;
 }
+
+export interface SearchI {
+  searching: boolean;
+  searchText?: string;
+  searchingAll?: boolean;
+}

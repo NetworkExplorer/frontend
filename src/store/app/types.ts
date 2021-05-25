@@ -1,5 +1,5 @@
 import { PromptProps } from "@components";
-import { BubbleI } from "@models";
+import { BubbleI, SearchI } from "@models";
 
 export interface AppStateI {
   loading: boolean;
@@ -8,6 +8,7 @@ export interface AppStateI {
   user?: User;
   bubbles: Map<string, BubbleI>;
   prompt?: PromptProps;
+  search: SearchI;
 }
 
 export enum AppActionTypes {
@@ -17,6 +18,7 @@ export enum AppActionTypes {
   ADD_BUBBLE = "app/add-bubble",
   REMOVE_BUBBLE = "app/remove-bubble",
   SET_PROMPT = "app/set-prompt",
+  SET_SEARCH = "app/set-search",
 }
 
 const Acts = AppActionTypes;
@@ -49,12 +51,12 @@ export interface AppAddBubble {
   payload: {
     key: string;
     bubble: BubbleI;
-  }
+  };
 }
 
 export interface AppRemoveBubble {
   type: typeof Acts.REMOVE_BUBBLE;
-  payload: string
+  payload: string;
 }
 
 export interface AppSetPrompt {
@@ -62,4 +64,16 @@ export interface AppSetPrompt {
   payload?: PromptProps;
 }
 
-export type AppActions = AppLogin | AppSetSidebar | AppSetTerminal | AppAddBubble | AppRemoveBubble | AppSetPrompt;
+export interface AppSetSearch {
+  type: typeof Acts.SET_SEARCH;
+  payload: SearchI;
+}
+
+export type AppActions =
+  | AppLogin
+  | AppSetSidebar
+  | AppSetTerminal
+  | AppAddBubble
+  | AppRemoveBubble
+  | AppSetPrompt
+  | AppSetSearch;

@@ -4,7 +4,7 @@ import { RootDispatch, RootState } from "@store";
 import { connect, ConnectedProps } from "react-redux";
 import { setTerminal, TerminalActions } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { findElInTree } from "@lib";
 
 const mapState = ({ appReducer: { terminalOpen } }: RootState) => ({
@@ -57,11 +57,11 @@ class TerminalUI extends Component<Props> {
               <FontAwesomeIcon icon={faAngleUp}></FontAwesomeIcon>
             </div>
           </button>
-          <button className={css.closeBtn}>
+          {/* <button className={css.closeBtn}>
             <div className={css.iconWrapper}>
               <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
             </div>
-          </button>
+          </button> */}
         </div>
         <div className={css.content}>
           Content here

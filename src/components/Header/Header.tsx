@@ -5,8 +5,8 @@ import {
   faCog,
   faDownload,
   faFile,
-  faFilter,
   faFolder,
+  faSearch,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import SearchBox from "./SearchBox/SearchBox";
@@ -23,6 +23,7 @@ import {
   onFolderDownload,
 } from "@lib";
 import { useSelector } from "react-redux";
+import { getFolder } from "@store/files";
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -82,6 +83,8 @@ export const Header = (): JSX.Element => {
 
         // req.response holds response from the server
         console.log(req.response);
+        console.log(file);
+        dispatch(getFolder(undefined, false) as any);
       });
     }
   };
@@ -156,6 +159,11 @@ export const Header = (): JSX.Element => {
           </button>
         </div>
       </label>
+      <IconButton
+        name="Search"
+        className={css.iconBtn}
+        icon={faSearch}
+      ></IconButton>
       <IconButton
         className={css.iconBtn}
         icon={faCog}
