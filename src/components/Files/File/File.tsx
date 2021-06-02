@@ -92,7 +92,7 @@ export function File({ file }: Props): JSX.Element {
   function onDragStart(e: React.DragEvent<HTMLDivElement>) {
     // e.stopPropagation();
     // e.preventDefault();
-    if (!selected.has(file)) selectFile(file);
+    if (!selected.has(file)) dispatch(selectFile(file));
     const s: FileI[] = [];
     for (const f of selected.values()) {
       s.push(f);
