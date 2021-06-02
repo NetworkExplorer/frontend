@@ -18,3 +18,31 @@
 .loading {
   position: absolute;
 }
+
+.drag {
+  position: absolute;
+  bottom: -3px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  // height: 5em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1em;
+  border-radius: 3px;
+  // left: 50%;
+  transform: translateY(100%);
+  transition: $dur transform ease;
+
+  .dragIcon {
+    height: 4em;
+    width: 4em;
+    margin-bottom: 0.5em;
+  }
+
+  &.dragging {
+    transform: translateY(0);
+  }
+}

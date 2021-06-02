@@ -57,7 +57,6 @@ const MainPageUI = (): JSX.Element => {
         (prompt?: PromptProps) => dispatch(setPrompt(prompt)),
         (key: string, bubble: BubbleI) => dispatch(addBubble(key, bubble))
       );
-      console.log("d");
       dispatch(getFolder());
     }
   };
@@ -70,6 +69,15 @@ const MainPageUI = (): JSX.Element => {
       setListening(false);
     }
   }, [selected]);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "F5") {
+        e.preventDefault();
+        e.stopPropagation();
+        dispatch(getFolder());
+      }
+    });
+  }, []);
 
   const handlers: HandlerType = {
     SEARCH: (e) => {

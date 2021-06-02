@@ -1,5 +1,6 @@
 @import "/src/global/variables";
-$fileHeight: 3.5em;
+$fileHeight: 4em;
+// $fileHeight: calc(#{fileHeight} - 3px * 2);
 
 .file {
   padding: 0 20px;
@@ -15,19 +16,26 @@ $fileHeight: 3.5em;
   }
 }
 
+.fileWrapperWrapper {
+  max-width: 80em;
+  width: 100%;
+  border-top: 1px solid rgba(#444, 0.5);
+  margin: 0 auto;
+  height: 100%;
+}
+
 $hoverColor: rgba(#444, 0.2);
 .fileWrapper {
-  max-width: 80em;
-  border-top: 1px solid rgba(#444, 0.5);
   // margin: 0 5px;
   width: 100%;
-  margin: 0 auto;
   display: flex;
   flex-direction: row;
   height: 100%;
   gap: 5px;
   transition: 150ms background ease;
   cursor: pointer;
+  height: 100%;
+  border: 3px solid transparent;
 
   &:hover {
     background: $hoverColor;
@@ -71,9 +79,13 @@ $hoverColor: rgba(#444, 0.2);
 
 .header {
   background: #dadada;
+  border-top: none;
+
+  .fileWrapperWrapper {
+    border-top: none;
+  }
 
   .fileWrapper {
-    border-top: none;
     cursor: default !important;
 
     &:hover {
@@ -88,4 +100,15 @@ $hoverColor: rgba(#444, 0.2);
   &:hover {
     background: rgba(92, 178, 231, 0.8);
   }
+}
+
+.file-highlight {
+  .file {
+    background-color: rgba(167, 235, 43, 0.473);
+  }
+}
+
+.dragover {
+  border: 3px solid lightblue;
+  background-color: #dadada;
 }

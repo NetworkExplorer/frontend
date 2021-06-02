@@ -1,5 +1,6 @@
 import { PromptProps } from "@components";
 import { BubbleI } from "@models";
+// import { FileSystemEntry } from "@models/file";
 import Endpoints from "./Endpoints";
 import { FileI } from "./types";
 import { normalizeURL } from "./util";
@@ -78,6 +79,32 @@ export function onFilesDownload(selected: Set<FileI>): void {
   Endpoints.getInstance().getFiles(urls);
 }
 
+export async function onMove(
+  files: FileI[],
+  folder: FileI,
+  addBubble: BFunc
+): Promise<void> {
+  if (files.length <= 0) return;
+
+  const base = normalizeURL(window.location.pathname);
+  try {
+    await Promise.all(
+      files.map((f) =>
+        Endpoints.getInstance().move(
+          base + f.name,
+          `${base}${folder.name}/${f.name}`
+        )
+      )
+    );
+  } catch (e) {
+    addBubble("move-error", {
+      title: "Could not move files/folders",
+      type: "ERROR",
+      message: e.msg,
+    });
+  }
+}
+
 export function onDelete(
   selected: Set<FileI>,
   setPrompt: PFunc,
@@ -86,12 +113,10 @@ export function onDelete(
   if (selected.size <= 0) return Promise.resolve();
 
   return new Promise((resolve) => {
-    console.log("dd");
     setPrompt({
       fieldName: "delete",
       type: "DELETE",
       callback: async (value: string | "true") => {
-        console.log("dd");
         if (value === "true") {
           const files: string[] = [];
           for (const file of selected) {
@@ -111,7 +136,6 @@ export function onDelete(
           }
         }
         resolve();
-        console.log("after");
       },
     });
   });
@@ -127,4 +151,85 @@ export function onFolderDownload(file: FileI): void {
   if (!file) return;
   const url = normalizeURL(window.location.pathname);
   Endpoints.getInstance().getFiles([url + file.name], `${file.name}.zip`);
+}
+
+export async function onFileDragUpload(
+  entry: FileSystemEntry | null,
+  addBubble: BFunc,
+  getFolder: () => void,
+  relativePath?: string
+): Promise<void> {
+  if (!entry) return;
+  const base = normalizeURL(window.location.pathname, false);
+  const folder = `${base}${relativePath ? relativePath + "/" : ""}`;
+  try {
+    if (entry.isDirectory) {
+      const dir = entry as FileSystemDirectoryEntry;
+      await Endpoints.getInstance().mkdir(`${folder}${entry.name}`);
+      const files = await listFilesInDirectory(dir);
+      await Promise.all(
+        files.map((f) =>
+          onFileDragUpload(
+            f,
+            addBubble,
+            getFolder,
+            (relativePath ? relativePath + "/" : "") + dir.name
+          )
+        )
+      );
+    } else if (entry.isFile) {
+      const fileEntry = entry as FileSystemFileEntry;
+      const file = await getFile(fileEntry);
+      const req = Endpoints.getInstance().uploadFile(file, folder);
+      // upload progress event
+      req.upload.addEventListener("progress", function (e) {
+        // upload progress as percentage
+        const percent_completed = (e.loaded / e.total) * 100;
+        console.log(percent_completed);
+      });
+
+      // req finished event
+      req.addEventListener("load", function () {
+        // HTTP status message (200, 404 etc)
+        console.log(req.status);
+
+        // req.response holds response from the server
+        console.log(req.response);
+        console.log(file);
+        getFolder();
+      });
+    }
+  } catch (e) {
+    addBubble(`file-error-${entry.name}`, {
+      title: `Could not upload ${entry.name}`,
+      type: "ERROR",
+      message: e.msg,
+    });
+  }
+}
+
+function getFile(item: FileSystemFileEntry): Promise<File> {
+  return new Promise((resolve, reject) => {
+    item.file((f) => resolve(f), reject);
+  });
+}
+
+function listFilesInDirectory(
+  dir: FileSystemDirectoryEntry
+): Promise<FileSystemEntry[]> {
+  return new Promise((resolve, reject) => {
+    const r = dir.createReader();
+    const files: FileSystemEntry[] = [];
+    const doBatch = () => {
+      r.readEntries((entries) => {
+        if (entries.length > 0) {
+          entries.forEach((e) => files.push(e));
+          doBatch();
+        } else {
+          resolve(files);
+        }
+      }, reject);
+    };
+    doBatch();
+  });
 }
