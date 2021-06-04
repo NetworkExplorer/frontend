@@ -1,4 +1,4 @@
-import { DefRes, FolderRes } from "./responses";
+import { DefRes, FolderRes, SuggestionsRes } from "./responses";
 import { normalizeURL } from "./util";
 
 const ENV = process.env.NODE_ENV;
@@ -171,6 +171,12 @@ export class Endpoints {
         false
       )}&newPath=${normalizeURL(to, false)}`,
       "PUT"
+    );
+  }
+
+  async fetchSuggestions(path: string, max: number): Promise<SuggestionsRes> {
+    return this.fetchFromAPI(
+      `${this.baseURL}/suggest?path=${path}&max=${max}`
     );
   }
 }

@@ -101,7 +101,11 @@ class PromptUI extends React.Component<Props, State> {
             setPrompt(undefined);
           }}
         >
-          <div className={css.top}>Are you sure you want to delete?</div>
+          <div className={css.top}>
+            {prompt?.type === "INPUT"
+              ? `Enter a value for ${prompt?.fieldName}`
+              : "Are you sure you want to delete?"}
+          </div>
           {prompt?.type === "INPUT" && (
             <div className={css.input}>
               <input

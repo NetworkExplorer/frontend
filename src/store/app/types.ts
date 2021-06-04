@@ -1,5 +1,12 @@
 import { PromptProps } from "@components";
 import { BubbleI, SearchI } from "@models";
+import { RootActions } from "@store";
+import { ActionCreator } from "redux";
+import { ThunkAction } from "redux-thunk";
+
+export type AppThunk<ReturnType = void> = ActionCreator<
+  ThunkAction<ReturnType, AppStateI, unknown, RootActions>
+>;
 
 export interface AppStateI {
   loading: boolean;
@@ -9,6 +16,7 @@ export interface AppStateI {
   bubbles: Map<string, BubbleI>;
   prompt?: PromptProps;
   search: SearchI;
+  suggestions: string[];
 }
 
 export enum AppActionTypes {
@@ -19,6 +27,7 @@ export enum AppActionTypes {
   REMOVE_BUBBLE = "app/remove-bubble",
   SET_PROMPT = "app/set-prompt",
   SET_SEARCH = "app/set-search",
+  FETCH_SUGGESTIONS = "app/fetch-suggestions"
 }
 
 const Acts = AppActionTypes;
@@ -69,6 +78,11 @@ export interface AppSetSearch {
   payload: SearchI;
 }
 
+export interface AppFetchSuggestions {
+  type: typeof Acts.FETCH_SUGGESTIONS;
+  payload: string[];
+}
+
 export type AppActions =
   | AppLogin
   | AppSetSidebar
@@ -76,4 +90,5 @@ export type AppActions =
   | AppAddBubble
   | AppRemoveBubble
   | AppSetPrompt
-  | AppSetSearch;
+  | AppSetSearch
+  | AppFetchSuggestions;

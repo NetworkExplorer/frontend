@@ -17,6 +17,10 @@ export interface FolderRes extends DefRes {
   data: FolderResInner;
 }
 
+export interface SuggestionsRes extends DefRes {
+  data: string[];
+}
+
 export type WSData = {
   cmd: string;
   end: false;

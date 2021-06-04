@@ -39,10 +39,10 @@
   input {
     z-index: 1;
     color: white;
+    font-family: monospace;
     position: absolute;
     height: 100%;
     width: 100%;
-    font-family: monospace;
     line-height: $headerHeight;
     font-size: 1.5em;
     background: transparent;
@@ -53,4 +53,51 @@
       box-shadow: none;
     }
   }
+}
+
+$suggestHeight: 1.5;
+$radius: 5px;
+
+.results {
+  background: $dark-bg-1;
+  border-radius: 0 0 $radius $radius;
+  width: calc(100% - #{$radius} * 2);
+  transition: $dur height ease, $dur padding ease;
+  height: 0;
+  padding: 0 $radius * 2;
+  overflow: hidden;
+  text-overflow: hidden;
+  margin: 0 auto;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    width: calc(100% - #{$radius} * 4);
+    content: " ";
+    height: #{$suggestHeight}em;
+    border-radius: $radius;
+    transform: translateY(calc(100% * var(--position)));
+    background: $dark-bg-2;
+    z-index: -1;
+  }
+
+  & > * {
+    height: #{$suggestHeight}em;
+    line-height: $suggestHeight;
+    border-radius: $radius;
+    width: 100%;
+    font-family: monospace;
+    font-size: 1rem;
+    background: transparent;
+    position: relative;
+
+    &:hover {
+      background: $dark-bg-2;
+    }
+  }
+}
+
+.resultsOpen {
+  height: calc(var(--items) * #{$suggestHeight}em + #{$radius} * 4);
+  padding: $radius * 2;
 }

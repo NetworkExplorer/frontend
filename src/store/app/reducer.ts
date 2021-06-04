@@ -15,6 +15,7 @@ const initState: AppStateI = {
     searching: false,
     searchingAll: false,
   },
+  suggestions: []
 };
 
 export const appReducer = (
@@ -75,6 +76,11 @@ export const appReducer = (
           ...action.payload,
         },
       };
+    case AppActionTypes.FETCH_SUGGESTIONS:
+      return {
+        ...state,
+        suggestions: action.payload
+      }
     default:
       return { ...state };
   }

@@ -1,4 +1,5 @@
 import { PromptProps } from "@components";
+import { Endpoints } from "@lib";
 import { BubbleI, SearchI } from "@models";
 import {
   AppActionTypes,
@@ -10,6 +11,8 @@ import {
   AppSetTerminal,
   SidebarActions,
   TerminalActions,
+  AppThunk,
+  AppFetchSuggestions
 } from "./types";
 
 export const setSidebar = (action: SidebarActions): AppSetSidebar => ({
@@ -46,4 +49,24 @@ export const setPrompt = (prompt?: PromptProps): AppSetPrompt => ({
 export const setSearch = (search: SearchI): AppSetSearch => ({
   type: AppActionTypes.SET_SEARCH,
   payload: search,
+});
+
+export const fetchSuggestions: AppThunk = (path: string, max = 5) => async (dispatch) => {
+  try {
+    const res = await Endpoints.getInstance().fetchSuggestions(path, max);
+    dispatch({
+      type: AppActionTypes.FETCH_SUGGESTIONS,
+      payload: res.data,
+    })
+  } catch (e) {
+    return dispatch(addBubble("suggestions-error", {
+      title: "could not fetch suggestions",
+      type: "ERROR"
+    }))
+  }
+}
+
+export const clearSuggestions = (): AppFetchSuggestions => ({
+  type: AppActionTypes.FETCH_SUGGESTIONS,
+  payload: [],
 });
