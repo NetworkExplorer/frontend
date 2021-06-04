@@ -1,12 +1,11 @@
-import SockJS from "sockjs-client";
 import { DefRes, FolderRes } from "./responses";
-import { Stomp } from "@stomp/stompjs";
 import { normalizeURL } from "./util";
 
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
   API_URL = "/api/v1";
   BASE = ENV === "development" ? "http://localhost:16091" : "";
+  // private ws: WebSocket;
 
   get dev(): boolean {
     return ENV === "development";
@@ -38,25 +37,29 @@ export class Endpoints {
       (window as any).reCreateEndpoints = this.reCreateInstance;
       (window as any).endpoints = this;
     }
+    // this.ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`)
   }
 
   reCreateInstance(): void {
     if (ENV === "development") {
+      // this.ws.close();
       Endpoints._instance = new Endpoints();
     }
   }
 
-  static testWS(): void {
-    const sock = new SockJS("http://localhost:16091/websocket");
-    const stompClient = Stomp.over(sock);
-    stompClient.connect({}, function (frame: any) {
-      // setConnected(true);
-      console.log("Connected: " + frame);
-      stompClient.subscribe("/user/queue/output", function (greeting) {
-        console.log(greeting.body);
-      });
-      stompClient.send("/app/exec", {}, "dir");
-    });
+  startExec(cwd: string, cmdStr: string, callback: (ev: MessageEvent) => void, error: (e: Event) => void): any {
+    try {
+      const ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`);
+      ws.onmessage = callback;
+      ws.onclose = error
+      ws.onerror = error
+      ws.onopen = () => {
+        const cmd = `{cwd: "${cwd}", cmd: "${cmdStr}"}`;
+        ws.send(cmd)
+      }
+    } catch (e) {
+      error(e)
+    }
   }
 
   fetchFromAPI = async (

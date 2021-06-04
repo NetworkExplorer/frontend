@@ -70,13 +70,15 @@ const MainPageUI = (): JSX.Element => {
     }
   }, [selected]);
   useEffect(() => {
-    document.addEventListener("keydown", (e) => {
+    const keydown = (e: KeyboardEvent) => {
       if (e.key === "F5") {
         e.preventDefault();
         e.stopPropagation();
         dispatch(getFolder());
       }
-    });
+    };
+    document.addEventListener("keydown", keydown);
+    return () => document.removeEventListener("keydown", keydown);
   }, []);
 
   const handlers: HandlerType = {

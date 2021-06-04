@@ -7,7 +7,6 @@ import store from "@store";
 import { Endpoints } from "@lib";
 
 Endpoints.getInstance();
-Endpoints.testWS();
 
 ReactDOM.render(
   <Provider store={store}>
