@@ -55,13 +55,13 @@
   }
 }
 
-$suggestHeight: 1.5;
+$suggestHeight: 1.8;
 $radius: 5px;
 
 .results {
   background: $dark-bg-1;
   border-radius: 0 0 $radius $radius;
-  width: calc(100% - #{$radius} * 2);
+  width: 100%;
   transition: $dur height ease, $dur padding ease;
   height: 0;
   padding: 0 $radius * 2;
@@ -72,13 +72,14 @@ $radius: 5px;
 
   &::before {
     position: absolute;
-    width: calc(100% - #{$radius} * 4);
+    width: 100%;
     content: " ";
     height: #{$suggestHeight}em;
     border-radius: $radius;
     transform: translateY(calc(100% * var(--position)));
     background: $dark-bg-2;
-    z-index: -1;
+    z-index: 1;
+    transition: $dur transform ease;
   }
 
   & > * {
@@ -90,6 +91,8 @@ $radius: 5px;
     font-size: 1rem;
     background: transparent;
     position: relative;
+    z-index: 2;
+    padding-left: 5px;
 
     &:hover {
       background: $dark-bg-2;

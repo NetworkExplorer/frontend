@@ -29,6 +29,7 @@ interface State {
   position: number;
 }
 
+const EMPTY_POSITION = -2;
 class HeaderSearchUI extends Component<Props, State> {
   inputRef = React.createRef<HTMLInputElement>();
   timeout = -1;
@@ -36,9 +37,9 @@ class HeaderSearchUI extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      path: this.props.location.pathname,
+      path: decodeURI(window.location.pathname),
       focused: false,
-      position: -1,
+      position: EMPTY_POSITION,
     };
   }
 
@@ -50,8 +51,11 @@ class HeaderSearchUI extends Component<Props, State> {
       this.setState({ path: decodeURI(window.location.pathname) });
       this.props.clearSuggestions();
     }
-    if (this.props.suggestions.length === 0 && this.state.position !== -1) {
-      this.setState({ position: -1 });
+    if (
+      this.props.suggestions.length === 0 &&
+      this.state.position !== EMPTY_POSITION
+    ) {
+      this.setState({ position: EMPTY_POSITION });
     }
   }
 
@@ -64,8 +68,8 @@ class HeaderSearchUI extends Component<Props, State> {
   handlePath = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
       path: e.target.value,
+      position: EMPTY_POSITION,
     });
-    this.setState({ position: -1 });
     this.props.clearSuggestions();
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.getSuggestions, 500) as unknown as number;
@@ -73,7 +77,7 @@ class HeaderSearchUI extends Component<Props, State> {
 
   getSuggestions = () => {
     this.props.fetchSuggestions(this.state.path);
-    this.setState({ position: -1 });
+    this.setState({ position: EMPTY_POSITION });
   };
 
   onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -82,7 +86,7 @@ class HeaderSearchUI extends Component<Props, State> {
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         e?.preventDefault();
         e?.stopPropagation();
-        if (this.state.position === -1) {
+        if (this.state.position < 0) {
           if (e.key === "ArrowDown") {
             this.setState({ position: 0 });
           } else {
@@ -96,7 +100,7 @@ class HeaderSearchUI extends Component<Props, State> {
           this.setState({ position: newPosition });
         }
       } else if (e.key === "Escape") {
-        this.setState({ position: -1 });
+        this.setState({ position: EMPTY_POSITION });
       }
     }
   };
@@ -104,7 +108,7 @@ class HeaderSearchUI extends Component<Props, State> {
   loadSuggestion(i?: number) {
     const index = i || this.state.position;
     let path = this.state.path;
-    if (index > -1) {
+    if (index > EMPTY_POSITION) {
       path = this.props.suggestions[index] || path;
     }
 
@@ -127,7 +131,9 @@ class HeaderSearchUI extends Component<Props, State> {
               value={path}
               onChange={this.handlePath}
               onFocus={() => this.setState({ focused: true })}
-              onBlur={() => this.setState({ focused: false })}
+              onBlur={() =>
+                this.setState({ focused: false, position: EMPTY_POSITION })
+              }
               onKeyDown={this.onKeyDown}
             />
           </label>
@@ -138,8 +144,7 @@ class HeaderSearchUI extends Component<Props, State> {
             style={
               {
                 "--items": this.props.suggestions.length,
-                "--position":
-                  this.state.position === -1 ? -2 : this.state.position,
+                "--position": this.state.position,
               } as React.CSSProperties
             }
           >
