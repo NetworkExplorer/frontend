@@ -16,6 +16,7 @@ $menu-item-height: 2.75em;
   align-items: flex-start;
   flex-direction: column;
   box-shadow: none;
+  z-index: 1;
 
   button {
     color: $dark-bg;

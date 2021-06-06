@@ -2,6 +2,7 @@ import { PromptProps } from "@components";
 import { BubbleI } from "@models";
 // import { FileSystemEntry } from "@models/file";
 import Endpoints from "./Endpoints";
+import { getCurrentFilesPath } from "./routes";
 import { FileI } from "./types";
 import { normalizeURL } from "./util";
 
@@ -21,15 +22,14 @@ export function onRename(
       type: "INPUT",
       callback: (val) => {
         if (file.type !== "header") {
-          const base = normalizeURL(window.location.pathname);
+          const base = normalizeURL(getCurrentFilesPath());
           try {
             Endpoints.getInstance().move(base + file.name, base + val);
             resolve();
           } catch (err) {
             addBubble("rename-error", {
-              title: `Could not rename ${
-                file.type === "FILE" ? "file" : "folder"
-              }`,
+              title: `Could not rename ${file.type === "FILE" ? "file" : "folder"
+                }`,
               type: "ERROR",
               message: `renaming of ${file.name} failed`,
             });
@@ -53,7 +53,7 @@ export function onCreateFolder(
       callback: async (value: string) => {
         try {
           await Endpoints.getInstance().mkdir(
-            normalizeURL(window.location.pathname) + value
+            normalizeURL(getCurrentFilesPath()) + value
           );
         } catch (err) {
           addBubble("mkdir-error", {
@@ -70,7 +70,7 @@ export function onCreateFolder(
 
 export function onFilesDownload(selected: Set<FileI>): void {
   if (selected.size <= 0) return;
-  const url = normalizeURL(window.location.pathname);
+  const url = normalizeURL(getCurrentFilesPath());
 
   const urls = [];
   for (const f of selected) {
@@ -86,7 +86,7 @@ export async function onMove(
 ): Promise<void> {
   if (files.length <= 0) return;
 
-  const base = normalizeURL(window.location.pathname);
+  const base = normalizeURL(getCurrentFilesPath());
   try {
     await Promise.all(
       files.map((f) =>
@@ -121,7 +121,7 @@ export function onDelete(
           const files: string[] = [];
           for (const file of selected) {
             files.push(
-              normalizeURL(window.location.pathname, false) + file.name
+              normalizeURL(getCurrentFilesPath(), false, false) + "/" + file.name
             );
           }
 
@@ -143,13 +143,13 @@ export function onDelete(
 
 export function onFileDownload(file: FileI): void {
   if (!file) return;
-  const url = normalizeURL(window.location.pathname);
+  const url = normalizeURL(getCurrentFilesPath());
   Endpoints.getInstance().getFile(url + file.name, file.name);
 }
 
 export function onFolderDownload(file: FileI): void {
   if (!file) return;
-  const url = normalizeURL(window.location.pathname);
+  const url = normalizeURL(getCurrentFilesPath());
   Endpoints.getInstance().getFiles([url + file.name], `${file.name}.zip`);
 }
 
@@ -160,7 +160,7 @@ export async function onFileDragUpload(
   relativePath?: string
 ): Promise<void> {
   if (!entry) return;
-  const base = normalizeURL(window.location.pathname, false);
+  const base = normalizeURL(getCurrentFilesPath());
   const folder = `${base}${relativePath ? relativePath + "/" : ""}`;
   try {
     if (entry.isDirectory) {
@@ -198,6 +198,13 @@ export async function onFileDragUpload(
         console.log(file);
         getFolder();
       });
+
+      req.addEventListener("error", function () {
+        addBubble(`upload-error-${file.name}`, {
+          title: `Could not upload ${file.name}`,
+          type: "ERROR",
+        })
+      })
     }
   } catch (e) {
     addBubble(`file-error-${entry.name}`, {

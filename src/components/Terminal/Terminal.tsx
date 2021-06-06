@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { setTerminal, TerminalActions } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { Endpoints, findElInTree, WSData } from "@lib";
+import { Endpoints, findElInTree, getCurrentFilesPath, WSData } from "@lib";
 import { XTerm as XTermEl } from "@termftp/react-xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebLinksAddon } from "xterm-addon-web-links";
@@ -76,7 +76,7 @@ class TerminalUI extends Component<Props, State> {
               t.writeln("");
               // TODO send command
               Endpoints.getInstance().startExec(
-                window.location.pathname,
+                getCurrentFilesPath(),
                 this.state.value,
                 this.onMessage,
                 this.onError

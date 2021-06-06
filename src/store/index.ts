@@ -12,6 +12,7 @@ import {
 } from "connected-react-router";
 import { AppActions, appReducer } from "./app";
 import { FilesActions, filesReducer } from "./files";
+import { editorReducer, EditorActions } from "./editor";
 import thunk, { ThunkDispatch } from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { useDispatch as _useDispatch } from "react-redux";
@@ -21,6 +22,7 @@ const createRootReducer = (history: History) =>
     router: connectRouter(history),
     appReducer,
     filesReducer,
+    editorReducer
   });
 
 export const history = createBrowserHistory();
@@ -30,7 +32,7 @@ export const store = createStore(
 );
 
 export type RootState = ReturnType<typeof store.getState>;
-export type RootActions = AppActions | RouterAction | FilesActions;
+export type RootActions = AppActions | RouterAction | FilesActions | EditorActions;
 export type RootDispatch = ThunkDispatch<any, any, RootActions | AnyAction>;
 // export type RootDispatch = AppDispatchTypes | RouterAction | FilesDispatchTypes;
 

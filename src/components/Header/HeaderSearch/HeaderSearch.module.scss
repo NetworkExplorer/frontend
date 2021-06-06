@@ -57,12 +57,13 @@
 
 $suggestHeight: 1.8;
 $radius: 5px;
+$shadow: rgba(0, 0, 0, 0.5);
 
 .results {
   background: $dark-bg-1;
   border-radius: 0 0 $radius $radius;
   width: 100%;
-  transition: $dur height ease, $dur padding ease;
+  transition: $dur * 2 height ease, $dur * 2 padding ease;
   height: 0;
   padding: 0 $radius * 2;
   overflow: hidden;
@@ -72,7 +73,7 @@ $radius: 5px;
 
   &::before {
     position: absolute;
-    width: 100%;
+    width: calc(100% - #{$radius * 4});
     content: " ";
     height: #{$suggestHeight}em;
     border-radius: $radius;
@@ -103,4 +104,5 @@ $radius: 5px;
 .resultsOpen {
   height: calc(var(--items) * #{$suggestHeight}em + #{$radius} * 4);
   padding: $radius * 2;
+  box-shadow: 1px 2px 5px 2px $shadow;
 }

@@ -1,3 +1,4 @@
+import { getCurrentFilesPath, normalizeURL, ROUTES } from "@lib";
 import { RootDispatch, RootState } from "@store";
 import { clearSuggestions, fetchSuggestions } from "@store/app";
 import { push } from "connected-react-router";
@@ -37,7 +38,7 @@ class HeaderSearchUI extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      path: decodeURI(window.location.pathname),
+      path: decodeURI(normalizeURL(getCurrentFilesPath(), false, true)),
       focused: false,
       position: EMPTY_POSITION,
     };
@@ -46,9 +47,12 @@ class HeaderSearchUI extends Component<Props, State> {
   componentDidUpdate() {
     if (
       !this.state.focused &&
-      this.state.path != decodeURI(window.location.pathname)
+      this.state.path !=
+        decodeURI(normalizeURL(getCurrentFilesPath(), false, true))
     ) {
-      this.setState({ path: decodeURI(window.location.pathname) });
+      this.setState({
+        path: decodeURI(normalizeURL(getCurrentFilesPath(), false, true)),
+      });
       this.props.clearSuggestions();
     }
     if (
@@ -76,6 +80,7 @@ class HeaderSearchUI extends Component<Props, State> {
   };
 
   getSuggestions = () => {
+    if (!this.state.focused) return;
     this.props.fetchSuggestions(this.state.path);
     this.setState({ position: EMPTY_POSITION });
   };
@@ -114,8 +119,9 @@ class HeaderSearchUI extends Component<Props, State> {
 
     this.inputRef.current?.blur();
     this.setState({ focused: false }, () => {
-      this.props.push(path.trim());
+      this.props.push(ROUTES.FILES + path.trim());
     });
+    // TODO check if relative path
   }
 
   render(): JSX.Element {
@@ -138,7 +144,9 @@ class HeaderSearchUI extends Component<Props, State> {
           </label>
           <div
             className={`${css.results} ${
-              this.props.suggestions.length > 0 ? css.resultsOpen : ""
+              this.props.suggestions.length > 0 && this.state.focused
+                ? css.resultsOpen
+                : ""
             }`}
             style={
               {

@@ -12,11 +12,12 @@ import {
 import HeaderSearch from "./HeaderSearch/HeaderSearch";
 import { IconButton } from "@components";
 import { RootState, useAppDispatch } from "@store";
-import { setSidebar } from "@store/app";
+import { addBubble, setSidebar } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Endpoints,
   FileI,
+  getCurrentFilesPath,
   normalizeURL,
   onFileDownload,
   onFilesDownload,
@@ -67,7 +68,7 @@ export const Header = (): JSX.Element => {
     for (const file of files) {
       const req = await Endpoints.getInstance().uploadFile(
         file,
-        normalizeURL(window.location.pathname, false)
+        normalizeURL(getCurrentFilesPath(), false)
       );
       // upload progress event
       req.upload.addEventListener("progress", function (e) {
@@ -86,6 +87,15 @@ export const Header = (): JSX.Element => {
         console.log(file);
         dispatch(getFolder(undefined, false) as any);
       });
+
+      req.addEventListener("error", function () {
+        dispatch(
+          addBubble(`upload-error-${file.name}`, {
+            title: `Could not upload ${file.name}`,
+            type: "ERROR",
+          })
+        );
+      });
     }
   };
 
@@ -97,6 +107,7 @@ export const Header = (): JSX.Element => {
     }
     fileRef.current?.click();
     setUploadState(false);
+    // TODO listen to click outside and remove if not on buttons
   };
 
   const onDownload = () => {

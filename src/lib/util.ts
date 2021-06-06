@@ -43,8 +43,13 @@ export function findElInTree(
   return findElInTree(className, el.parentElement);
 }
 
-export function normalizeURL(url: string, leadingSlash = true): string {
-  if (url.startsWith("/")) url = url.substring(1);
-  if (leadingSlash && !url.endsWith("/")) url = url + "/";
+export function normalizeURL(url: string, endingSlash = true, leadingSlash = false): string {
+  url = url.trim();
+  if (url === "/") {
+    if (!leadingSlash && !endingSlash) return "";
+  }
+  if (leadingSlash && !url.startsWith("/")) url = "/" + url;
+  if (!leadingSlash && url.startsWith("/")) url = url.substring(1);
+  if (endingSlash && !url.endsWith("/")) url = url + "/";
   return url;
 }

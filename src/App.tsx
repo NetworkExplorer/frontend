@@ -2,8 +2,9 @@ import React from "react";
 import css from "./App.module.scss";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "@store";
-import { Route, Switch } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 import { MainPage } from "@pages";
+import { ROUTES } from "@lib";
 
 export function App(): JSX.Element {
   // const state = useSelector((state: RootState) => ({
@@ -22,9 +23,12 @@ export function App(): JSX.Element {
         <ConnectedRouter history={history}>
           <Switch>
             {/* TODO add pages for login/register */}
-            <Route path="/login"></Route>
-            <Route path="/register"></Route>
-            <Route path="/" component={MainPage}></Route>
+            <Route path={ROUTES.LOGIN}></Route>
+            <Route path={ROUTES.REGISTER}></Route>
+            <Route path={ROUTES.FILES} component={MainPage}></Route>
+            <Route exact path="/">
+              <Redirect to={ROUTES.FILES}></Redirect>
+            </Route>
           </Switch>
         </ConnectedRouter>
       </div>

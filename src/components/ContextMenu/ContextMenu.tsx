@@ -25,6 +25,7 @@ import {
   onDelete,
   onFilesDownload,
   onFolderDownload,
+  getCurrentFilesPath,
 } from "@lib";
 
 const mapState = ({
@@ -241,7 +242,7 @@ const ContextMenuUI = ({
     for (const file of files) {
       const req = await Endpoints.getInstance().uploadFile(
         file,
-        normalizeURL(window.location.pathname, false)
+        normalizeURL(getCurrentFilesPath(), false)
       );
       // upload progress event
       req.upload.addEventListener("progress", function (e) {

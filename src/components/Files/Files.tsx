@@ -10,7 +10,14 @@ import { connect, ConnectedProps } from "react-redux";
 import { File } from "./File/File";
 import css from "./Files.module.scss";
 import fileCSS from "./File/File.module.scss";
-import { FileI, findElInTree, onFileDragUpload } from "@lib";
+import {
+  FileI,
+  findElInTree,
+  getCurrentFilesPath,
+  normalizeURL,
+  onFileDragUpload,
+  ROUTES,
+} from "@lib";
 import { push } from "connected-react-router";
 import { ContextMenu, Loading, Prompt } from "@components";
 import { BubbleI } from "@models";
@@ -63,7 +70,6 @@ class FilesUI extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.getFolder(this.props.pathname);
     document.addEventListener("dblclick", this.doubleClick);
   }
 
@@ -80,13 +86,23 @@ class FilesUI extends Component<Props, State> {
     if (!dataAttr) return;
     const file: FileI = JSON.parse(dataAttr);
     if (file.type === "FOLDER") {
-      if (window.location.pathname === "/") {
-        this.props.push(`/${file.name}`);
+      if (getCurrentFilesPath() === "") {
+        this.props.push(`${ROUTES.FILES}/${file.name}`);
       } else {
-        let url = window.location.pathname;
-        if (url.endsWith("/")) url = url.substring(0, url.length - 1);
-        this.props.push(`${url}/${file.name}`);
+        // let url = window.location.pathname;
+        // if (url.endsWith("/")) url = url.substring(0, url.length - 1);
+        this.props.push(
+          `${normalizeURL(window.location.pathname, true, true)}${file.name}`
+        );
       }
+      this.props.setContextMenu({
+        isOpen: false,
+        file: undefined,
+        x: undefined,
+        y: undefined,
+      });
+    } else {
+      // TODO add editor navigation
     }
   };
 
@@ -201,7 +217,7 @@ class FilesUI extends Component<Props, State> {
               type: "header",
             }}
           ></File>
-          {window.location.pathname != "/" && (
+          {normalizeURL(getCurrentFilesPath(), true, true) != "/" && (
             <File
               file={{
                 name: "..",

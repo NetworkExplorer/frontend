@@ -6,7 +6,7 @@ import {
   Sidebar,
   Terminal,
 } from "@components";
-import { normalizeURL, onDelete } from "@lib";
+import { getCurrentFilesPath, normalizeURL, onDelete, ROUTES } from "@lib";
 import { RootDispatch, RootState } from "@store";
 import { getFolder } from "@store/files";
 import React, { useEffect, useState } from "react";
@@ -40,7 +40,8 @@ const MainPageUI = (): JSX.Element => {
   );
   const dispatch = useDispatch<RootDispatch>();
   useEffect(() => {
-    dispatch(getFolder(normalizeURL(window.location.pathname)));
+    if (!window.location.pathname.startsWith(ROUTES.FILES)) return;
+    dispatch(getFolder(normalizeURL(getCurrentFilesPath())));
   }, [location]);
   const [listening, setListening] = useState(false);
 
