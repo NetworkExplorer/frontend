@@ -120,7 +120,6 @@ class HeaderSearchUI extends Component<Props, State> {
 
   render(): JSX.Element {
     const { path } = this.state;
-    console.log(this.props.suggestions);
     return (
       <div className={css.searchBox}>
         <form className={css.form} onSubmit={this.handleSubmit}>

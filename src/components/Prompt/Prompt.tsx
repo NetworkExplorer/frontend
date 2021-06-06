@@ -25,6 +25,7 @@ export interface PromptProps {
 interface State {
   initial?: string;
   value: string;
+  listening: boolean;
 }
 
 class PromptUI extends React.Component<Props, State> {
@@ -35,6 +36,7 @@ class PromptUI extends React.Component<Props, State> {
     this.state = {
       value: "",
       initial: undefined,
+      listening: false,
     };
   }
 
@@ -58,6 +60,18 @@ class PromptUI extends React.Component<Props, State> {
       this.input.current?.blur();
       this.okBtn.current?.blur();
     }
+
+    if (prompt && !this.state.listening) {
+      this.setState({
+        listening: true,
+      });
+      document.addEventListener("keydown", this.onKeyDown);
+    }
+
+    if (!prompt && this.state.listening) {
+      document.removeEventListener("keydown", this.onKeyDown);
+      this.setState({ listening: false });
+    }
   }
 
   onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -66,9 +80,12 @@ class PromptUI extends React.Component<Props, State> {
     });
   };
 
-  onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  onKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent
+  ) => {
     if (event.key === "Escape") {
       this.props.setPrompt(undefined);
+      document.removeEventListener("keydown", this.onKeyDown);
     }
   };
 
@@ -115,7 +132,7 @@ class PromptUI extends React.Component<Props, State> {
                 ref={this.input}
                 onChange={this.onChange}
                 value={value}
-                onKeyUp={this.onKeyUp}
+                onKeyDown={this.onKeyDown}
               />
             </div>
           )}
