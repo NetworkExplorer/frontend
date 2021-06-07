@@ -140,6 +140,7 @@ class HeaderSearchUI extends Component<Props, State> {
                 this.setState({ focused: false, position: EMPTY_POSITION })
               }
               onKeyDown={this.onKeyDown}
+              disabled={!window.location.pathname.startsWith(ROUTES.FILES)}
             />
           </label>
           <div

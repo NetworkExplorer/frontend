@@ -6,6 +6,7 @@ import {
   faDownload,
   faFile,
   faFolder,
+  faSave,
   faSearch,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ import {
   onFileDownload,
   onFilesDownload,
   onFolderDownload,
+  ROUTES,
 } from "@lib";
 import { useSelector } from "react-redux";
 import { getFolder } from "@store/files";
@@ -30,12 +32,16 @@ export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploadState, setUploadState] = useState(false);
-  const { selected } = useSelector(
+  const { selected, editorReady } = useSelector(
     ({
       filesReducer: {
         selection: { selected },
       },
-    }: RootState) => ({ selected })
+      router: {
+        location: { pathname },
+      },
+      editorReducer: { editorReady },
+    }: RootState) => ({ selected, pathname, editorReady })
   );
 
   const setDirectory = (dir: boolean) => {
@@ -134,47 +140,61 @@ export const Header = (): JSX.Element => {
         name="Menu"
       ></IconButton>
       <HeaderSearch></HeaderSearch>
-      <IconButton
-        className={css.iconBtn}
-        icon={faDownload}
-        name="Download"
-        onClick={onDownload}
-        disabled={selected.size == 0}
-      ></IconButton>
-      <label>
-        <input
-          type="file"
-          hidden
-          ref={fileRef}
-          onChange={fileChange}
-          multiple
-        />
-        <IconButton
-          className={css.iconBtn}
-          icon={faUpload}
-          onClick={() => setUploadState(!uploadState)}
-          name="Upload"
-        ></IconButton>
-        <div
-          className={`${css.uploadChooser} ${
-            uploadState ? css.chooserOpen : ""
-          }`}
-        >
-          <button onClick={() => chooseUpload("file")}>
-            <FontAwesomeIcon icon={faFile}></FontAwesomeIcon>
-            <span hidden>Files</span>
-          </button>
-          <button onClick={() => chooseUpload("folder")}>
-            <FontAwesomeIcon icon={faFolder}></FontAwesomeIcon>
-            <span hidden>Directory</span>
-          </button>
-        </div>
-      </label>
-      <IconButton
-        name="Search"
-        className={css.iconBtn}
-        icon={faSearch}
-      ></IconButton>
+      {window.location.pathname.startsWith(ROUTES.FILES) && (
+        <>
+          <IconButton
+            className={css.iconBtn}
+            icon={faDownload}
+            name="Download"
+            onClick={onDownload}
+            disabled={selected.size == 0}
+          ></IconButton>
+          <label>
+            <input
+              type="file"
+              hidden
+              ref={fileRef}
+              onChange={fileChange}
+              multiple
+            />
+            <IconButton
+              className={css.iconBtn}
+              icon={faUpload}
+              onClick={() => setUploadState(!uploadState)}
+              name="Upload"
+            ></IconButton>
+            <div
+              className={`${css.uploadChooser} ${
+                uploadState ? css.chooserOpen : ""
+              }`}
+            >
+              <button onClick={() => chooseUpload("file")}>
+                <FontAwesomeIcon icon={faFile}></FontAwesomeIcon>
+                <span hidden>Files</span>
+              </button>
+              <button onClick={() => chooseUpload("folder")}>
+                <FontAwesomeIcon icon={faFolder}></FontAwesomeIcon>
+                <span hidden>Directory</span>
+              </button>
+            </div>
+          </label>
+          <IconButton
+            name="Search"
+            className={css.iconBtn}
+            icon={faSearch}
+          ></IconButton>
+        </>
+      )}
+      {window.location.pathname.startsWith(ROUTES.EDITOR) && (
+        <>
+          <IconButton
+            name="Save file"
+            className={css.iconBtn}
+            icon={faSave}
+            disabled={!editorReady}
+          ></IconButton>
+        </>
+      )}
       <IconButton
         className={css.iconBtn}
         icon={faCog}

@@ -120,8 +120,9 @@ export function onDelete(
         if (value === "true") {
           const files: string[] = [];
           for (const file of selected) {
+            const n = normalizeURL(getCurrentFilesPath(), false, false);
             files.push(
-              normalizeURL(getCurrentFilesPath(), false, false) + "/" + file.name
+              (n === "" ? "" : n + "/") + file.name
             );
           }
 

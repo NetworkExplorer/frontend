@@ -10,7 +10,7 @@ import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
 import { RootState, useAppDispatch } from "@store";
 import { addBubble, setPrompt, setTerminal } from "@store/app";
-import { onCreateFolder } from "@lib";
+import { onCreateFolder, ROUTES } from "@lib";
 import { getFolder } from "@store/files";
 
 export const Sidebar = (): JSX.Element => {
@@ -30,22 +30,26 @@ export const Sidebar = (): JSX.Element => {
           icon={faHome}
         ></SidebarLink>
         <hr />
-        <SidebarLink
-          name="New Folder"
-          icon={faFolderPlus}
-          onClick={async () => {
-            await onCreateFolder(
-              (prompt) => dispatch(setPrompt(prompt)),
-              (key, bubble) => dispatch(addBubble(key, bubble))
-            );
-            dispatch(getFolder(undefined, false) as any);
-          }}
-        ></SidebarLink>
-        <SidebarLink
-          name="Terminal"
-          icon={faTerminal}
-          onClick={() => dispatch(setTerminal("TOGGLE"))}
-        ></SidebarLink>
+        {window.location.pathname.startsWith(ROUTES.FILES) && (
+          <>
+            <SidebarLink
+              name="New Folder"
+              icon={faFolderPlus}
+              onClick={async () => {
+                await onCreateFolder(
+                  (prompt) => dispatch(setPrompt(prompt)),
+                  (key, bubble) => dispatch(addBubble(key, bubble))
+                );
+                dispatch(getFolder(undefined, false) as any);
+              }}
+            ></SidebarLink>
+            <SidebarLink
+              name="Terminal"
+              icon={faTerminal}
+              onClick={() => dispatch(setTerminal("TOGGLE"))}
+            ></SidebarLink>
+          </>
+        )}
       </div>
       <div>
         <SidebarLink

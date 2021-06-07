@@ -1,17 +1,9 @@
-import {
-  Bubbles,
-  Files,
-  Header,
-  PromptProps,
-  Sidebar,
-  Terminal,
-} from "@components";
+import { Files, Layout, PromptProps, Terminal } from "@components";
 import { getCurrentFilesPath, normalizeURL, onDelete, ROUTES } from "@lib";
 import { RootDispatch, RootState } from "@store";
 import { getFolder } from "@store/files";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import css from "./Main.module.scss";
 import { HotKeys, KeyMap } from "react-hotkeys";
 import { addBubble, setPrompt, setSearch } from "@store/app";
 import { Search } from "@components/Search/Search";
@@ -94,17 +86,12 @@ const MainPageUI = (): JSX.Element => {
   };
 
   return (
-    <HotKeys id={css.main} keyMap={keyMap} handlers={handlers}>
-      <Header></Header>
-      <div className={css.mainContent}>
-        <Sidebar></Sidebar>
-        <div className={css.right}>
-          <Files></Files>
-          <Terminal></Terminal>
-          <Search></Search>
-        </div>
-      </div>
-      <Bubbles></Bubbles>
+    <HotKeys keyMap={keyMap} handlers={handlers}>
+      <Layout>
+        <Files></Files>
+        <Terminal></Terminal>
+        <Search></Search>
+      </Layout>
     </HotKeys>
   );
 };

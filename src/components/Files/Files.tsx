@@ -102,7 +102,13 @@ class FilesUI extends Component<Props, State> {
         y: undefined,
       });
     } else {
-      // TODO add editor navigation
+      this.props.push(
+        `${ROUTES.EDITOR}${normalizeURL(
+          normalizeURL(getCurrentFilesPath(), false, true),
+          true,
+          true
+        )}${file.name}`
+      );
     }
   };
 

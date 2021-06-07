@@ -3,7 +3,7 @@ import css from "./App.module.scss";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "@store";
 import { Redirect, Route, Switch } from "react-router";
-import { MainPage } from "@pages";
+import { EditorPage, MainPage } from "@pages";
 import { ROUTES } from "@lib";
 
 export function App(): JSX.Element {
@@ -26,6 +26,7 @@ export function App(): JSX.Element {
             <Route path={ROUTES.LOGIN}></Route>
             <Route path={ROUTES.REGISTER}></Route>
             <Route path={ROUTES.FILES} component={MainPage}></Route>
+            <Route path={ROUTES.EDITOR} component={EditorPage}></Route>
             <Route exact path="/">
               <Redirect to={ROUTES.FILES}></Redirect>
             </Route>

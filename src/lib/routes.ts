@@ -3,12 +3,13 @@ export enum ROUTES {
   REGISTER = "/register",
   FILES = "/files",
   SETTINGS = "/settings",
-  FILE = "/file"
+  EDITOR = "/editor"
 }
 
 export function getFilesURL(path?: string): string {
   path = path || window.location.pathname;
   path = path.replace(ROUTES.FILES, "");
+  path = path.replace(ROUTES.EDITOR, "");
   return path;
 }
 

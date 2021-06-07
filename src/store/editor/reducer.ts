@@ -3,7 +3,8 @@ import { EditorActions, EditorStateI, EditorActionTypes } from "./types";
 const Acts = EditorActionTypes;
 
 const initState: EditorStateI = {
-  currentFile: undefined
+  currentFile: undefined,
+  editorReady: false
 };
 
 export const editorReducer = (
@@ -15,6 +16,11 @@ export const editorReducer = (
       return {
         ...state,
         currentFile: action.payload
+      }
+    case Acts.SET_EDITOR_READY:
+      return {
+        ...state,
+        editorReady: action.payload
       }
     default:
       return state;

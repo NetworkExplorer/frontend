@@ -14,10 +14,12 @@ export interface EditorFile {
 
 export interface EditorStateI {
   currentFile?: EditorFile;
+  editorReady: boolean;
 }
 
 export enum EditorActionTypes {
-  SET_CURRENT_FILE = "editor/set-current-file"
+  SET_CURRENT_FILE = "editor/set-current-file",
+  SET_EDITOR_READY = "editor/set-editor-ready",
 }
 
 const Acts = EditorActionTypes;
@@ -27,4 +29,10 @@ export interface EditorSetCurrentFile {
   payload?: EditorFile
 }
 
-export type EditorActions = EditorSetCurrentFile;
+export interface EditorSetEditorReady {
+  type: typeof Acts.SET_EDITOR_READY;
+  payload: boolean
+}
+
+export type EditorActions = EditorSetCurrentFile
+  | EditorSetEditorReady;

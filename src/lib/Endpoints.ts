@@ -122,6 +122,14 @@ export class Endpoints {
     document.body.removeChild(a);
   }
 
+  getFileBlob(file: string): Promise<Blob> {
+    if (file.startsWith("/")) file = file.substring(1);
+
+    const url = `${this.baseURL}/download/file?file=${file}`;
+    return fetch(url)
+      .then((res) => res.blob());
+  }
+
   getFiles(paths: string[], downloadName = "download.zip"): void {
     const pathsStr = paths
       .map((f) => {

@@ -260,6 +260,13 @@ const ContextMenuUI = ({
         console.log(req.response);
         getFolder(undefined, false);
       });
+
+      req.addEventListener("error", function () {
+        addBubble(`upload-error-${file.name}`, {
+          title: `Could not upload ${file.name}`,
+          type: "ERROR",
+        });
+      });
     }
   };
 

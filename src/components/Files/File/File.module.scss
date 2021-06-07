@@ -1,13 +1,13 @@
 @import "/src/global/variables";
-$fileHeight: 4em;
+$fileHeight: 3.8em;
 // $fileHeight: calc(#{fileHeight} - 3px * 2);
 
 .file {
   padding: 0 20px;
   width: 100%;
-  height: $fileHeight;
+  height: calc(#{$fileHeight} + 3px);
 
-  & > * > * {
+  & > * > * > * {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -60,6 +60,7 @@ $hoverColor: rgba(#444, 0.2);
   display: flex;
   align-items: flex-start;
   user-select: text;
+  text-overflow: ellipsis;
 }
 
 .date {
