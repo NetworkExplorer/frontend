@@ -35,7 +35,9 @@ const MainPageUI = (): JSX.Element => {
     if (!window.location.pathname.startsWith(ROUTES.FILES)) return;
     dispatch(getFolder(normalizeURL(getCurrentFilesPath())));
   }, [location]);
-  const [listening, setListening] = useState(false);
+  const [listening, setListening] = useState<typeof selected | undefined>(
+    new Set()
+  );
 
   const keyUp = async (e: KeyboardEvent) => {
     if (e?.target) {
@@ -54,13 +56,14 @@ const MainPageUI = (): JSX.Element => {
     }
   };
   useEffect(() => {
-    if (!listening && selected.size > 0) {
-      setListening(true);
+    document.removeEventListener("keyup", keyUp);
+    if (listening != selected && selected.size > 0) {
       document.addEventListener("keyup", keyUp);
-    } else if (listening && selected.size === 0) {
-      document.removeEventListener("keyup", keyUp);
-      setListening(false);
+      setListening(listening);
     }
+    return () => {
+      document.removeEventListener("keyup", keyUp);
+    };
   }, [selected]);
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {

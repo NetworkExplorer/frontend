@@ -50,6 +50,7 @@ export function normalizeURL(url: string, endingSlash = true, leadingSlash = fal
   }
   if (leadingSlash && !url.startsWith("/")) url = "/" + url;
   if (!leadingSlash && url.startsWith("/")) url = url.substring(1);
+  if (!endingSlash && url.endsWith("/")) url = url.substring(0, url.length - 1);
   if (endingSlash && !url.endsWith("/")) url = url + "/";
   return url;
 }

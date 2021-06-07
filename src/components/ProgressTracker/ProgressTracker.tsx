@@ -79,7 +79,12 @@ const ProgressFile = ({ file }: ProgressFileProps) => {
     <div
       className={css.file}
       style={
-        { "--progress": file.progress / file.total } as React.CSSProperties
+        {
+          "--progress":
+            file.progress === 0 && file.total === 0
+              ? 1
+              : file.progress / file.total,
+        } as React.CSSProperties
       }
     >
       <FileIcon

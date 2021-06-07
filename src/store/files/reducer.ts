@@ -142,7 +142,6 @@ export const filesReducer = (
     case Acts.UPDATE_PROGRESS_FILE: {
       const copy = new Map(state.progressFiles);
       let f = copy.get(action.payload.cwd + action.payload.name);
-      console.log("ff", f)
       if (!f) {
         f = {
           ...action.payload,

@@ -1,6 +1,5 @@
 import { PromptProps } from "@components";
 import { BubbleI, ProgressFileI } from "@models";
-import { addProgressFiles, updateProgressFile } from "@store/files";
 // import { FileSystemEntry } from "@models/file";
 import Endpoints from "./Endpoints";
 import { getCurrentFilesPath } from "./routes";
@@ -197,7 +196,7 @@ export async function onFileUpload(
         req.upload.addEventListener("progress", function (e) {
           // upload progress as percentage
           // const percent_completed = (e.loaded / e.total) * 100;
-          addProgressFiles([{
+          addProgress([{
             cwd: folder,
             name: file.name,
             progress: e.loaded,
@@ -207,7 +206,7 @@ export async function onFileUpload(
 
         // req finished event
         req.addEventListener("load", function () {
-          updateProgressFile({
+          updateProgress({
             cwd: folder,
             name: file.name,
             progress: file.size,
