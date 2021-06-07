@@ -37,6 +37,7 @@
   color: $bg;
   gap: 10px;
   font-weight: bold;
+  padding: 2em;
 }
 
 .loadingHidden {
@@ -52,5 +53,20 @@ $icon: 6em;
   & > * {
     height: $icon;
     width: $icon;
+  }
+}
+
+.progress {
+  max-width: 30em;
+  width: 100%;
+  border-radius: 0.25em;
+  overflow: hidden;
+  background: $bg;
+  height: 0.5em;
+
+  div {
+    height: 0.5em;
+    background: $green;
+    transition: $dur width ease;
   }
 }

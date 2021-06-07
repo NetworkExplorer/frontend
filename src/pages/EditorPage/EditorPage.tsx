@@ -24,13 +24,6 @@ export const EditorPage = (): JSX.Element => {
   const name = fileURL.split("/").reverse()[0];
   const [loaded, setLoaded] = useState(0);
 
-  function handleEditorChange(
-    value: string | undefined,
-    event: editor.IModelContentChangedEvent
-  ) {
-    // here is the current value
-  }
-
   async function handleEditorDidMount(
     editor: editor.IStandaloneCodeEditor,
     monaco: typeof Monaco
@@ -38,19 +31,57 @@ export const EditorPage = (): JSX.Element => {
     console.log("onMount: the editor instance:", editor);
     console.log("onMount: the monaco instance:", monaco);
     dispatch(setEditorReady(true));
-    const b = await Endpoints.getInstance().getFileBlob(fileURL);
-    const t = await b.text();
-    // editor.setValue(t);
-    // console.log("text", t);
+    let t = "";
+    let b: Blob;
+    const res = await Endpoints.getInstance().getFileBlob(fileURL);
+    const reader = res.body?.getReader();
+    if (reader == null) {
+      // when reader is not available
+      b = await res.blob();
+      t = await res.text();
+    } else {
+      // get total length
+      const contentLength = Number.parseInt(
+        res.headers.get("Content-Length") || "0"
+      );
+
+      // read the data
+      let receivedLength = 0; // received that many bytes at the moment
+      const chunks = []; // array of received binary chunks (comprises the body)
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        if (value) chunks.push(value);
+        receivedLength += value?.length || 0;
+
+        setLoaded((receivedLength / contentLength) * 100);
+      }
+
+      // concatenate chunks into single Uint8Array
+      const chunksAll = new Uint8Array(receivedLength);
+      let position = 0;
+      for (const chunk of chunks) {
+        chunksAll.set(chunk, position);
+        position += chunk.length;
+      }
+
+      // decode into a string and blob
+      t = new TextDecoder("utf-8").decode(chunksAll);
+      b = new Blob([chunksAll], { type: "text/plain" });
+    }
     editor.setModel(
       monaco.editor.createModel(t, undefined, monaco.Uri.file(fileURL))
     );
-    // TODO add loading progress
     setLoaded(100);
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
       const val = editor.getValue();
       const file = new File([new Blob([val], { type: b.type })], name, {
-        type: b.type,
+        type: res.type,
         lastModified: new Date().getTime(),
       });
       const req = Endpoints.getInstance().uploadFile(
@@ -108,7 +139,6 @@ export const EditorPage = (): JSX.Element => {
       <Editor
         height="100%"
         defaultValue="Loading"
-        onChange={handleEditorChange}
         onMount={handleEditorDidMount}
         beforeMount={handleEditorWillMount}
         // onValidate={handleEditorValidation}
@@ -117,7 +147,7 @@ export const EditorPage = (): JSX.Element => {
       />
       <div
         className={`${css.loading} ${
-          (loaded === 100 && css.loadingHidden) || ""
+          (loaded >= 100 && css.loadingHidden) || ""
         }`}
       >
         <FileIcon
@@ -126,6 +156,9 @@ export const EditorPage = (): JSX.Element => {
         ></FileIcon>
         <span>DOWNLOADING</span>
         <span>{name}</span>
+        <div className={css.progress}>
+          <div style={{ width: `${Math.floor(loaded)}%` }}>.</div>
+        </div>
       </div>
     </Layout>
   );

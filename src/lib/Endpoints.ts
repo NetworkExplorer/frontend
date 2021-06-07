@@ -4,7 +4,7 @@ import { normalizeURL } from "./util";
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
   API_URL = "/api/v1";
-  BASE = ENV === "development" ? "http://localhost:16091" : "";
+  BASE = ENV === "development" ? "http://127.0.0.1:16091" : "";
   // private ws: WebSocket;
 
   get dev(): boolean {
@@ -122,12 +122,11 @@ export class Endpoints {
     document.body.removeChild(a);
   }
 
-  getFileBlob(file: string): Promise<Blob> {
+  getFileBlob(file: string): Promise<Response> {
     if (file.startsWith("/")) file = file.substring(1);
 
     const url = `${this.baseURL}/download/file?file=${file}`;
-    return fetch(url)
-      .then((res) => res.blob());
+    return fetch(url);
   }
 
   getFiles(paths: string[], downloadName = "download.zip"): void {
