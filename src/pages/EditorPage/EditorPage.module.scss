@@ -1,14 +1,56 @@
+@import "/src/global/variables";
+
 #editorPage {
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .editorWrapper {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 
   & > * {
     height: 100%;
     width: 100%;
+    position: absolute !important;
+  }
+}
+
+.loading {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $dark-bg-2;
+  opacity: 1;
+  transition: $dur * 2 opacity ease, $dur * 2 transform ease;
+  transform: translate(0, 0);
+  transition-delay: $dur * 2;
+  pointer-events: none;
+  color: $bg;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.loadingHidden {
+  opacity: 0;
+  transform: translate(0, -10%);
+}
+
+$icon: 6em;
+.fileIcon {
+  width: $icon;
+  height: $icon;
+
+  & > * {
+    height: $icon;
+    width: $icon;
   }
 }

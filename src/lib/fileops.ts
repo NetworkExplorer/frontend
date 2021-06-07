@@ -161,7 +161,7 @@ export async function onFileDragUpload(
   relativePath?: string
 ): Promise<void> {
   if (!entry) return;
-  const base = normalizeURL(getCurrentFilesPath());
+  const base = normalizeURL(getCurrentFilesPath(), false, false);
   const folder = `${base}${relativePath ? relativePath + "/" : ""}`;
   try {
     if (entry.isDirectory) {
@@ -197,7 +197,9 @@ export async function onFileDragUpload(
         // req.response holds response from the server
         console.log(req.response);
         console.log(file);
-        getFolder();
+        if (folder === base) {
+          getFolder();
+        }
       });
 
       req.addEventListener("error", function () {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import css from "./EditorPage.module.scss";
 import Editor from "@monaco-editor/react";
 import { editor } from "monaco-editor";
@@ -9,6 +9,7 @@ import { useAppDispatch } from "@store";
 import { setEditorReady } from "@store/editor";
 import { Endpoints, normalizeURL, ROUTES } from "@lib";
 import { addBubble } from "@store/app";
+import FileIcon from "@components/Files/File/FileIcon";
 
 export const EditorPage = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export const EditorPage = (): JSX.Element => {
     false
   );
   const name = fileURL.split("/").reverse()[0];
+  const [loaded, setLoaded] = useState(0);
 
   function handleEditorChange(
     value: string | undefined,
@@ -43,13 +45,18 @@ export const EditorPage = (): JSX.Element => {
     editor.setModel(
       monaco.editor.createModel(t, undefined, monaco.Uri.file(fileURL))
     );
+    // TODO add loading progress
+    setLoaded(100);
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
       const val = editor.getValue();
       const file = new File([new Blob([val], { type: b.type })], name, {
         type: b.type,
         lastModified: new Date().getTime(),
       });
-      const req = Endpoints.getInstance().uploadFile(file, fileURL);
+      const req = Endpoints.getInstance().uploadFile(
+        file,
+        fileURL.replace(name, "")
+      );
       // upload progress event
       req.upload.addEventListener("progress", function (e) {
         // upload progress as percentage
@@ -65,6 +72,12 @@ export const EditorPage = (): JSX.Element => {
         // req.response holds response from the server
         console.log(req.response);
         // getFolder(undefined, false);
+        dispatch(
+          addBubble("save-success", {
+            type: "SUCCESS",
+            title: `Successfully saved ${name}`,
+          })
+        );
       });
 
       req.addEventListener("error", function () {
@@ -75,7 +88,6 @@ export const EditorPage = (): JSX.Element => {
           })
         );
       });
-      console.log("SAVE pressed!");
     });
     monaco.editor.defineTheme("custom-dark", {
       base: "vs-dark",
@@ -95,7 +107,6 @@ export const EditorPage = (): JSX.Element => {
     <Layout id={css.editorPage} mainClass={css.editorWrapper}>
       <Editor
         height="100%"
-        defaultLanguage="javascript"
         defaultValue="Loading"
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
@@ -104,6 +115,18 @@ export const EditorPage = (): JSX.Element => {
         theme="custom-dark"
         options={options}
       />
+      <div
+        className={`${css.loading} ${
+          (loaded === 100 && css.loadingHidden) || ""
+        }`}
+      >
+        <FileIcon
+          file={{ name, owner: "", size: 0, type: "FILE" }}
+          className={css.fileIcon}
+        ></FileIcon>
+        <span>DOWNLOADING</span>
+        <span>{name}</span>
+      </div>
     </Layout>
   );
 };
