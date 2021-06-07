@@ -1,10 +1,11 @@
 import css from "./File.module.scss";
 import React, { useState } from "react";
-import { convertFileSize, FileI, onFileDragUpload, onMove } from "@lib";
+import { convertFileSize, FileI, onFileUpload, onMove } from "@lib";
 import FileIcon from "./FileIcon";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@store";
 import {
+  addProgressFiles,
   addSelection,
   getFolder,
   removeSelection,
@@ -12,6 +13,7 @@ import {
   setContextMenu,
   setLoading,
   shiftSelection,
+  updateProgressFile,
 } from "@store/files";
 import { addBubble } from "@store/app";
 
@@ -151,10 +153,12 @@ export function File({ file }: Props): JSX.Element {
           });
           break;
         }
-        onFileDragUpload(
+        onFileUpload(
           f.webkitGetAsEntry(),
           (key, bubble) => dispatch(addBubble(key, bubble)),
           () => dispatch(getFolder(undefined, false) as any),
+          (files) => dispatch(addProgressFiles(files)),
+          (file) => dispatch(updateProgressFile(file)),
           file.name
         );
       }

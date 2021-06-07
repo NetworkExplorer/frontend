@@ -1,0 +1,200 @@
+@import "/src/global/variables";
+
+$plus-height: 2.5em;
+$file-height: 3em;
+$bottom-height: 2em;
+$top-height: 4em;
+$r-padding: 1em;
+
+.tracker {
+  position: absolute;
+  bottom: $r-padding;
+  right: $r-padding;
+  // height: calc($plus-height) * 2 + 8px);
+  display: flex;
+  flex-direction: column;
+  gap: $r-padding;
+  z-index: 1;
+}
+
+.btn {
+  height: $plus-height;
+  width: $plus-height;
+  border-radius: 50%;
+  // border-radius: 50%;
+  display: grid;
+  place-items: center center;
+  font-size: inherit;
+  transition: $dur transform ease, $dur background ease, $dur color ease;
+  animation: closed $dur ease forwards;
+  background: $dark-bg-1;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background: $dark-bg-2;
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.part {
+  position: relative;
+  height: $plus-height;
+  transition: $dur height ease;
+
+  &.open {
+    height: calc(#{$plus-height} * 4);
+  }
+}
+
+$content-width: 20em;
+.contentWrapper {
+  height: 100%;
+  width: 0;
+  transition: $dur height ease, $dur width ease;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  background: $bg;
+  border-radius: 3px;
+}
+
+.open .contentWrapper {
+  width: $content-width;
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.6);
+  // padding-bottom: $r-padding);
+}
+
+.content {
+  width: $content-width;
+  height: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .partHeader {
+    display: flex;
+    flex-direction: row;
+    background: $dark-bg-1;
+    position: sticky;
+    color: white;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+
+    p {
+      flex-grow: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    button {
+      width: $plus-height;
+      height: $plus-height;
+      background: inherit;
+      font-size: inherit;
+      display: grid;
+      place-items: center;
+      color: white;
+
+      &:hover {
+        background: $dark-bg-2;
+      }
+    }
+
+    .partCancel:hover {
+      color: $red;
+    }
+  }
+}
+
+$hoverColor: rgba(#444, 0.2);
+.file {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  height: $plus-height;
+  align-items: center;
+  position: relative;
+  transition: $dur background ease;
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: calc(100% * var(--progress));
+    background: $green;
+    transition: 100ms width ease;
+  }
+
+  &:hover {
+    background: $hoverColor;
+    .fileCancel {
+      display: block;
+    }
+  }
+
+  .name {
+    flex-grow: 1;
+    max-width: calc(100% - #{$plus-height} * 2);
+    // display: inline-flex;
+    place-items: center start;
+    vertical-align: baseline;
+    text-align: left;
+    font-size: 0.9em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    height: min-content;
+  }
+
+  .type {
+    height: $plus-height;
+    width: $plus-height;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+
+    img {
+      height: $plus-height * 0.9;
+      width: $plus-height * 0.9;
+    }
+  }
+
+  .right {
+    height: $plus-height;
+    width: $plus-height;
+    position: relative;
+    flex-shrink: 0;
+
+    & > * {
+      height: $plus-height;
+      width: $plus-height;
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: inherit;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    button {
+      display: none;
+    }
+  }
+
+  .fileCancel {
+    color: $red;
+  }
+}

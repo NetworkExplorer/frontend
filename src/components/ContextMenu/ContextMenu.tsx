@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import css from "./ContextMenu.module.scss";
-import { RootDispatch, RootState } from "@store";
+import { RootDispatch, RootState, useAppDispatch } from "@store";
 import { connect, ConnectedProps } from "react-redux";
-import { ContextMenuProps, getFolder, setContextMenu } from "@store/files";
+import {
+  addProgressFiles,
+  ContextMenuProps,
+  getFolder,
+  setContextMenu,
+  updateProgressFile,
+} from "@store/files";
 import { PromptProps } from "@components/Prompt/Prompt";
 import { setPrompt, addBubble } from "@store/app";
 import { BubbleI } from "@models";
@@ -230,6 +236,7 @@ const ContextMenuUI = ({
       setListening(false);
     }
   }, [isOpen]);
+  const dispatch = useAppDispatch();
 
   const fileChange = async (e: React.FormEvent) => {
     if (!fileRef.current) return;
@@ -239,6 +246,10 @@ const ContextMenuUI = ({
     if (!files || files.length === 0) {
       return;
     }
+    const folder =
+      normalizeURL(getCurrentFilesPath(), false, false) === ""
+        ? ""
+        : normalizeURL(getCurrentFilesPath(), true, false);
     for (const file of files) {
       const req = await Endpoints.getInstance().uploadFile(
         file,
@@ -247,17 +258,28 @@ const ContextMenuUI = ({
       // upload progress event
       req.upload.addEventListener("progress", function (e) {
         // upload progress as percentage
-        const percent_completed = (e.loaded / e.total) * 100;
-        console.log(percent_completed);
+        dispatch(
+          addProgressFiles([
+            {
+              cwd: folder,
+              name: file.name,
+              progress: e.loaded,
+              total: e.total,
+            },
+          ])
+        );
       });
 
       // req finished event
       req.addEventListener("load", function () {
-        // HTTP status message (200, 404 etc)
-        console.log(req.status);
-
-        // req.response holds response from the server
-        console.log(req.response);
+        dispatch(
+          updateProgressFile({
+            cwd: folder,
+            name: file.name,
+            progress: file.size,
+            total: file.size,
+          })
+        );
         getFolder(undefined, false);
       });
 

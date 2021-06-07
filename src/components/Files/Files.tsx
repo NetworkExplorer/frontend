@@ -1,9 +1,11 @@
 import { RootDispatch, RootState } from "@store";
 import {
+  addProgressFiles,
   clearSelection,
   ContextMenuProps,
   getFolder,
   setContextMenu,
+  updateProgressFile,
 } from "@store/files";
 import React, { Component } from "react";
 import { connect, ConnectedProps } from "react-redux";
@@ -15,15 +17,16 @@ import {
   findElInTree,
   getCurrentFilesPath,
   normalizeURL,
-  onFileDragUpload,
+  onFileUpload,
   ROUTES,
 } from "@lib";
 import { push } from "connected-react-router";
 import { ContextMenu, Loading, Prompt } from "@components";
-import { BubbleI } from "@models";
+import { BubbleI, ProgressFileI } from "@models";
 import { addBubble } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import ProgressTracker from "@components/ProgressTracker/ProgressTracker";
 
 const mapState = ({
   filesReducer: {
@@ -48,6 +51,10 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   clearSelection: () => dispatch(clearSelection()),
   setContextMenu: (menu: ContextMenuProps) => dispatch(setContextMenu(menu)),
   addBubble: (key: string, bubble: BubbleI) => dispatch(addBubble(key, bubble)),
+  addProgressFiles: (files: ProgressFileI[]) =>
+    dispatch(addProgressFiles(files)),
+  updateProgressFile: (file: ProgressFileI) =>
+    dispatch(updateProgressFile(file)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -195,10 +202,12 @@ class FilesUI extends Component<Props, State> {
         });
         return;
       }
-      onFileDragUpload(
+      onFileUpload(
         file.webkitGetAsEntry(),
         (key, bubble) => this.props.addBubble(key, bubble),
-        () => this.props.getFolder(undefined, false)
+        () => this.props.getFolder(undefined, false),
+        (files) => this.props.addProgressFiles(files),
+        (file) => this.props.updateProgressFile(file)
       );
     }
   };
@@ -249,6 +258,7 @@ class FilesUI extends Component<Props, State> {
         <Loading loading={this.props.loading} className={css.loading}></Loading>
         <ContextMenu></ContextMenu>
         <Prompt></Prompt>
+        <ProgressTracker></ProgressTracker>
       </div>
     );
   }

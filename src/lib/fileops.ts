@@ -1,5 +1,6 @@
 import { PromptProps } from "@components";
-import { BubbleI } from "@models";
+import { BubbleI, ProgressFileI } from "@models";
+import { addProgressFiles, updateProgressFile } from "@store/files";
 // import { FileSystemEntry } from "@models/file";
 import Endpoints from "./Endpoints";
 import { getCurrentFilesPath } from "./routes";
@@ -8,6 +9,8 @@ import { normalizeURL } from "./util";
 
 type PFunc = (prompt?: PromptProps) => void;
 type BFunc = (key: string, bubble: BubbleI) => void;
+type AddPFunc = (files: ProgressFileI[]) => void;
+type UpdatePFunc = (file: ProgressFileI) => void;
 
 export function onRename(
   file: FileI,
@@ -154,26 +157,33 @@ export function onFolderDownload(file: FileI): void {
   Endpoints.getInstance().getFiles([url + file.name], `${file.name}.zip`);
 }
 
-export async function onFileDragUpload(
+export async function onFileUpload(
   entry: FileSystemEntry | null,
   addBubble: BFunc,
   getFolder: () => void,
-  relativePath?: string
+  addProgress: AddPFunc,
+  updateProgress: UpdatePFunc,
+  relativePath?: string,
 ): Promise<void> {
   if (!entry) return;
-  const base = normalizeURL(getCurrentFilesPath(), false, false);
+  const base = normalizeURL(getCurrentFilesPath(), false, false) === "" ? "" : normalizeURL(getCurrentFilesPath(), true, false);
   const folder = `${base}${relativePath ? relativePath + "/" : ""}`;
   try {
     if (entry.isDirectory) {
       const dir = entry as FileSystemDirectoryEntry;
       await Endpoints.getInstance().mkdir(`${folder}${entry.name}`);
       const files = await listFilesInDirectory(dir);
+      if (normalizeURL(folder, false, true) === normalizeURL(base, false, true)) {
+        getFolder();
+      }
       await Promise.all(
         files.map((f) =>
-          onFileDragUpload(
+          onFileUpload(
             f,
             addBubble,
             getFolder,
+            addProgress,
+            updateProgress,
             (relativePath ? relativePath + "/" : "") + dir.name
           )
         )
@@ -181,31 +191,41 @@ export async function onFileDragUpload(
     } else if (entry.isFile) {
       const fileEntry = entry as FileSystemFileEntry;
       const file = await getFile(fileEntry);
-      const req = Endpoints.getInstance().uploadFile(file, folder);
-      // upload progress event
-      req.upload.addEventListener("progress", function (e) {
-        // upload progress as percentage
-        const percent_completed = (e.loaded / e.total) * 100;
-        console.log(percent_completed);
-      });
+      return new Promise((resolve) => {
+        const req = Endpoints.getInstance().uploadFile(file, folder);
+        // upload progress event
+        req.upload.addEventListener("progress", function (e) {
+          // upload progress as percentage
+          // const percent_completed = (e.loaded / e.total) * 100;
+          addProgressFiles([{
+            cwd: folder,
+            name: file.name,
+            progress: e.loaded,
+            total: e.total
+          }])
+        });
 
-      // req finished event
-      req.addEventListener("load", function () {
-        // HTTP status message (200, 404 etc)
-        console.log(req.status);
+        // req finished event
+        req.addEventListener("load", function () {
+          updateProgressFile({
+            cwd: folder,
+            name: file.name,
+            progress: file.size,
+            total: file.size
+          })
+          if (normalizeURL(folder, false, true) === normalizeURL(base, false, true)) {
+            getFolder();
+          }
+          resolve();
+        });
 
-        // req.response holds response from the server
-        console.log(req.response);
-        console.log(file);
-        if (folder === base) {
-          getFolder();
-        }
-      });
-
-      req.addEventListener("error", function () {
-        addBubble(`upload-error-${file.name}`, {
-          title: `Could not upload ${file.name}`,
-          type: "ERROR",
+        req.addEventListener("error", function () {
+          addBubble(`upload-error-${file.name}`, {
+            title: `Could not upload ${file.name}`,
+            type: "ERROR",
+          })
+          // TODO add error progress
+          resolve()
         })
       })
     }

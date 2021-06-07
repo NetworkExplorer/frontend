@@ -1,17 +1,21 @@
 import { convertFiles, Endpoints, FileI, getCurrentFilesPath, normalizeURL } from "@lib";
+import { ProgressFileI } from "@models";
 import { addBubble } from "@store/app";
 import {
   ContextMenuProps,
   FilesActionTypes,
   FilesAddFiles,
+  FilesAddProgressFiles,
   FilesAddSelection,
   FilesClearSelection,
+  FilesRemoveProgressFiles,
   FilesRemoveSelection,
   FilesSelectFile,
   FilesSetContextMenu,
   FilesSetLoading,
   FilesShiftSelection,
   FilesThunk,
+  FilesUpdateProgressFile,
 } from "./types";
 
 export const setLoading = (loading: boolean): FilesSetLoading => ({
@@ -93,3 +97,18 @@ export const addFiles = (files: FileI[]): FilesAddFiles => ({
   type: FilesActionTypes.ADD_FILES,
   payload: files,
 });
+
+export const addProgressFiles = (files: ProgressFileI[]): FilesAddProgressFiles => ({
+  type: FilesActionTypes.ADD_PROGRESS_FILES,
+  payload: files,
+});
+
+export const updateProgressFile = (file: ProgressFileI): FilesUpdateProgressFile => ({
+  type: FilesActionTypes.UPDATE_PROGRESS_FILE,
+  payload: file
+})
+
+export const removeProgressFiles = (files: ProgressFileI[]): FilesRemoveProgressFiles => ({
+  type: FilesActionTypes.REMOVE_PROGRESS_FILES,
+  payload: files
+})

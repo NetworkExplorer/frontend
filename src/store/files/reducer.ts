@@ -13,6 +13,7 @@ const initState: FilesStateI = {
   menu: {
     isOpen: false,
   },
+  progressFiles: new Map()
 };
 
 export const filesReducer = (
@@ -127,6 +128,50 @@ export const filesReducer = (
           files: [...state.folder.files, ...action.payload],
         },
       };
+    case Acts.ADD_PROGRESS_FILES: {
+      console.log(action.payload)
+      const copy = new Map(state.progressFiles);
+      for (const file of action.payload) {
+        copy.set(file.cwd + file.name, file);
+      }
+      return {
+        ...state,
+        progressFiles: copy
+      }
+    }
+    case Acts.UPDATE_PROGRESS_FILE: {
+      const copy = new Map(state.progressFiles);
+      let f = copy.get(action.payload.cwd + action.payload.name);
+      console.log("ff", f)
+      if (!f) {
+        f = {
+          ...action.payload,
+          progress: 0,
+          name: action.payload.name.split("/").reverse()[0]
+        };
+      }
+      if (!action.payload.total) {
+        action.payload.total = f.total;
+      }
+      f.progress += action.payload.progress;
+      copy.set(action.payload.cwd + action.payload.name, action.payload);
+      return {
+        ...state,
+        progressFiles: copy
+      }
+    }
+    case Acts.REMOVE_PROGRESS_FILES: {
+      const copy = new Map(state.progressFiles);
+
+      for (const p of action.payload) {
+        copy.delete(p.cwd + p.name);
+      }
+
+      return {
+        ...state,
+        progressFiles: copy
+      }
+    }
     default:
       return { ...state };
   }

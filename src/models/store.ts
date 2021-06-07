@@ -11,3 +11,10 @@ export interface SearchI {
   searchText?: string;
   searchingAll?: boolean;
 }
+
+export interface ProgressFileI {
+  name: string;
+  total: number;
+  progress: number;
+  cwd: string;
+}

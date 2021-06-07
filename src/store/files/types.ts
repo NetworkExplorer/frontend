@@ -1,5 +1,6 @@
 import { FileI } from "@lib";
 import { FolderResInner } from "@lib/responses";
+import { ProgressFileI } from "@models";
 import { RootActions } from "@store";
 import { ActionCreator } from "redux";
 import { ThunkAction } from "redux-thunk";
@@ -23,6 +24,7 @@ export interface FilesStateI {
     selected: Set<FileI>;
   };
   menu: ContextMenuProps;
+  progressFiles: Map<string, ProgressFileI>;
 }
 
 export enum FilesActionTypes {
@@ -35,6 +37,9 @@ export enum FilesActionTypes {
   CLEAR_SELECTION = "files/clear-selection",
   SET_CONTEXT_MENU = "files/set-context-menu",
   ADD_FILES = "files/set-file",
+  ADD_PROGRESS_FILES = "files/add-progress-files",
+  UPDATE_PROGRESS_FILE = "files/update-progress-file",
+  REMOVE_PROGRESS_FILES = "files/remove-progress-files"
 }
 
 const Acts = FilesActionTypes;
@@ -83,6 +88,21 @@ export interface FilesAddFiles {
   payload: FileI[];
 }
 
+export interface FilesAddProgressFiles {
+  type: typeof Acts.ADD_PROGRESS_FILES;
+  payload: ProgressFileI[]
+}
+
+export interface FilesUpdateProgressFile {
+  type: typeof Acts.UPDATE_PROGRESS_FILE;
+  payload: ProgressFileI
+}
+
+export interface FilesRemoveProgressFiles {
+  type: typeof Acts.REMOVE_PROGRESS_FILES;
+  payload: ProgressFileI[]
+}
+
 export type FilesActions =
   | FilesLoadFolder
   | FilesSetLoading
@@ -92,4 +112,7 @@ export type FilesActions =
   | FilesShiftSelection
   | FilesClearSelection
   | FilesSetContextMenu
-  | FilesAddFiles;
+  | FilesAddFiles
+  | FilesAddProgressFiles
+  | FilesUpdateProgressFile
+  | FilesRemoveProgressFiles;
