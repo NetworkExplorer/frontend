@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  faArrowLeft,
   faFolderPlus,
   faHome,
   faSignOutAlt,
@@ -12,6 +13,7 @@ import { RootState, useAppDispatch } from "@store";
 import { addBubble, setPrompt, setTerminal } from "@store/app";
 import { onCreateFolder, ROUTES } from "@lib";
 import { getFolder } from "@store/files";
+import { goBack } from "connected-react-router";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen } = useSelector(
@@ -47,6 +49,16 @@ export const Sidebar = (): JSX.Element => {
               name="Terminal"
               icon={faTerminal}
               onClick={() => dispatch(setTerminal("TOGGLE"))}
+            ></SidebarLink>
+          </>
+        )}
+        {window.location.pathname.startsWith(ROUTES.EDITOR) && (
+          <>
+            <SidebarLink
+              aria-label="go back"
+              name="go back"
+              onClick={() => dispatch(goBack())}
+              icon={faArrowLeft}
             ></SidebarLink>
           </>
         )}
