@@ -23,18 +23,18 @@ export function Search(): JSX.Element {
     }
   };
 
-  // useEffect(() => {
-  //   if (!listening && search.searching) {
-  //     document.addEventListener("keyup", keyUp);
-  //     setListening(true);
-  //   } else {
-  //     dispatch(
-  //       setSearch({ searching: false, shouldFocus: false, searchText: "" })
-  //     );
-  //     setListening(false);
-  //     document.removeEventListener("keyup", keyUp);
-  //   }
-  // }, [search.searching]);
+  useEffect(() => {
+    if (!listening && search.searching) {
+      document.addEventListener("keyup", keyUp);
+      setListening(true);
+    } else {
+      dispatch(
+        setSearch({ searching: false, shouldFocus: false, searchText: "" })
+      );
+      setListening(false);
+      document.removeEventListener("keyup", keyUp);
+    }
+  }, [search.searching]);
 
   useEffect(() => {
     if (search.shouldFocus) {
