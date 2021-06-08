@@ -13,7 +13,7 @@ import {
 import HeaderSearch from "./HeaderSearch/HeaderSearch";
 import { IconButton } from "@components";
 import { RootState, useAppDispatch } from "@store";
-import { addBubble, setSidebar } from "@store/app";
+import { addBubble, setSearch, setSidebar } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Endpoints,
@@ -32,7 +32,7 @@ export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploadState, setUploadState] = useState(false);
-  const { selected, editorReady } = useSelector(
+  const { selected, editorReady, editor } = useSelector(
     ({
       filesReducer: {
         selection: { selected },
@@ -40,8 +40,8 @@ export const Header = (): JSX.Element => {
       router: {
         location: { pathname },
       },
-      editorReducer: { editorReady },
-    }: RootState) => ({ selected, pathname, editorReady })
+      editorReducer: { editorReady, editor },
+    }: RootState) => ({ selected, pathname, editorReady, editor })
   );
 
   const setDirectory = (dir: boolean) => {
@@ -182,6 +182,14 @@ export const Header = (): JSX.Element => {
             name="Search"
             className={css.iconBtn}
             icon={faSearch}
+            onClick={() =>
+              dispatch(
+                setSearch({
+                  searching: true,
+                  shouldFocus: true,
+                })
+              )
+            }
           ></IconButton>
         </>
       )}
@@ -192,6 +200,15 @@ export const Header = (): JSX.Element => {
             className={css.iconBtn}
             icon={faSave}
             disabled={!editorReady}
+            onClick={() => {
+              editor?.getAction("save")?.run();
+              // editor?.getDomNode()?.dispatchEvent(
+              //   new KeyboardEvent("keydown", {
+              //     key: "s",
+              //     ctrlKey: true,
+              //   })
+              // );
+            }}
           ></IconButton>
         </>
       )}

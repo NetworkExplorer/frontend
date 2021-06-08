@@ -39,7 +39,7 @@ export enum FilesActionTypes {
   ADD_FILES = "files/set-file",
   ADD_PROGRESS_FILES = "files/add-progress-files",
   UPDATE_PROGRESS_FILE = "files/update-progress-file",
-  REMOVE_PROGRESS_FILES = "files/remove-progress-files"
+  REMOVE_PROGRESS_FILES = "files/remove-progress-files",
 }
 
 const Acts = FilesActionTypes;

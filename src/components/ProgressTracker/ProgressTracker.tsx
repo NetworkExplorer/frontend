@@ -1,7 +1,6 @@
 import FileIcon from "@components/Files/File/FileIcon";
 import {
   faAngleDown,
-  faDownload,
   faTimes,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";

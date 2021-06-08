@@ -4,7 +4,7 @@ import { normalizeURL } from "./util";
 const ENV = process.env.NODE_ENV;
 export class Endpoints {
   API_URL = "/api/v1";
-  BASE = ENV === "development" ? "http://127.0.0.1:16091" : "";
+  BASE = ENV === "development" ? "http://localhost:16091" : "";
   // private ws: WebSocket;
 
   get dev(): boolean {
@@ -54,7 +54,7 @@ export class Endpoints {
       ws.onclose = error
       ws.onerror = error
       ws.onopen = () => {
-        const cmd = `{cwd: "${cwd}", cmd: "${cmdStr}"}`;
+        const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
         ws.send(cmd)
       }
     } catch (e) {

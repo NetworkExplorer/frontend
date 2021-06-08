@@ -22,6 +22,11 @@ export const editorReducer = (
         ...state,
         editorReady: action.payload
       }
+    case Acts.SET_EDITOR:
+      return {
+        ...state,
+        editor: action.payload
+      }
     default:
       return state;
   }

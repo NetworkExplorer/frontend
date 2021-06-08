@@ -6,7 +6,7 @@ import * as Monaco from "monaco-editor";
 import { Layout } from "@components";
 import { options } from "./EditorOptions";
 import { useAppDispatch } from "@store";
-import { setEditorReady } from "@store/editor";
+import { setEditor, setEditorReady } from "@store/editor";
 import { Endpoints, normalizeURL, ROUTES } from "@lib";
 import { addBubble } from "@store/app";
 import FileIcon from "@components/Files/File/FileIcon";
@@ -23,14 +23,18 @@ export const EditorPage = (): JSX.Element => {
   );
   const name = fileURL.split("/").reverse()[0];
   const [loaded, setLoaded] = useState(0);
+  useEffect(() => {
+    return () => {
+      dispatch(setEditor(undefined));
+    };
+  }, []);
 
   async function handleEditorDidMount(
     editor: editor.IStandaloneCodeEditor,
     monaco: typeof Monaco
   ) {
-    console.log("onMount: the editor instance:", editor);
-    console.log("onMount: the monaco instance:", monaco);
     dispatch(setEditorReady(true));
+    dispatch(setEditor(editor));
     let t = "";
     let b: Blob;
     const res = await Endpoints.getInstance().getFileBlob(fileURL);
@@ -78,48 +82,60 @@ export const EditorPage = (): JSX.Element => {
       monaco.editor.createModel(t, undefined, monaco.Uri.file(fileURL))
     );
     setLoaded(100);
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
-      const val = editor.getValue();
-      const file = new File([new Blob([val], { type: b.type })], name, {
-        type: res.type,
-        lastModified: new Date().getTime(),
-      });
-      const req = Endpoints.getInstance().uploadFile(
-        file,
-        fileURL.replace(name, "")
-      );
-      // upload progress event
-      req.upload.addEventListener("progress", function (e) {
-        // upload progress as percentage
-        const percent_completed = (e.loaded / e.total) * 100;
-        console.log(percent_completed);
-      });
+    const saveAction: Monaco.editor.IActionDescriptor = {
+      id: "save",
+      label: "Save file",
+      keybindings: [
+        Monaco.KeyMod.CtrlCmd | Monaco.KeyCode.KEY_S, // Ctrl + Enter or Cmd + Enter
+      ],
+      contextMenuOrder: 0, // choose the order
+      contextMenuGroupId: "operation", // create a new grouping
+      run: () => {
+        const val = editor.getValue();
+        const uri = editor.getModel()?.uri;
+        if (uri) {
+          const name = uri.path.split("/").reverse()[0];
+          const file = new File([new Blob([val], { type: b.type })], name, {
+            type: b.type,
+            lastModified: new Date().getTime(),
+          });
+          const req = Endpoints.getInstance().uploadFile(
+            file,
+            fileURL.replace(name, "")
+          );
+          // upload progress event
+          req.upload.addEventListener("progress", function (e) {
+            // upload progress as percentage
+            const percent_completed = (e.loaded / e.total) * 100;
+            console.log(percent_completed);
+          });
 
-      // req finished event
-      req.addEventListener("load", function () {
-        // HTTP status message (200, 404 etc)
-        console.log(req.status);
+          // req finished event
+          req.addEventListener("load", function () {
+            dispatch(
+              addBubble("save-success", {
+                type: "SUCCESS",
+                title: `Successfully saved ${name}`,
+              })
+            );
+          });
 
-        // req.response holds response from the server
-        console.log(req.response);
-        // getFolder(undefined, false);
-        dispatch(
-          addBubble("save-success", {
-            type: "SUCCESS",
-            title: `Successfully saved ${name}`,
-          })
-        );
-      });
+          req.addEventListener("error", function () {
+            dispatch(
+              addBubble(`upload-error-${file.name}`, {
+                title: `Could not upload ${file.name}`,
+                type: "ERROR",
+              })
+            );
+          });
+        }
+      },
+    };
+    editor.addAction(saveAction);
+    editor.getAction("editor.action.quickCommand").run();
+  }
 
-      req.addEventListener("error", function () {
-        dispatch(
-          addBubble(`upload-error-${file.name}`, {
-            title: `Could not upload ${file.name}`,
-            type: "ERROR",
-          })
-        );
-      });
-    });
+  function handleEditorWillMount(monaco: typeof Monaco) {
     monaco.editor.defineTheme("custom-dark", {
       base: "vs-dark",
       colors: { "editor.background": "#282c34" },
@@ -128,10 +144,6 @@ export const EditorPage = (): JSX.Element => {
       rules: [],
     });
     monaco.editor.setTheme("custom-dark");
-  }
-
-  function handleEditorWillMount(monaco: typeof Monaco) {
-    console.log("beforeMount: the monaco instance:", monaco);
   }
 
   return (
@@ -163,5 +175,11 @@ export const EditorPage = (): JSX.Element => {
     </Layout>
   );
 };
+
+// export const saveEditorFile = (
+//   editor?: editor.IStandaloneCodeEditor,
+// ): (() => void) => {
+//   return () => {};
+// };
 
 export default EditorPage;

@@ -1,4 +1,5 @@
 import { RootActions } from "@store";
+import { editor } from "monaco-editor";
 import { ActionCreator } from "redux";
 import { ThunkAction } from "redux-thunk";
 
@@ -15,11 +16,13 @@ export interface EditorFile {
 export interface EditorStateI {
   currentFile?: EditorFile;
   editorReady: boolean;
+  editor?: editor.IStandaloneCodeEditor;
 }
 
 export enum EditorActionTypes {
   SET_CURRENT_FILE = "editor/set-current-file",
   SET_EDITOR_READY = "editor/set-editor-ready",
+  SET_EDITOR = "files/set-editor"
 }
 
 const Acts = EditorActionTypes;
@@ -34,5 +37,11 @@ export interface EditorSetEditorReady {
   payload: boolean
 }
 
+export interface EditorSetEditor {
+  type: typeof Acts.SET_EDITOR;
+  payload?: editor.IStandaloneCodeEditor;
+}
+
 export type EditorActions = EditorSetCurrentFile
-  | EditorSetEditorReady;
+  | EditorSetEditorReady
+  | EditorSetEditor;
