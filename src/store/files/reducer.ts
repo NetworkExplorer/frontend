@@ -129,7 +129,6 @@ export const filesReducer = (
         },
       };
     case Acts.ADD_PROGRESS_FILES: {
-      console.log(action.payload)
       const copy = new Map(state.progressFiles);
       for (const file of action.payload) {
         copy.set(file.cwd + file.name, file);

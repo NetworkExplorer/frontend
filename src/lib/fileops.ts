@@ -191,17 +191,23 @@ export async function onFileUpload(
       const fileEntry = entry as FileSystemFileEntry;
       const file = await getFile(fileEntry);
       return new Promise((resolve) => {
+        addProgress([{
+          cwd: folder,
+          name: file.name,
+          progress: 0,
+          total: file.size
+        }])
         const req = Endpoints.getInstance().uploadFile(file, folder);
         // upload progress event
         req.upload.addEventListener("progress", function (e) {
           // upload progress as percentage
           // const percent_completed = (e.loaded / e.total) * 100;
-          addProgress([{
+          updateProgress({
             cwd: folder,
             name: file.name,
             progress: e.loaded,
             total: e.total
-          }])
+          })
         });
 
         // req finished event
