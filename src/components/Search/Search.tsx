@@ -23,18 +23,18 @@ export function Search(): JSX.Element {
     }
   };
 
-  useEffect(() => {
-    if (!listening && search.searching) {
-      document.addEventListener("keyup", keyUp);
-      setListening(true);
-    } else {
-      dispatch(
-        setSearch({ searching: false, shouldFocus: false, searchText: "" })
-      );
-      setListening(false);
-      document.removeEventListener("keyup", keyUp);
-    }
-  }, [search.searching]);
+  // useEffect(() => {
+  //   if (!listening && search.searching) {
+  //     document.addEventListener("keyup", keyUp);
+  //     setListening(true);
+  //   } else {
+  //     dispatch(
+  //       setSearch({ searching: false, shouldFocus: false, searchText: "" })
+  //     );
+  //     setListening(false);
+  //     document.removeEventListener("keyup", keyUp);
+  //   }
+  // }, [search.searching]);
 
   useEffect(() => {
     if (search.shouldFocus) {
@@ -60,7 +60,7 @@ export function Search(): JSX.Element {
           )
         }
         ref={inputRef}
-        onKeyUp={(e) => keyUp(e)}
+        // onKeyUp={(e) => keyUp(e)}
       />
     </div>
   );

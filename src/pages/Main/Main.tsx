@@ -81,10 +81,12 @@ const MainPageUI = (): JSX.Element => {
     SEARCH: (e) => {
       e?.preventDefault();
       e?.stopPropagation();
-      setSearch({
-        searching: true,
-        shouldFocus: true,
-      });
+      dispatch(
+        setSearch({
+          searching: true,
+          shouldFocus: true,
+        })
+      );
     },
   };
 

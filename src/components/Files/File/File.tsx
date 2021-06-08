@@ -47,15 +47,15 @@ export function File({ file }: Props): JSX.Element {
     );
   }
 
-  if (search.searching && !file.name.includes(search.searchText || "")) {
-    return <></>;
-  }
-
   let counter = 0;
   const [dragOver, setDragOver] = useState({
     over: false,
     shouldBeHighlighted: false,
   });
+
+  if (search.searching && !file.name.includes(search.searchText || "")) {
+    return <></>;
+  }
 
   function handleClick(ev: React.MouseEvent<HTMLDivElement>) {
     if (file.name === "..") return;
