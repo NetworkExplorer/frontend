@@ -11,14 +11,21 @@
   flex-grow: 1;
   display: flex;
   flex-direction: row;
+  width: 100%;
   height: calc(100% - #{$headerHeight});
   max-height: calc(100% - #{$headerHeight});
 }
 
 .right {
-  flex-grow: 1;
+  // flex-grow: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
   position: relative;
+  width: calc(100% - #{$headerHeight});
+  transition: $dur width ease;
+}
+
+.sidebarOpen {
+  width: calc(100% - #{$sidebarOpen});
 }

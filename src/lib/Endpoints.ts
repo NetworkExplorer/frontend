@@ -5,7 +5,7 @@ const ENV = process.env.NODE_ENV;
 export class Endpoints {
   API_URL = "/api/v1";
   BASE = ENV === "development" ? "http://localhost:16091" : "";
-  // private ws: WebSocket;
+  private ws?: WebSocket;
 
   get dev(): boolean {
     return ENV === "development";
@@ -49,17 +49,21 @@ export class Endpoints {
 
   startExec(cwd: string, cmdStr: string, callback: (ev: MessageEvent) => void, error: (e: Event) => void): any {
     try {
-      const ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`);
-      ws.onmessage = callback;
-      ws.onclose = error
-      ws.onerror = error
-      ws.onopen = () => {
+      if (!this.ws) this.ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`);
+      this.ws.onmessage = callback;
+      this.ws.onclose = error
+      this.ws.onerror = error
+      this.ws.onopen = () => {
         const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
-        ws.send(cmd)
+        this.ws?.send(cmd)
       }
     } catch (e) {
       error(e)
     }
+  }
+
+  cancelExec(): void {
+    this.ws?.send(`{exit: true}`);
   }
 
   fetchFromAPI = async (

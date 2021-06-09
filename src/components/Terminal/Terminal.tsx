@@ -5,10 +5,17 @@ import { connect, ConnectedProps } from "react-redux";
 import { setTerminal, TerminalActions } from "@store/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { Endpoints, findElInTree, getCurrentFilesPath, WSData } from "@lib";
+import {
+  Endpoints,
+  findElInTree,
+  getCurrentFilesPath,
+  normalizeURL,
+  WSData,
+} from "@lib";
 import { XTerm as XTermEl } from "@termftp/react-xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebLinksAddon } from "xterm-addon-web-links";
+import { Terminal as XTerminal } from "xterm";
 
 const mapState = ({ appReducer: { terminalOpen } }: RootState) => ({
   terminalOpen,
@@ -26,18 +33,23 @@ type Props = PropsFromState;
 interface State {
   executing: boolean;
   value: string;
+  actualValue: string;
+  currentPosition: number;
 }
 
 class TerminalUI extends Component<Props, State> {
   xtermRef: React.RefObject<XTermEl> = React.createRef();
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
+  history: string[] = [];
 
   constructor(props: Props) {
     super(props);
     this.state = {
       executing: false,
       value: "",
+      currentPosition: -1,
+      actualValue: "",
     };
   }
 
@@ -62,48 +74,115 @@ class TerminalUI extends Component<Props, State> {
   componentDidMount() {
     window.addEventListener("dblclick", this.handleDoubleClick);
     window.addEventListener("resize", this.resize);
+    this.xtermRef.current?.getTerminal().setOption("theme", {
+      background: "#343b47",
+    });
     // this.resize();
     (window as any).fit = this.fitAddon.fit.bind(this.fitAddon);
     if (this.xtermRef.current) {
       const t = this.xtermRef.current.getTerminal();
       t.write("$ ");
-      t.onKey(
-        (({ key, domEvent }: { key: string; domEvent: KeyboardEvent }) => {
-          if (!this.state.executing) {
-            if (domEvent.key === "Enter") {
-              this.setState({ executing: true });
-              t.writeln("");
-              t.writeln("");
-              // TODO send command
-              Endpoints.getInstance().startExec(
-                getCurrentFilesPath(),
-                this.state.value,
-                this.onMessage,
-                this.onError
-              );
-              return;
-            } else if (domEvent.key.toLowerCase() === "c" && domEvent.ctrlKey) {
-              console.log("ctrl+c");
-              // TODO add cancel
-            } else if (domEvent.key === "Backspace") {
-              if (this.state.value.length > 0) {
-                this.setState({
-                  value: this.state.value.substring(
-                    0,
-                    this.state.value.length - 1
-                  ),
-                });
-                t.write("\b \b");
-              }
-            } else if (domEvent.key.length == 1) {
-              // check if character is writeable
-              this.setState({ value: this.state.value + domEvent.key });
-              t.write(key);
-            }
-          }
-        }).bind(this)
-      );
+      t.onKey(this.onKey);
     }
+  }
+
+  onKey = ({ key, domEvent }: { key: string; domEvent: KeyboardEvent }) => {
+    const t = this.xtermRef.current?.getTerminal();
+    if (!t) return;
+    if (domEvent.key.toLowerCase() === "c" && domEvent.ctrlKey) {
+      t.write("^C");
+      Endpoints.getInstance().cancelExec();
+      return;
+    }
+    if (!this.state.executing) {
+      if (domEvent.key === "Enter") {
+        t.writeln("");
+        t.writeln("");
+        this.history.push(this.state.value);
+
+        Endpoints.getInstance().startExec(
+          normalizeURL(getCurrentFilesPath(), false, true),
+          this.state.value,
+          this.onMessage,
+          this.onError
+        );
+        this.setState({
+          executing: true,
+          currentPosition: this.history.length,
+          value: "",
+          actualValue: "",
+        });
+      } else if (domEvent.key === "Backspace") {
+        if (this.state.value.length > 0) {
+          const s = this.state.actualValue.substring(
+            0,
+            this.state.actualValue.length - 1
+          );
+          this.setState({
+            value: s,
+            actualValue: s,
+            currentPosition: -1,
+          });
+          t.write("\b \b");
+        }
+      } else if (domEvent.key.length == 1) {
+        // check if character is writeable
+        this.setState({
+          value: this.state.actualValue + domEvent.key,
+          actualValue: this.state.actualValue + domEvent.key,
+          currentPosition: -1,
+        });
+        t.write(key);
+      } else if (domEvent.key === "ArrowUp") {
+        let newPos = this.state.currentPosition;
+        if (this.state.currentPosition < 0) {
+          newPos = this.history.length;
+        }
+        newPos -= 1;
+        if (newPos >= 0) {
+          this.removeCurrent(t, this.history[newPos]);
+          t.write(this.history[newPos]);
+          this.setState({
+            currentPosition: newPos,
+            actualValue: this.history[newPos],
+          });
+        }
+      } else if (domEvent.key === "ArrowDown") {
+        let newPos = this.state.currentPosition;
+        newPos += 1;
+        if (newPos < this.history.length) {
+          this.removeCurrent(t, this.history[newPos]);
+          t.write(this.history[newPos]);
+          this.setState({
+            currentPosition: newPos,
+            actualValue: this.history[newPos],
+          });
+        } else if (newPos >= this.history.length) {
+          this.removeCurrent(t, this.state.actualValue);
+          t.write(this.state.value);
+          this.setState({
+            actualValue: this.state.value,
+            currentPosition: this.history.length,
+          });
+        }
+      }
+    }
+  };
+
+  removeCurrent(t: XTerminal, newValue: string) {
+    if (this.state.currentPosition === -1) {
+      for (let i = 0; i < this.state.value.length; i++) {
+        this.backspace(t);
+      }
+    } else {
+      for (let i = 0; i < newValue.length; i++) {
+        this.backspace(t);
+      }
+    }
+  }
+
+  backspace(t: XTerminal) {
+    t.write("\b \b");
   }
 
   onMessage = (ev: MessageEvent) => {
@@ -112,7 +191,7 @@ class TerminalUI extends Component<Props, State> {
     if (!t) return;
     if (res.error) {
       t.writeln(
-        "An error occured. The development console contains more information"
+        "An error occurred. The development console contains more information"
       );
       console.error(res);
     } else if (res.end) {

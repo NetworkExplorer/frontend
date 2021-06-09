@@ -73,10 +73,5 @@ $terminalDur: 400ms;
 }
 
 .xterm {
-  background: $dark-bg-2 !important;
   height: 100%;
-  * > div,
-  * > * > div {
-    background: $dark-bg-2 !important;
-  }
 }
