@@ -3,7 +3,7 @@ import css from "./App.module.scss";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "@store";
 import { Redirect, Route, Switch } from "react-router";
-import { EditorPage, MainPage } from "@pages";
+import { EditorPage, Login, MainPage, Register } from "@pages";
 import { ROUTES } from "@lib";
 
 export function App(): JSX.Element {
@@ -22,11 +22,12 @@ export function App(): JSX.Element {
       <div id={css.appWrapper}>
         <ConnectedRouter history={history}>
           <Switch>
-            {/* TODO add pages for login/register */}
-            <Route path={ROUTES.LOGIN}></Route>
-            <Route path={ROUTES.REGISTER}></Route>
+            <Route path={ROUTES.LOGIN} component={Login}></Route>
+            <Route path={ROUTES.REGISTER} component={Register}></Route>
             <Route path={ROUTES.FILES} component={MainPage}></Route>
             <Route path={ROUTES.EDITOR} component={EditorPage}></Route>
+            {/* TODO add pages for settings */}
+            <Route path={ROUTES.SETTINGS}></Route>
             <Route exact path="/">
               <Redirect to={ROUTES.FILES}></Redirect>
             </Route>
