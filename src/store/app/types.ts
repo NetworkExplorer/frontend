@@ -9,7 +9,7 @@ export type AppThunk<ReturnType = void> = ActionCreator<
 >;
 
 export interface AppStateI {
-	loading: boolean;
+	appLoading: boolean;
 	sidebarOpen: boolean;
 	terminalOpen: boolean;
 	bubbles: Map<string, BubbleI>;
@@ -25,7 +25,8 @@ export enum AppActionTypes {
 	REMOVE_BUBBLE = "app/remove-bubble",
 	SET_PROMPT = "app/set-prompt",
 	SET_SEARCH = "app/set-search",
-	FETCH_SUGGESTIONS = "app/fetch-suggestions"
+	FETCH_SUGGESTIONS = "app/fetch-suggestions",
+	SET_LOADING = "app/set-loading"
 }
 
 const Acts = AppActionTypes;
@@ -72,6 +73,11 @@ export interface AppFetchSuggestions {
 	payload: string[];
 }
 
+export interface AppSetLoading {
+	type: typeof Acts.SET_LOADING;
+	payload: boolean;
+}
+
 export type AppActions =
 	| AppSetSidebar
 	| AppSetTerminal
@@ -79,4 +85,5 @@ export type AppActions =
 	| AppRemoveBubble
 	| AppSetPrompt
 	| AppSetSearch
-	| AppFetchSuggestions;
+	| AppFetchSuggestions
+	| AppSetLoading;

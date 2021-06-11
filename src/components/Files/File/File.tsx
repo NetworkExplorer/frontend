@@ -11,7 +11,7 @@ import {
   removeSelection,
   selectFile,
   setContextMenu,
-  setLoading,
+  setFilesLoading,
   shiftSelection,
   updateProgressFile,
 } from "@store/files";
@@ -134,7 +134,7 @@ export function File({ file }: Props): JSX.Element {
       const data: FileI[] = JSON.parse(
         e.dataTransfer.getData("app/file-transfer")
       );
-      dispatch(setLoading(true));
+      dispatch(setFilesLoading(true));
       await onMove(data, file, (key, bubble) =>
         dispatch(addBubble(key, bubble))
       );

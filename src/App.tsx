@@ -1,22 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import css from "./App.module.scss";
 import { ConnectedRouter } from "connected-react-router";
-import { history } from "@store";
+import { history, useAppDispatch, RootState } from "@store";
 import { Redirect, Route, Switch } from "react-router";
-import { EditorPage, Login, MainPage, Register } from "@pages";
-import { ROUTES } from "@lib";
+import { EditorPage, Login, MainPage } from "@pages";
+import { Endpoints, ROUTES } from "@lib";
+import ProtectedRoute from "@components/ProtectedRoute";
+import { loginWithToken } from "@store/user";
+import { useSelector } from "react-redux";
+import { Bubbles, Loading } from "@components";
 
 export function App(): JSX.Element {
-  // const state = useSelector((state: RootState) => ({
-  //   loading: state.appReducer.loading,
-  // }));
-  // const dispatch = useDispatch<RootDispatch>();
-  // const handleChange = () =>
-  //   dispatch({
-  //     type: AppActionTypes.SET_LOADING,
-  //     payload: !state.loading,
-  //   });
-
+  const dispatch = useAppDispatch();
+  const { appLoading } = useSelector(
+    ({ appReducer: { appLoading } }: RootState) => ({ appLoading })
+  );
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) dispatch(loginWithToken(token) as any);
+    else Endpoints.clearToken();
+  }, []);
   return (
     <div className={css.App}>
       <div id={css.appWrapper}>
@@ -24,17 +28,25 @@ export function App(): JSX.Element {
           <Switch>
             <Route path={ROUTES.LOGIN} component={Login}></Route>
             {/* TODO check if register is enabled */}
-            <Route path={ROUTES.REGISTER} component={Register}></Route>
-            <Route path={ROUTES.FILES} component={MainPage}></Route>
-            <Route path={ROUTES.EDITOR} component={EditorPage}></Route>
+            {/* <Route path={ROUTES.REGISTER} component={Register}></Route> */}
+            <ProtectedRoute
+              path={ROUTES.FILES}
+              component={MainPage}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              path={ROUTES.EDITOR}
+              component={EditorPage}
+            ></ProtectedRoute>
             {/* TODO add page for settings */}
-            <Route path={ROUTES.SETTINGS}></Route>
+            <ProtectedRoute path={ROUTES.SETTINGS}></ProtectedRoute>
             <Route exact path="/">
               <Redirect to={ROUTES.FILES}></Redirect>
             </Route>
           </Switch>
         </ConnectedRouter>
+        <Loading loading={appLoading}></Loading>
       </div>
+      <Bubbles></Bubbles>
     </div>
   );
 }

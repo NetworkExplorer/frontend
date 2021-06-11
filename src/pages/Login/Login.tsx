@@ -126,10 +126,10 @@ class LoginUI extends React.Component<Props, State> {
           </form>
         </div>
         {/* TODO check if register is enabled */}
-        <div id={css.registerHint}>
+        {/* <div id={css.registerHint}>
           Don&apos;t have an account?{" "}
           <button onClick={this.props.register}>Register</button>
-        </div>
+        </div> */}
       </div>
     );
   }

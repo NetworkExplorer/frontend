@@ -11,7 +11,7 @@ export const userReducer = (
 	action: UserActions
 ): UserStateI => {
 	switch (action.type) {
-		case Acts.LOGIN:
+		case Acts.SET_USER:
 			return {
 				...state,
 				user: action.payload

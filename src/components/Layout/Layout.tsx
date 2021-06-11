@@ -1,6 +1,6 @@
 import React from "react";
 import css from "./Layout.module.scss";
-import { Header, Sidebar, Bubbles } from "@components";
+import { Header, Sidebar } from "@components";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
 
@@ -33,7 +33,6 @@ export const Layout = ({
           {children}
         </div>
       </div>
-      <Bubbles></Bubbles>
     </div>
   );
 };

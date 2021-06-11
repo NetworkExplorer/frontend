@@ -4,7 +4,7 @@ import { AppActions, AppStateI, AppActionTypes } from "./types";
 const Acts = AppActionTypes;
 
 const initState: AppStateI = {
-	loading: false,
+	appLoading: false,
 	sidebarOpen: false,
 	terminalOpen: false,
 	bubbles: new Map(),
@@ -23,6 +23,11 @@ export const appReducer = (
 	action: AppActions
 ): AppStateI => {
 	switch (action.type) {
+		case Acts.SET_LOADING:
+			return {
+				...state,
+				appLoading: action.payload
+			}
 		case Acts.SET_SIDEBAR: {
 			let sidebar = state.sidebarOpen;
 			if (action.payload === "TOGGLE") sidebar = !sidebar;

@@ -30,8 +30,9 @@
   background: $dark-bg-1;
   margin: 20px 0;
   min-width: 500px;
+  color: $bg;
   & :local {
-    animation: trans-in $dur cubic-bezier(0.17, 0.67, 0.61, 1.21);
+    animation: trans-in $dur * 3 cubic-bezier(0.17, 0.67, 0.61, 1.25);
   }
 
   form {
@@ -48,11 +49,14 @@
     align-items: flex-start;
     margin-bottom: 15px;
     width: 100%;
+    user-select: none;
 
     input {
       margin-top: 5px;
       width: 100%;
       text-align: left;
+      color: $bg;
+      user-select: text;
     }
   }
 
@@ -73,11 +77,13 @@
     flex-grow: 0;
     padding: 10px 15px;
     transition: filter $dur;
+    color: $bg;
+    border-radius: 5px;
 
-    &:disabled {
-      filter: opacity(0.3);
-      cursor: default;
-    }
+    //     &:disabled {
+    //       filter: opacity(0.3);
+    //       cursor: default;
+    //     }
   }
 }
 
@@ -92,7 +98,7 @@
 
 @keyframes trans-in {
   0% {
-    transform: translateY(-3em);
+    transform: translateY(-80%);
   }
 
   100% {
