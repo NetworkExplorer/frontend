@@ -89,7 +89,7 @@ class LoginUI extends React.Component<Props, State> {
     return (
       <div id={css.login}>
         <h1>Login</h1>
-        <div id="login-box">
+        <div className={css.loginBox} id="loginBox">
           <form onSubmit={this.handleSubmit}>
             <label>
               Username/Email:
@@ -112,7 +112,7 @@ class LoginUI extends React.Component<Props, State> {
                 onChange={(e) => this.handleChange(e, Change.PASSWORD)}
               />
             </label>
-            <label htmlFor="auto-login" id="auto-login-label">
+            <label htmlFor="auto-login" id={css.autoLoginLabel}>
               <input
                 type="checkbox"
                 name="auto-login"
@@ -125,7 +125,8 @@ class LoginUI extends React.Component<Props, State> {
             <input type="submit" value="Login" disabled={!canRegister} />
           </form>
         </div>
-        <div id="register-hint">
+        {/* TODO check if register is enabled */}
+        <div id={css.registerHint}>
           Don&apos;t have an account?{" "}
           <button onClick={this.props.register}>Register</button>
         </div>

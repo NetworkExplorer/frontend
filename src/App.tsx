@@ -23,10 +23,11 @@ export function App(): JSX.Element {
         <ConnectedRouter history={history}>
           <Switch>
             <Route path={ROUTES.LOGIN} component={Login}></Route>
+            {/* TODO check if register is enabled */}
             <Route path={ROUTES.REGISTER} component={Register}></Route>
             <Route path={ROUTES.FILES} component={MainPage}></Route>
             <Route path={ROUTES.EDITOR} component={EditorPage}></Route>
-            {/* TODO add pages for settings */}
+            {/* TODO add page for settings */}
             <Route path={ROUTES.SETTINGS}></Route>
             <Route exact path="/">
               <Redirect to={ROUTES.FILES}></Redirect>

@@ -1,2 +1,101 @@
+@import "/src/global/variables";
+
 #login {
+  color: $bg;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: $dark-bg;
+
+  #register-hint button {
+    text-decoration: underline;
+  }
+}
+
+// :global {
+//   #loginBox {
+//     animation: trans-in 1s 1 ease;
+//   }
+// }
+
+.loginBox {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-radius: 5px;
+  align-items: flex-end;
+  background: $dark-bg-1;
+  margin: 20px 0;
+  min-width: 500px;
+  & :local {
+    animation: trans-in $dur cubic-bezier(0.17, 0.67, 0.61, 1.21);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    width: 100%;
+
+    input {
+      margin-top: 5px;
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  #autoLoginLabel {
+    font-variant: normal;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    input {
+      width: auto;
+      margin: 0 10px;
+    }
+  }
+
+  input[type="submit"] {
+    width: fit-content;
+    flex-grow: 0;
+    padding: 10px 15px;
+    transition: filter $dur;
+
+    &:disabled {
+      filter: opacity(0.3);
+      cursor: default;
+    }
+  }
+}
+
+#registerHint button {
+  background-color: inherit;
+  color: white;
+
+  &:hover {
+    background-color: $dark-bg-1;
+  }
+}
+
+@keyframes trans-in {
+  0% {
+    transform: translateY(-3em);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }

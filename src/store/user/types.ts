@@ -14,6 +14,8 @@ export interface UserStateI {
 
 export enum UserActionTypes {
 	LOGIN = "user/login",
+	REGISTER = "user/register",
+	SIGNOUT = "user/signout"
 }
 
 const Acts = UserActionTypes;
@@ -23,4 +25,15 @@ export interface UserLogin {
 	payload?: User;
 }
 
-export type UserActions = UserLogin;
+export interface UserRegister {
+	type: typeof Acts.REGISTER;
+	payload?: User;
+}
+
+export interface UserSignout {
+	type: typeof Acts.SIGNOUT;
+}
+
+export type UserActions = UserLogin
+	| UserRegister
+	| UserSignout;
