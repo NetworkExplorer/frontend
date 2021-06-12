@@ -48,6 +48,7 @@ export const loginWithToken: UserThunk = (token: string) =>
 				permissions: d.permissions
 			}
 			dispatch(setUser(user))
+			if (window.location.pathname.startsWith(ROUTES.LOGIN)) dispatch(push(ROUTES.FILES))
 			return dispatch(setAppLoading(false))
 		} catch (e) {
 			dispatch(addBubble("login-error", {
@@ -55,6 +56,15 @@ export const loginWithToken: UserThunk = (token: string) =>
 				type: "ERROR"
 			}))
 			return dispatch(setAppLoading(false))
+		}
+	}
+
+export const signOut: UserThunk = () =>
+	async (dispatch) => {
+		Endpoints.clearToken();
+		dispatch(push(ROUTES.LOGIN));
+		return {
+			type: Acts.SIGNOUT
 		}
 	}
 

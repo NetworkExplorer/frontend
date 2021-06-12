@@ -14,6 +14,7 @@ import { addBubble, setPrompt, setTerminal } from "@store/app";
 import { onCreateFolder, ROUTES } from "@lib";
 import { getFolder } from "@store/files";
 import { goBack } from "connected-react-router";
+import { signOut } from "@store/user";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen } = useSelector(
@@ -68,9 +69,7 @@ export const Sidebar = (): JSX.Element => {
           name="Sign out"
           icon={faSignOutAlt}
           // path="/"
-          onClick={() => {
-            //
-          }} // TODO
+          onClick={() => dispatch(signOut() as any)} // TODO
         ></SidebarLink>
       </div>
     </div>

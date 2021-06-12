@@ -16,6 +16,11 @@ export const userReducer = (
 				...state,
 				user: action.payload
 			}
+		case Acts.SIGNOUT: {
+			const newState = { ...state };
+			delete newState.user;
+			return newState;
+		}
 		default:
 			return state;
 	}

@@ -99,35 +99,29 @@ export const EditorPage = (): JSX.Element => {
             type: b.type,
             lastModified: new Date().getTime(),
           });
-          const req = Endpoints.getInstance().uploadFile(
+          Endpoints.getInstance().uploadFile(
             file,
-            fileURL.replace(name, "")
+            fileURL.replace(name, ""),
+            () => {
+              //
+            },
+            function () {
+              dispatch(
+                addBubble("save-success", {
+                  type: "SUCCESS",
+                  title: `Successfully saved ${name}`,
+                })
+              );
+            },
+            function () {
+              dispatch(
+                addBubble(`upload-error-${file.name}`, {
+                  title: `Could not upload ${file.name}`,
+                  type: "ERROR",
+                })
+              );
+            }
           );
-          // upload progress event
-          req.upload.addEventListener("progress", function (e) {
-            // upload progress as percentage
-            const percent_completed = (e.loaded / e.total) * 100;
-            console.log(percent_completed);
-          });
-
-          // req finished event
-          req.addEventListener("load", function () {
-            dispatch(
-              addBubble("save-success", {
-                type: "SUCCESS",
-                title: `Successfully saved ${name}`,
-              })
-            );
-          });
-
-          req.addEventListener("error", function () {
-            dispatch(
-              addBubble(`upload-error-${file.name}`, {
-                title: `Could not upload ${file.name}`,
-                type: "ERROR",
-              })
-            );
-          });
         }
       },
     };

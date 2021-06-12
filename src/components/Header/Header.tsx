@@ -26,7 +26,7 @@ import {
   ROUTES,
 } from "@lib";
 import { useSelector } from "react-redux";
-import { getFolder } from "@store/files";
+import { addProgressFiles, getFolder, updateProgressFile } from "@store/files";
 
 export const Header = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -71,37 +71,54 @@ export const Header = (): JSX.Element => {
       setUploadState(false);
       return;
     }
+    const folder =
+      normalizeURL(getCurrentFilesPath(), false, false) === ""
+        ? ""
+        : normalizeURL(getCurrentFilesPath(), true, false);
     for (const file of files) {
-      const req = await Endpoints.getInstance().uploadFile(
-        file,
-        normalizeURL(getCurrentFilesPath(), false)
+      dispatch(
+        addProgressFiles([
+          {
+            cwd: folder,
+            name: file.name,
+            progress: 0,
+            total: file.size,
+          },
+        ])
       );
-      // upload progress event
-      req.upload.addEventListener("progress", function (e) {
-        // upload progress as percentage
-        const percent_completed = (e.loaded / e.total) * 100;
-        console.log(percent_completed);
-      });
-
-      // req finished event
-      req.addEventListener("load", function () {
-        // HTTP status message (200, 404 etc)
-        console.log(req.status);
-
-        // req.response holds response from the server
-        console.log(req.response);
-        console.log(file);
-        dispatch(getFolder(undefined, false) as any);
-      });
-
-      req.addEventListener("error", function () {
-        dispatch(
-          addBubble(`upload-error-${file.name}`, {
-            title: `Could not upload ${file.name}`,
-            type: "ERROR",
-          })
-        );
-      });
+      await Endpoints.getInstance().uploadFile(
+        file,
+        folder,
+        (e) =>
+          // upload progress as percentage
+          dispatch(
+            updateProgressFile({
+              cwd: folder,
+              name: file.name,
+              progress: e.loaded,
+              total: e.total,
+            })
+          ),
+        () => {
+          dispatch(
+            updateProgressFile({
+              cwd: folder,
+              name: file.name,
+              progress: file.size,
+              total: file.size,
+            })
+          );
+          dispatch(getFolder() as any);
+        },
+        () => {
+          dispatch(
+            addBubble(`upload-error-${file.name}`, {
+              title: `Could not upload ${file.name}`,
+              type: "ERROR",
+            })
+          );
+        }
+      );
     }
   };
 
@@ -215,7 +232,8 @@ export const Header = (): JSX.Element => {
       <IconButton
         className={css.iconBtn}
         icon={faCog}
-        name="settings"
+        name="Settings"
+        path={ROUTES.SETTINGS}
       ></IconButton>
     </header>
   );

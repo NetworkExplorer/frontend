@@ -30,7 +30,12 @@ export default function SidebarLink({
     );
   } else if (onClick) {
     return (
-      <button onClick={onClick} className={css.link}>
+      <button
+        onClick={onClick}
+        className={css.link}
+        title={name}
+        aria-label={name}
+      >
         <div className={css.iconWrapper} aria-hidden="true">
           <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
         </div>

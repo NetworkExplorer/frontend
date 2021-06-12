@@ -251,44 +251,48 @@ const ContextMenuUI = ({
         ? ""
         : normalizeURL(getCurrentFilesPath(), true, false);
     for (const file of files) {
-      const req = await Endpoints.getInstance().uploadFile(
-        file,
-        normalizeURL(getCurrentFilesPath(), false)
+      dispatch(
+        addProgressFiles([
+          {
+            cwd: folder,
+            name: file.name,
+            progress: 0,
+            total: file.size,
+          },
+        ])
       );
-      // upload progress event
-      req.upload.addEventListener("progress", function (e) {
-        // upload progress as percentage
-        dispatch(
-          addProgressFiles([
-            {
+      await Endpoints.getInstance().uploadFile(
+        file,
+        folder,
+        (e) =>
+          // upload progress as percentage
+          dispatch(
+            updateProgressFile({
               cwd: folder,
               name: file.name,
               progress: e.loaded,
               total: e.total,
-            },
-          ])
-        );
-      });
-
-      // req finished event
-      req.addEventListener("load", function () {
-        dispatch(
-          updateProgressFile({
-            cwd: folder,
-            name: file.name,
-            progress: file.size,
-            total: file.size,
-          })
-        );
-        getFolder(undefined, false);
-      });
-
-      req.addEventListener("error", function () {
-        addBubble(`upload-error-${file.name}`, {
-          title: `Could not upload ${file.name}`,
-          type: "ERROR",
-        });
-      });
+            })
+          ),
+        () => {
+          dispatch(
+            updateProgressFile({
+              cwd: folder,
+              name: file.name,
+              progress: file.size,
+              total: file.size,
+            })
+          );
+          dispatch(getFolder() as any);
+        },
+        () =>
+          dispatch(
+            addBubble(`upload-error-${file.name}`, {
+              title: `Could not upload ${file.name}`,
+              type: "ERROR",
+            })
+          )
+      );
     }
   };
 

@@ -27,6 +27,12 @@ export interface AuthRes extends DefRes {
 	}
 }
 
+export interface TokenRes extends DefRes {
+	data: {
+		token: string;
+	}
+}
+
 export type WSData = {
 	cmd: string;
 	end: false;

@@ -34,7 +34,7 @@ export function File({ file }: Props): JSX.Element {
   const dispatch = useAppDispatch();
   if (file.type === "header") {
     return (
-      <div className={`${css.file} ${css.header}`}>
+      <div className={`${css.file} ${css.header}`} aria-label="file header">
         <div className={css.fileWrapperWrapper}>
           <div className={css.fileWrapper}>
             <div className={css.fileIcon}></div>
@@ -190,6 +190,7 @@ export function File({ file }: Props): JSX.Element {
           onDragLeave={onDragLeave}
           onDrop={onDrop}
           data-dir={file.type === "FOLDER"}
+          aria-label={file.name}
         >
           <FileIcon file={file}></FileIcon>
           <div className={css.name}>{file.name}</div>

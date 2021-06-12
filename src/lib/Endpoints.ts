@@ -1,4 +1,4 @@
-import { AuthRes, DefRes, FolderRes, SuggestionsRes } from "./responses";
+import { AuthRes, DefRes, FolderRes, SuggestionsRes, TokenRes } from "./responses";
 import { normalizeURL } from "./util";
 
 const ENV = process.env.NODE_ENV;
@@ -6,7 +6,7 @@ export class Endpoints {
 	API_URL = "/api/v1";
 	BASE = ENV === "development" ? "http://localhost:16091" : "";
 	private ws?: WebSocket;
-	private static headers: { Bearer?: string } = {}
+	private static headers: { Authorization?: string } = {}
 
 	get dev(): boolean {
 		return ENV === "development";
@@ -48,7 +48,7 @@ export class Endpoints {
 
 	public static setToken(token: string, autoLogin = false): void {
 		Endpoints.clearToken();
-		Endpoints.headers = { Bearer: token };
+		Endpoints.headers = { Authorization: tokenHeader(token) };
 		if (autoLogin) {
 			localStorage.setItem("token", token);
 			localStorage.setItem("isAuthenticated", "true");
@@ -74,7 +74,7 @@ export class Endpoints {
 	}
 
 	startExec(cwd: string, cmdStr: string, callback: (ev: MessageEvent) => void, error: (e: Event) => void): any {
-		if (!Endpoints.headers.Bearer) {
+		if (!Endpoints.headers.Authorization) {
 			error(new Event("error"));
 			return;
 		}
@@ -84,7 +84,7 @@ export class Endpoints {
 			this.ws.onclose = error
 			this.ws.onerror = error
 			this.ws.onopen = () => {
-				this.ws?.send(`{bearer: "${Endpoints.headers.Bearer}"}`)
+				this.ws?.send(`{bearer: "${Endpoints.headers.Authorization}"}`)
 				const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
 				this.ws?.send(cmd)
 			}
@@ -164,11 +164,15 @@ export class Endpoints {
 		})
 	}
 
-	getFile(file: string, downloadName: string): void {
+	async getFileToken(): Promise<TokenRes> {
+		return this.fetchFromAPI(`${this.baseURL}/token`);
+	}
+
+	async getFile(file: string, downloadName: string): Promise<void> {
 		if (file.startsWith("/")) {
 			file = file.substring(1);
 		}
-		const url = `${this.baseURL}/download/file?file=${file}`;
+		const url = `${this.baseURL}/download/file?file=${file}&token=${(await this.getFileToken()).data.token}`;
 		const a = document.createElement("a");
 		a.href = url;
 		a.download = downloadName;
@@ -185,7 +189,7 @@ export class Endpoints {
 		return fetch(url);
 	}
 
-	getFiles(paths: string[], downloadName = "download.zip"): void {
+	async getFiles(paths: string[], downloadName = "download.zip"): Promise<void> {
 		const pathsStr = paths
 			.map((f) => {
 				if (f.startsWith("/")) return f.substring(1);
@@ -193,7 +197,7 @@ export class Endpoints {
 			})
 			.join(",");
 
-		const url = `${this.baseURL}/download/files?files=${pathsStr}`;
+		const url = `${this.baseURL}/download/files?files=${pathsStr}&token=${(await this.getFileToken()).data.token}`;
 		const a = document.createElement("a");
 		a.href = url;
 		a.download = downloadName;
@@ -203,13 +207,21 @@ export class Endpoints {
 		document.body.removeChild(a);
 	}
 
-	uploadFile(file: File, path: string): XMLHttpRequest {
+	uploadFile(file: File, path: string,
+		progress: (e: ProgressEvent<XMLHttpRequestEventTarget>) => void,
+		load: () => void,
+		error: () => void): XMLHttpRequest {
+		if (!Endpoints.headers.Authorization) throw new Error("not logged in");
 		const formData = new FormData();
 		formData.append("file", file);
 		formData.append("path", path);
 
-		const request = new XMLHttpRequest();
+		const request = new XMLHttpRequest()
 		request.open("POST", `${this.baseURL}/upload`);
+		request.setRequestHeader("Authorization", Endpoints.headers.Authorization)
+		request.upload.addEventListener("progress", progress, false);
+		request.addEventListener("load", load);
+		request.addEventListener("error", error)
 
 		request.send(formData);
 		return request;
@@ -255,6 +267,12 @@ export function resWasOk(res: Response, url: string, body = {}): boolean {
 		console.error("request body", JSON.stringify(body));
 	}
 	return res.ok;
+}
+
+const tokenHeader = (token: string): string => {
+	if (token.startsWith("Bearer ")) return token;
+	if (token.startsWith("Bearer")) return token.replace("Bearer", "Bearer ");
+	return `Bearer ${token}`;
 }
 
 // export function isJsonOk(json: DefaultResponse): boolean {
