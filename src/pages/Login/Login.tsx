@@ -122,6 +122,12 @@ class LoginUI extends React.Component<Props, State> {
               />
               Enable auto-login
             </label>
+            {!autoLogin && (
+              <div id={css.loginHint}>
+                If you leave this unchecked, you will have to login for each
+                tab!
+              </div>
+            )}
             <input type="submit" value="Login" disabled={!canRegister} />
           </form>
         </div>
