@@ -11,18 +11,24 @@ import css from "./Sidebar.module.scss";
 import SidebarLink from "./SidebarLink/SidebarLink";
 import { RootState, useAppDispatch } from "@store";
 import { addBubble, setPrompt, setTerminal } from "@store/app";
-import { onCreateFolder, ROUTES } from "@lib";
+import { onCreateFolder, ROUTES, settingsRoutes } from "@lib";
 import { getFolder } from "@store/files";
 import { goBack } from "connected-react-router";
 import { signOut } from "@store/user";
+import { Permission } from "@models";
 
 export const Sidebar = (): JSX.Element => {
-  const { sidebarOpen } = useSelector(
-    ({ appReducer: { sidebarOpen } }: RootState) => ({
+  const { sidebarOpen, user } = useSelector(
+    ({ appReducer: { sidebarOpen }, userReducer: { user } }: RootState) => ({
       sidebarOpen,
+      user,
     })
   );
   const dispatch = useAppDispatch();
+  const settingsOrEditor =
+    window.location.pathname.startsWith(ROUTES.SETTINGS) ||
+    window.location.pathname.startsWith(ROUTES.EDITOR);
+  const manageUser = user?.permissions.includes(Permission.MANAGE_USER);
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
       <div>
@@ -32,6 +38,14 @@ export const Sidebar = (): JSX.Element => {
           path="/"
           icon={faHome}
         ></SidebarLink>
+        {settingsOrEditor && (
+          <SidebarLink
+            aria-label="go back"
+            name="go back"
+            onClick={() => dispatch(goBack())}
+            icon={faArrowLeft}
+          ></SidebarLink>
+        )}
         <hr />
         {window.location.pathname.startsWith(ROUTES.FILES) && (
           <>
@@ -53,14 +67,21 @@ export const Sidebar = (): JSX.Element => {
             ></SidebarLink>
           </>
         )}
-        {window.location.pathname.startsWith(ROUTES.EDITOR) && (
+        {window.location.pathname.startsWith(ROUTES.SETTINGS) && (
           <>
-            <SidebarLink
-              aria-label="go back"
-              name="go back"
-              onClick={() => dispatch(goBack())}
-              icon={faArrowLeft}
-            ></SidebarLink>
+            {settingsRoutes.map((r) => {
+              if (!r.permissionNeeded || (r.permissionNeeded && manageUser))
+                return (
+                  <SidebarLink
+                    key={r.name}
+                    aria-label={r.name}
+                    name={r.name}
+                    path={`${ROUTES.SETTINGS}/${r.path}`}
+                    icon={r.icon}
+                  ></SidebarLink>
+                );
+              else return <React.Fragment key={r.name}></React.Fragment>;
+            })}
           </>
         )}
       </div>

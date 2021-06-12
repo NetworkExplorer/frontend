@@ -229,12 +229,14 @@ export const Header = (): JSX.Element => {
           ></IconButton>
         </>
       )}
-      <IconButton
-        className={css.iconBtn}
-        icon={faCog}
-        name="Settings"
-        path={ROUTES.SETTINGS}
-      ></IconButton>
+      {!window.location.pathname.startsWith(ROUTES.SETTINGS) && (
+        <IconButton
+          className={css.iconBtn}
+          icon={faCog}
+          name="Settings"
+          path={ROUTES.SETTINGS}
+        ></IconButton>
+      )}
     </header>
   );
 };

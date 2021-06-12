@@ -1,3 +1,4 @@
+import { UserI } from "@models";
 import { FileI, FileTypes } from "./types";
 
 export interface DefRes {
@@ -31,6 +32,10 @@ export interface TokenRes extends DefRes {
 	data: {
 		token: string;
 	}
+}
+
+export interface UsersRes extends DefRes {
+	data: UserI[];
 }
 
 export type WSData = {

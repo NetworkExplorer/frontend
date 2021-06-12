@@ -1,0 +1,115 @@
+@import "/src/global/variables";
+$permissionWidth: 8em;
+$permissionPadding: 4px;
+$deleteWidth: 3em;
+
+.manageUsers {
+  overflow-y: scroll;
+  background: $bg-1;
+}
+
+.users {
+  display: flex;
+  flex-direction: column;
+  max-width: 50em;
+  width: 100%;
+}
+
+.user {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  border-top: 1px solid rgba(#444, 0.5);
+  padding: 5px 10px;
+  gap: 10px;
+
+  .name {
+    flex-grow: 1;
+  }
+
+  .permissions {
+    flex-shrink: 0;
+    width: calc(#{$permissionWidth * 2} + #{$permissionPadding});
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+    gap: $permissionPadding;
+
+    label {
+      width: $permissionWidth;
+      height: 2em;
+      color: $bg;
+      cursor: pointer;
+      font-weight: bold;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      .pText {
+        font-size: 0.9em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: $dur background ease;
+        border-radius: 5px;
+        background: $red;
+        width: 100%;
+        height: 100%;
+      }
+
+      input:checked ~ .pText {
+        background: rgba(saturate($green, 0.8), 0.8);
+        background: $green;
+        text-shadow: 0px 0px 3px #445;
+      }
+    }
+  }
+}
+
+.header {
+  background: #dadada;
+  border-top: none;
+  font-weight: bold;
+
+  .delete {
+    height: 0;
+    &:hover {
+      background: inherit;
+    }
+  }
+}
+
+.delete {
+  width: $deleteWidth;
+  height: $deleteWidth;
+  background: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-radius: 50%;
+
+  &:hover {
+    background: rgba(#444, 0.2);
+  }
+
+  .deleteIcon {
+    width: $deleteWidth;
+    height: $deleteWidth;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+
+    svg {
+      font-size: 1.25em;
+    }
+  }
+}

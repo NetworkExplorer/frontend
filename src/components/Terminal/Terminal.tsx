@@ -16,9 +16,14 @@ import { XTerm as XTermEl } from "@termftp/react-xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebLinksAddon } from "xterm-addon-web-links";
 import { Terminal as XTerminal } from "xterm";
+import { Permission } from "@models";
 
-const mapState = ({ appReducer: { terminalOpen } }: RootState) => ({
+const mapState = ({
+  appReducer: { terminalOpen },
+  userReducer: { user },
+}: RootState) => ({
   terminalOpen,
+  user,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
@@ -71,18 +76,22 @@ class TerminalUI extends Component<Props, State> {
     this.handleToggle(undefined);
   };
 
-  componentDidMount() {
-    window.addEventListener("dblclick", this.handleDoubleClick);
-    window.addEventListener("resize", this.resize);
-    this.xtermRef.current?.getTerminal().setOption("theme", {
-      background: "#343b47",
-    });
-    // this.resize();
-    (window as any).fit = this.fitAddon.fit.bind(this.fitAddon);
-    if (this.xtermRef.current) {
-      const t = this.xtermRef.current.getTerminal();
-      t.write("$ ");
-      t.onKey(this.onKey);
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.user !== this.props.user) {
+      window.removeEventListener("dblclick", this.handleDoubleClick);
+      window.removeEventListener("resize", this.resize);
+      window.addEventListener("dblclick", this.handleDoubleClick);
+      window.addEventListener("resize", this.resize);
+      this.xtermRef.current?.getTerminal().setOption("theme", {
+        background: "#343b47",
+      });
+      // this.resize();
+      (window as any).fit = this.fitAddon.fit.bind(this.fitAddon);
+      if (this.xtermRef.current) {
+        const t = this.xtermRef.current.getTerminal();
+        t.write("$ ");
+        t.onKey(this.onKey);
+      }
     }
   }
 
@@ -222,6 +231,8 @@ class TerminalUI extends Component<Props, State> {
 
   render(): JSX.Element {
     const { terminalOpen } = this.props;
+    if (!this.props.user?.permissions.includes(Permission.TERMINAL))
+      return <></>;
     const { executing } = this.state;
     return (
       <div className={`${css.terminal} ${terminalOpen ? css.opened : ""}`}>

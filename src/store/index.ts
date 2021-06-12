@@ -28,9 +28,10 @@ const createRootReducer = (history: History) =>
 	});
 
 export const history = createBrowserHistory();
+const composeEnhancers = composeWithDevTools({ trace: true, traceLimit: 25 })
 export const store = createStore(
 	createRootReducer(history),
-	composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk))
+	composeEnhancers(applyMiddleware(routerMiddleware(history), thunk))
 );
 
 export type RootState = ReturnType<typeof store.getState>;

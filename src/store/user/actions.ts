@@ -1,13 +1,13 @@
 import { Endpoints, ROUTES } from "@lib";
-import { User, UserPaylaod } from "@models";
-import { UserActionTypes, UserThunk, UserSetUser } from "./types";
+import { UserI, UserPaylaod } from "@models";
+import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers } from "./types";
 import jwtDecode from "jwt-decode";
 import { addBubble, setAppLoading } from "@store/app";
 import { push } from "connected-react-router";
 
 const Acts = UserActionTypes;
 
-export const setUser = (user?: User): UserSetUser => ({
+export const setUser = (user?: UserI): UserSetUser => ({
 	type: Acts.SET_USER,
 	payload: user
 })
@@ -19,9 +19,9 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 			const { data: { token } } = await Endpoints.getInstance().login(username, password);
 			Endpoints.setToken(token, autoLogin);
 			const d = jwtDecode<UserPaylaod>(token);
-			const user: User = {
+			const user: UserI = {
 				expires: d.exp,
-				name: d.sub || username,
+				username: d.sub || username,
 				permissions: d.permissions
 			}
 			dispatch(setUser(user))
@@ -43,9 +43,9 @@ export const loginWithToken: UserThunk = (token: string) =>
 		try {
 			await Endpoints.getInstance().validate(token);
 			const d = jwtDecode<UserPaylaod>(token);
-			const user: User = {
+			const user: UserI = {
 				expires: d.exp,
-				name: d.sub || "n/a",
+				username: d.sub || "n/a",
 				permissions: d.permissions
 			}
 			dispatch(setUser(user))
@@ -66,6 +66,33 @@ export const signOut: UserThunk = () =>
 		dispatch(push(ROUTES.LOGIN));
 		return {
 			type: Acts.SIGNOUT
+		}
+	}
+
+export const setUsersLoading = (loading: boolean): UserSetUsersLoading => ({
+	type: Acts.SET_USERS_LOADING,
+	payload: loading
+})
+
+export const updateUsers = (users: UserI[]): UserUpdateUsers => ({
+	type: Acts.UPDATE_USERS,
+	payload: users
+})
+
+export const fetchUsers: UserThunk = () =>
+	async (dispatch) => {
+		dispatch(setUsersLoading(true));
+
+		try {
+			const { data } = await Endpoints.getInstance().getUsers();
+			dispatch(updateUsers(data))
+			return dispatch(setUsersLoading(false))
+		} catch (e) {
+			dispatch(addBubble("users-error", {
+				title: "Could not fetch users",
+				type: "ERROR"
+			}))
+			return dispatch(setUsersLoading(false))
 		}
 	}
 

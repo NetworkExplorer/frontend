@@ -35,13 +35,14 @@ input {
   color: $color;
   background-color: $dark-bg-2;
   // border-radius: $radius;
-  transition: $dur background ease, $dur color ease;
+  transition: $dur background ease, $dur color ease, $dur opacity ease;
   outline: none;
+  opacity: 1;
 }
 
 input:focus {
-  box-shadow: -1px -1px 1px $green, -1px 0 1px $green, 0 -1px 1px $green,
-    1px 0 1px $green, 0 1px 1px $green, 1px 1px 1px $green, 0 0 1px $green;
+  box-shadow: -1px -1px 1px $accent, -1px 0 1px $accent, 0 -1px 1px $accent,
+    1px 0 1px $accent, 0 1px 1px $accent, 1px 1px 1px $accent, 0 0 1px $accent;
 }
 
 button,

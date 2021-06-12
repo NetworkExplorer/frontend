@@ -67,7 +67,7 @@ class LoginUI extends React.Component<Props, State> {
         break;
     }
 
-    if (upd.username && upd.password.length >= 8) {
+    if (upd.username && upd.password) {
       upd = { ...upd, canRegister: true };
     } else {
       upd = { ...upd, canRegister: false };

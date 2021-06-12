@@ -1,4 +1,4 @@
-import { AuthRes, DefRes, FolderRes, SuggestionsRes, TokenRes } from "./responses";
+import { AuthRes, DefRes, FolderRes, SuggestionsRes, TokenRes, UsersRes } from "./responses";
 import { normalizeURL } from "./util";
 
 const ENV = process.env.NODE_ENV;
@@ -84,7 +84,7 @@ export class Endpoints {
 			this.ws.onclose = error
 			this.ws.onerror = error
 			this.ws.onopen = () => {
-				this.ws?.send(`{bearer: "${Endpoints.headers.Authorization}"}`)
+				this.ws?.send(`{bearer: "${Endpoints.headers.Authorization?.replaceAll("Bearer ", "")}"}`)
 				const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
 				this.ws?.send(cmd)
 			}
@@ -162,6 +162,10 @@ export class Endpoints {
 		return this.fetchFromAPI(`${this.baseURL}/user/logout`, "POST", {
 			token
 		})
+	}
+
+	async getUsers(): Promise<UsersRes> {
+		return this.fetchFromAPI(`${this.baseURL}/user`);
 	}
 
 	async getFileToken(): Promise<TokenRes> {
