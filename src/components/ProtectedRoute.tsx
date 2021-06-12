@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { ROUTES } from "@lib";
+import { REDIRECT_PARAM, ROUTES } from "@lib";
 
 export function ProtectedRoute({
   component: Component,
@@ -18,7 +18,9 @@ export function ProtectedRoute({
         isAuthenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect to={ROUTES.LOGIN} />
+          <Redirect
+            to={`${ROUTES.LOGIN}?${REDIRECT_PARAM}=${window.location.pathname}`}
+          />
         )
       }
     />

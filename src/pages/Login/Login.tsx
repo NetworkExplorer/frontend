@@ -12,8 +12,12 @@ const mapState = () => ({});
 const mapDispatch = (dispatch: RootDispatch) => ({
   register: () => dispatch(push("/register")),
   addBubble: (key: string, bubble: BubbleI) => dispatch(addBubble(key, bubble)),
-  login: (username: string, pw: string, autoLogin: boolean) =>
-    dispatch(login(username, pw, autoLogin)),
+  login: (
+    username: string,
+    pw: string,
+    autoLogin: boolean,
+    redirect?: string
+  ) => dispatch(login(username, pw, autoLogin, redirect)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -81,7 +85,12 @@ class LoginUI extends React.Component<Props, State> {
       state: { username, password, autoLogin },
       props: { login },
     } = this;
-    login(username, password, autoLogin);
+    login(
+      username,
+      password,
+      autoLogin,
+      new URLSearchParams(window.location.search).get("redirect") || undefined
+    );
   }
 
   render() {

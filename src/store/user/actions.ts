@@ -12,7 +12,7 @@ export const setUser = (user?: User): UserSetUser => ({
 	payload: user
 })
 
-export const login: UserThunk = (username: string, password: string, autoLogin: boolean) =>
+export const login: UserThunk = (username: string, password: string, autoLogin: boolean, redirect?: string) =>
 	async (dispatch) => {
 		dispatch(setAppLoading(true))
 		try {
@@ -25,7 +25,8 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 				permissions: d.permissions
 			}
 			dispatch(setUser(user))
-			dispatch(push(ROUTES.FILES))
+			!redirect && dispatch(push(ROUTES.FILES));
+			redirect && dispatch(push(redirect))
 			return dispatch(setAppLoading(false))
 		} catch (e) {
 			dispatch(addBubble("login-error", {
