@@ -1,3 +1,4 @@
+import { UserI } from "@models";
 import { AuthRes, DefRes, FolderRes, SuggestionsRes, TokenRes, UsersRes } from "./responses";
 import { normalizeURL } from "./util";
 
@@ -161,7 +162,19 @@ export class Endpoints {
 	async logout(token: string): Promise<DefRes> {
 		return this.fetchFromAPI(`${this.baseURL}/user/logout`, "POST", {
 			token
-		})
+		});
+	}
+
+	async createUser(user: UserI): Promise<DefRes> {
+		return this.fetchFromAPI(`${this.baseURL}/user`, "POST", user);
+	}
+
+	async changeUser(user: UserI): Promise<DefRes> {
+		return this.fetchFromAPI(`${this.baseURL}/user`, "PUT", user)
+	}
+
+	async deleteUser(user: UserI): Promise<DefRes> {
+		return this.fetchFromAPI(`${this.baseURL}/user`, "DELETE", user);
 	}
 
 	async getUsers(): Promise<UsersRes> {

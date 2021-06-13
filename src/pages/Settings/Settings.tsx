@@ -1,21 +1,23 @@
 import css from "./Settings.module.scss";
 import React from "react";
-import { Layout } from "@components";
+import { Layout, Loading, ProtectedRoute } from "@components";
 import { useSelector } from "react-redux";
 import { RootState } from "@store";
-import { Permission } from "@models";
+import { PermissionE } from "@models";
 import { Redirect, Switch, useRouteMatch } from "react-router";
-import ProtectedRoute from "@components/ProtectedRoute";
 import ManageUsers from "./ManageUsers/ManageUsers";
 import ChangePassword from "./ChangePassword/ChangePassword";
 import { SettingsRoute } from "@lib";
 
 export function SettingsPage(): JSX.Element {
-  const { user } = useSelector(({ userReducer: { user } }: RootState) => ({
-    user,
-  }));
+  const { user, usersLoading } = useSelector(
+    ({ userReducer: { user, usersLoading } }: RootState) => ({
+      user,
+      usersLoading,
+    })
+  );
   const { path } = useRouteMatch();
-  const manageUser = user?.permissions.includes(Permission.MANAGE_USER);
+  const manageUser = user?.permissions.includes(PermissionE.MANAGE_USER);
   // is allowed to manage users
   return (
     <Layout id={css.settings}>
@@ -38,6 +40,7 @@ export function SettingsPage(): JSX.Element {
           <></>
         )}
       </Switch>
+      <Loading loading={usersLoading}></Loading>
     </Layout>
   );
 }

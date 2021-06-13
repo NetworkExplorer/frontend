@@ -1,4 +1,7 @@
+import { RootState, useAppDispatch } from "@store";
+import { changeUser } from "@store/user";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import settings from "../Settings.module.scss";
 import css from "./ChangePassword.module.scss";
 
@@ -6,10 +9,20 @@ export function ChangePassword(): JSX.Element {
   const [prevPassword, setPrevPassword] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
+  const dispatch = useAppDispatch();
+  const { user } = useSelector(({ userReducer: { user } }: RootState) => ({
+    user,
+  }));
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(password);
+    if (!canChange || !user) return;
+    dispatch(
+      changeUser({
+        username: user.username,
+        password,
+      }) as any
+    );
   };
   const canChange =
     prevPassword && password && passwordAgain && password === passwordAgain;

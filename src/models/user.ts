@@ -1,5 +1,5 @@
 import { JwtPayload } from "jwt-decode";
-export enum Permission {
+export enum PermissionE {
 	MANAGE_USER = "MANAGE_USER",
 	READ = "READ",
 	WRITE = "WRITE",
@@ -7,12 +7,14 @@ export enum Permission {
 }
 
 export interface UserPaylaod extends JwtPayload {
-	permissions: Permission[];
+	permissions: PermissionE[];
 }
 
 export interface UserI {
 	username: string;
-	permissions: Permission[];
+	permissions: PermissionE[];
 	expires?: number;
-	jwts?: string[]
+	jwts?: string[];
+	password?: string;
+	delete?: boolean;
 }

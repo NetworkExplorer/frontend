@@ -16,7 +16,7 @@ import { XTerm as XTermEl } from "@termftp/react-xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { WebLinksAddon } from "xterm-addon-web-links";
 import { Terminal as XTerminal } from "xterm";
-import { Permission } from "@models";
+import { PermissionE } from "@models";
 
 const mapState = ({
   appReducer: { terminalOpen },
@@ -231,7 +231,7 @@ class TerminalUI extends Component<Props, State> {
 
   render(): JSX.Element {
     const { terminalOpen } = this.props;
-    if (!this.props.user?.permissions.includes(Permission.TERMINAL))
+    if (!this.props.user?.permissions.includes(PermissionE.TERMINAL))
       return <></>;
     const { executing } = this.state;
     return (

@@ -97,7 +97,7 @@ class LoginUI extends React.Component<Props, State> {
     const { canRegister, password, username, autoLogin } = this.state;
     return (
       <div id={css.login}>
-        <h1>Login</h1>
+        {/* <h1>Login</h1> */}
         <div className={css.loginBox} id="loginBox">
           <form onSubmit={this.handleSubmit}>
             <label>

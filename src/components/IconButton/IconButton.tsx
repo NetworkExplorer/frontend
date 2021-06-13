@@ -47,7 +47,7 @@ export function IconButton({
       </button>
     );
   } else {
-    throw new Error("specify onClick or path for SidebarLink component");
+    throw new Error("specify onClick or path for IconButton component");
   }
 }
 

@@ -74,6 +74,10 @@ class PromptUI extends React.Component<Props, State> {
     }
   }
 
+  componentWillUnmount(): void {
+    document.removeEventListener("keydown", this.onKeyDown);
+  }
+
   onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({
       value: event.target.value,

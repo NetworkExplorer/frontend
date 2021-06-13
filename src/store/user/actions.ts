@@ -1,6 +1,6 @@
 import { Endpoints, ROUTES } from "@lib";
 import { UserI, UserPaylaod } from "@models";
-import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers } from "./types";
+import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers, UserSetUserPrompt } from "./types";
 import jwtDecode from "jwt-decode";
 import { addBubble, setAppLoading } from "@store/app";
 import { push } from "connected-react-router";
@@ -86,6 +86,72 @@ export const fetchUsers: UserThunk = () =>
 		try {
 			const { data } = await Endpoints.getInstance().getUsers();
 			dispatch(updateUsers(data))
+			return dispatch(setUsersLoading(false))
+		} catch (e) {
+			dispatch(addBubble("users-error", {
+				title: "Could not fetch users",
+				type: "ERROR"
+			}))
+			return dispatch(setUsersLoading(false))
+		}
+	}
+
+export const saveUsers: UserThunk = (users: UserI[]) =>
+	async (dispatch) => {
+		dispatch(setUsersLoading(true));
+
+		try {
+			for (const u of users) {
+				if (u.username === "admin") continue;
+				else if (u.delete) {
+					await Endpoints.getInstance().deleteUser(u);
+				} else {
+					u.password = "";
+					await Endpoints.getInstance().changeUser(u);
+				}
+			}
+			return dispatch(fetchUsers())
+		} catch (e) {
+			dispatch(addBubble("users-error", {
+				title: "Could not fetch users",
+				type: "ERROR"
+			}))
+			return dispatch(setUsersLoading(false))
+		}
+	}
+
+export const setUserPrompt = (prompt: boolean): UserSetUserPrompt => ({
+	type: Acts.SET_USER_PROMPT,
+	payload: prompt
+})
+
+export const createUser: UserThunk = (user: UserI) =>
+	async (dispatch) => {
+		dispatch(setUsersLoading(true));
+		dispatch(setUserPrompt(false));
+
+		try {
+			await Endpoints.getInstance().createUser(user);
+			return dispatch(fetchUsers())
+		} catch (e) {
+			dispatch(addBubble("users-error", {
+				title: "Could not fetch users",
+				type: "ERROR"
+			}))
+			return dispatch(setUsersLoading(false))
+		}
+	}
+
+export const changeUser: UserThunk = (user: UserI) =>
+	async (dispatch) => {
+		dispatch(setUsersLoading(true));
+
+		try {
+			await Endpoints.getInstance().changeUser(user);
+			dispatch(addBubble("change-success", {
+				title: "Successfully changed user",
+				type: "SUCCESS"
+			}))
 			return dispatch(setUsersLoading(false))
 		} catch (e) {
 			dispatch(addBubble("users-error", {

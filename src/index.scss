@@ -1,5 +1,17 @@
 @import "global/variables";
 
+::-webkit-scrollbar {
+  width: $scrollBarWidth;
+}
+::-webkit-scrollbar-track {
+  border: none;
+  background: $bg-2;
+}
+::-webkit-scrollbar-thumb {
+  background: $dark-bg-2;
+  // border-radius: 3px;
+}
+
 * {
   margin: 0;
   padding: 0;

@@ -15,7 +15,7 @@ import { onCreateFolder, ROUTES, settingsRoutes } from "@lib";
 import { getFolder } from "@store/files";
 import { goBack } from "connected-react-router";
 import { signOut } from "@store/user";
-import { Permission } from "@models";
+import { PermissionE } from "@models";
 
 export const Sidebar = (): JSX.Element => {
   const { sidebarOpen, user } = useSelector(
@@ -28,7 +28,7 @@ export const Sidebar = (): JSX.Element => {
   const settingsOrEditor =
     window.location.pathname.startsWith(ROUTES.SETTINGS) ||
     window.location.pathname.startsWith(ROUTES.EDITOR);
-  const manageUser = user?.permissions.includes(Permission.MANAGE_USER);
+  const manageUser = user?.permissions.includes(PermissionE.MANAGE_USER);
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
       <div>
