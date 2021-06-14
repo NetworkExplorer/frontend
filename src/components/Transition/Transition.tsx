@@ -6,7 +6,9 @@ export function Transition(): JSX.Element {
   return (
     <div className={css.transition}>
       <div className={css.background}></div>
-      <img src={logo} alt="NetworkExplorer logo"></img>
+      <div className={css.transitionWrapper}>
+        <img src={logo} alt="NetworkExplorer logo"></img>
+      </div>
     </div>
   );
 }

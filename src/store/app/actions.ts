@@ -83,7 +83,7 @@ export const setTransition = (transition: boolean): AppSetTransition => ({
 	payload: transition
 })
 
-export const enableTransition: AppThunk = (callback: () => void, time = 5000) => async (dispatch) => {
+export const enableTransition: AppThunk = (callback: () => void, time = 4000) => async (dispatch) => {
 	dispatch(setTransition(true));
 	setTimeout(() => {
 		callback();
