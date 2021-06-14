@@ -80,15 +80,20 @@ export class Endpoints {
 			return;
 		}
 		try {
-			if (!this.ws) this.ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`);
-			this.ws.onmessage = callback;
-			this.ws.onclose = error
-			this.ws.onerror = error
-			this.ws.onopen = () => {
-				this.ws?.send(`{bearer: "${Endpoints.headers.Authorization?.replaceAll("Bearer ", "")}"}`)
+			if (!this.ws) {
+				this.ws = new WebSocket(`ws://${this.BASE.replace(/https?:\/\//, "")}/exec`);
+				this.ws.onopen = () => {
+					this.ws?.send(`{bearer: "${Endpoints.headers.Authorization?.replaceAll("Bearer ", "")}"}`)
+					const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
+					this.ws?.send(cmd)
+				}
+			} else {
 				const cmd = `{cwd: "${normalizeURL(cwd, false, false)}", cmd: "${cmdStr}"}`;
 				this.ws?.send(cmd)
 			}
+			this.ws.onmessage = callback;
+			this.ws.onclose = error
+			this.ws.onerror = error
 		} catch (e) {
 			error(e)
 		}

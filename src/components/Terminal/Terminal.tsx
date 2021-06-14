@@ -40,6 +40,7 @@ interface State {
   value: string;
   actualValue: string;
   currentPosition: number;
+  initialised: boolean;
 }
 
 class TerminalUI extends Component<Props, State> {
@@ -55,6 +56,7 @@ class TerminalUI extends Component<Props, State> {
       value: "",
       currentPosition: -1,
       actualValue: "",
+      initialised: false,
     };
   }
 
@@ -76,12 +78,19 @@ class TerminalUI extends Component<Props, State> {
     this.handleToggle(undefined);
   };
 
+  componentDidMount() {
+    window.removeEventListener("dblclick", this.handleDoubleClick);
+    window.removeEventListener("resize", this.resize);
+    window.addEventListener("dblclick", this.handleDoubleClick);
+    window.addEventListener("resize", this.resize);
+  }
+
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.user !== this.props.user) {
-      window.removeEventListener("dblclick", this.handleDoubleClick);
-      window.removeEventListener("resize", this.resize);
-      window.addEventListener("dblclick", this.handleDoubleClick);
-      window.addEventListener("resize", this.resize);
+    if (
+      !this.state.initialised &&
+      ((!window.onresize && this.props.user) ||
+        prevProps.user !== this.props.user)
+    ) {
       this.xtermRef.current?.getTerminal().setOption("theme", {
         background: "#343b47",
       });
@@ -92,6 +101,7 @@ class TerminalUI extends Component<Props, State> {
         t.write("$ ");
         t.onKey(this.onKey);
       }
+      this.setState({ initialised: true });
     }
   }
 
