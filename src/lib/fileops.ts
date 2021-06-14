@@ -1,9 +1,8 @@
 import { PromptProps } from "@components";
 import { BubbleI, ProgressFileI } from "@models";
-// import { FileSystemEntry } from "@models/file";
 import Endpoints from "./Endpoints";
 import { getCurrentFilesPath } from "./routes";
-import { FileI } from "./types";
+import { FileI } from "./file";
 import { normalizeURL } from "./util";
 
 type PFunc = (prompt?: PromptProps) => void;
@@ -11,6 +10,13 @@ type BFunc = (key: string, bubble: BubbleI) => void;
 type AddPFunc = (files: ProgressFileI[]) => void;
 type UpdatePFunc = (file: ProgressFileI) => void;
 
+/**
+ * helper function for renaming a file/folder
+ * @param file the file/folder that should be renamed
+ * @param setPrompt a dispatcher function for getting the new name
+ * @param addBubble a dispatcher function for showing errors, if there are any
+ * @returns a promise which resolves when the rename is done
+ */
 export function onRename(
 	file: FileI,
 	setPrompt: PFunc,
@@ -43,6 +49,12 @@ export function onRename(
 	});
 }
 
+/**
+ * helper function for creating a folder
+ * @param setPrompt dispatcher function for getting the name of the folder
+ * @param addBubble function for showing errors, if there are any
+ * @returns a promise which resolves when the folder is created
+ */
 export function onCreateFolder(
 	setPrompt: PFunc,
 	addBubble: BFunc
@@ -70,6 +82,11 @@ export function onCreateFolder(
 	});
 }
 
+/**
+ * helper function when multiple files are selected that should be downloaded
+ * @param selected the selected files to be downloaded
+ * @returns nothing
+ */
 export function onFilesDownload(selected: Set<FileI>): void {
 	if (selected.size <= 0) return;
 	const url = normalizeURL(getCurrentFilesPath());
@@ -81,6 +98,13 @@ export function onFilesDownload(selected: Set<FileI>): void {
 	Endpoints.getInstance().getFiles(urls);
 }
 
+/**
+ * helper function for moving files/folders
+ * @param files the files/folders that should be moved
+ * @param folder the folder to which they should be moved to
+ * @param addBubble function to show errors, if there are any
+ * @returns a promise which resolves when all files were moved
+ */
 export async function onMove(
 	files: FileI[],
 	folder: FileI,
@@ -107,6 +131,13 @@ export async function onMove(
 	}
 }
 
+/**
+ * helper function for deleting files/folders
+ * @param selected the files/folders that should be deleted
+ * @param setPrompt prompt for asking the user if he is sure
+ * @param addBubble function to show errors, if there are any
+ * @returns a promise which resolves when the files/folders are delted
+ */
 export function onDelete(
 	selected: Set<FileI>,
 	setPrompt: PFunc,
@@ -144,18 +175,38 @@ export function onDelete(
 	});
 }
 
+/**
+ * helper function for downloading a selected file
+ * @param file the selected file that should be downloaded
+ * @returns nothing
+ */
 export function onFileDownload(file: FileI): void {
 	if (!file) return;
 	const url = normalizeURL(getCurrentFilesPath());
 	Endpoints.getInstance().getFile(url + file.name, file.name);
 }
 
+/**
+ * helper function for download a selected folder
+ * @param file the folder that should be downloaded
+ * @returns nothing
+ */
 export function onFolderDownload(file: FileI): void {
 	if (!file) return;
 	const url = normalizeURL(getCurrentFilesPath());
 	Endpoints.getInstance().getFiles([url + file.name], `${file.name}.zip`);
 }
 
+/**
+ * helper function for upload dragged in files/folders
+ * @param entry the file system entry for a file/folder
+ * @param addBubble function to show errors, if there are any
+ * @param getFolder function to update the folder view of the user
+ * @param addProgress function to add a file to the upload progress status
+ * @param updateProgress function to update the upload status of a file
+ * @param relativePath the relativePath (for nested directories)
+ * @returns a promise which resolves when all files/folders are uploaded/created
+ */
 export async function onFileUpload(
 	entry: FileSystemEntry | null,
 	addBubble: BFunc,
@@ -233,12 +284,22 @@ export async function onFileUpload(
 	}
 }
 
+/**
+ * a wrapper function for the FileSystemFileEntry.file() function
+ * @param item the file systementry which should be converted
+ * @returns a promise which resolves with the file object
+ */
 function getFile(item: FileSystemFileEntry): Promise<File> {
 	return new Promise((resolve, reject) => {
 		item.file((f) => resolve(f), reject);
 	});
 }
 
+/**
+ * gets all files/folders in a folder
+ * @param dir the folder that should be listed
+ * @returns a promise with the contents of a directory
+ */
 function listFilesInDirectory(
 	dir: FileSystemDirectoryEntry
 ): Promise<FileSystemEntry[]> {
