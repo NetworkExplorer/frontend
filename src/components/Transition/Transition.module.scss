@@ -1,0 +1,74 @@
+@import "/src/global/variables";
+
+.transition {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  & :local {
+    animation: main 5s cubic-bezier(0.17, 0.67, 0.81, 1.21);
+  }
+
+  img {
+    width: 128px;
+    height: 128px;
+    z-index: 2;
+  }
+}
+
+.background {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  height: 1px;
+  width: 1px;
+  z-index: 1;
+  background: $bg;
+  transform: translate(-50%, -50%);
+  box-shadow: 1px 1px 5px rgba($color, 0.5);
+
+  & :local {
+    animation: bg 4s 1s ease;
+  }
+}
+
+@keyframes main {
+  0% {
+    transform: translateY(-100%);
+  }
+  20% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes bg {
+  0% {
+    width: 200px;
+    height: 200px;
+  }
+  20% {
+    width: 200vw;
+    height: 200vw;
+  }
+  70% {
+    width: 200px;
+    height: 200px;
+  }
+  100% {
+    width: 0;
+    height: 0;
+  }
+}

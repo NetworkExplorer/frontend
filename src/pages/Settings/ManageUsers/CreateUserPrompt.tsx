@@ -1,7 +1,7 @@
 import { PermissionE, UserI } from "@models";
 import { RootDispatch, RootState } from "@store";
 import { createUser, setUserPrompt } from "@store/user";
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import css from "./ManageUsers.module.scss";
 import { Permission } from "./Permission";
@@ -30,6 +30,7 @@ interface State {
 }
 
 class CreateUserPromptUI extends Component<Props, State> {
+  input = createRef<HTMLInputElement>();
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -52,6 +53,7 @@ class CreateUserPromptUI extends Component<Props, State> {
         passwordAgain: "",
         canSubmit: false,
       });
+      this.input.current?.focus();
     }
 
     if (userPromptOpen && !this.state.listening) {
@@ -139,6 +141,7 @@ class CreateUserPromptUI extends Component<Props, State> {
           <div className={css.input}>
             Username
             <input
+              ref={this.input}
               type="text"
               name="Username"
               placeholder="bob"

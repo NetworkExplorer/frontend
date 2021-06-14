@@ -75,6 +75,14 @@ $headerHeight: 5em;
   }
 }
 
+.willBeDeleted {
+  opacity: 0.7;
+
+  .deleteIcon {
+    color: $red;
+  }
+}
+
 .permissions {
   flex-shrink: 0;
   width: calc(#{$permissionWidth * 2} + #{$permissionPadding});
@@ -113,9 +121,13 @@ $headerHeight: 5em;
   }
 
   input:checked ~ .pText {
-    background: rgba(saturate($green, 0.8), 0.8);
     background: $green;
     text-shadow: 0px 0px 3px #445;
+  }
+
+  input:focus ~ .pText {
+    box-shadow: -1px -1px 1px $accent, -1px 0 1px $accent, 0 -1px 1px $accent,
+      1px 0 1px $accent, 0 1px 1px $accent, 1px 1px 1px $accent, 0 0 1px $accent;
   }
 }
 
@@ -162,6 +174,10 @@ $headerHeight: 5em;
     svg {
       font-size: 1.25em;
     }
+  }
+
+  &.noHover:hover {
+    background: initial;
   }
 }
 

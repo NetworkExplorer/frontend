@@ -15,7 +15,8 @@ const initState: AppStateI = {
 		searching: false,
 		searchingAll: false,
 	},
-	suggestions: []
+	suggestions: [],
+	transition: false
 };
 
 export const appReducer = (
@@ -80,6 +81,11 @@ export const appReducer = (
 			return {
 				...state,
 				suggestions: action.payload
+			}
+		case AppActionTypes.SET_TRANSITION:
+			return {
+				...state,
+				transition: action.payload
 			}
 		default:
 			return { ...state };

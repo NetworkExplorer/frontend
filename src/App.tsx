@@ -8,12 +8,15 @@ import { Endpoints, ROUTES } from "@lib";
 import ProtectedRoute from "@components/ProtectedRoute";
 import { loginWithToken } from "@store/user";
 import { useSelector } from "react-redux";
-import { Bubbles, Loading } from "@components";
+import { Bubbles, Loading, Transition } from "@components";
 
 export function App(): JSX.Element {
   const dispatch = useAppDispatch();
-  const { appLoading } = useSelector(
-    ({ appReducer: { appLoading } }: RootState) => ({ appLoading })
+  const { appLoading, transition } = useSelector(
+    ({ appReducer: { appLoading, transition } }: RootState) => ({
+      appLoading,
+      transition,
+    })
   );
   useEffect(() => {
     const token =
@@ -50,6 +53,7 @@ export function App(): JSX.Element {
         <Loading loading={appLoading}></Loading>
       </div>
       <Bubbles></Bubbles>
+      {transition && <Transition></Transition>}
     </div>
   );
 }

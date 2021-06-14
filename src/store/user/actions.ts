@@ -2,7 +2,7 @@ import { Endpoints, ROUTES } from "@lib";
 import { UserI, UserPaylaod } from "@models";
 import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers, UserSetUserPrompt } from "./types";
 import jwtDecode from "jwt-decode";
-import { addBubble, setAppLoading } from "@store/app";
+import { addBubble, enableTransition, setAppLoading } from "@store/app";
 import { push } from "connected-react-router";
 
 const Acts = UserActionTypes;
@@ -25,8 +25,11 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 				permissions: d.permissions
 			}
 			dispatch(setUser(user))
-			!redirect && dispatch(push(ROUTES.FILES));
-			redirect && dispatch(push(redirect))
+			if (!redirect) {
+				dispatch(enableTransition(() => dispatch(push(ROUTES.FILES))) as any)
+			} else {
+				dispatch(enableTransition(() => dispatch(push(redirect))) as any)
+			}
 			return dispatch(setAppLoading(false))
 		} catch (e) {
 			dispatch(addBubble("login-error", {
@@ -155,7 +158,7 @@ export const changeUser: UserThunk = (user: UserI) =>
 			return dispatch(setUsersLoading(false))
 		} catch (e) {
 			dispatch(addBubble("users-error", {
-				title: "Could not fetch users",
+				title: "Could not change user",
 				type: "ERROR"
 			}))
 			return dispatch(setUsersLoading(false))

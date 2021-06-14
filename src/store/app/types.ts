@@ -16,6 +16,7 @@ export interface AppStateI {
 	prompt?: PromptProps;
 	search: SearchI;
 	suggestions: string[];
+	transition: boolean;
 }
 
 export enum AppActionTypes {
@@ -26,7 +27,8 @@ export enum AppActionTypes {
 	SET_PROMPT = "app/set-prompt",
 	SET_SEARCH = "app/set-search",
 	FETCH_SUGGESTIONS = "app/fetch-suggestions",
-	SET_LOADING = "app/set-loading"
+	SET_LOADING = "app/set-loading",
+	SET_TRANSITION = "app/set-transition",
 }
 
 const Acts = AppActionTypes;
@@ -78,6 +80,11 @@ export interface AppSetLoading {
 	payload: boolean;
 }
 
+export interface AppSetTransition {
+	type: typeof Acts.SET_TRANSITION;
+	payload: boolean;
+}
+
 export type AppActions =
 	| AppSetSidebar
 	| AppSetTerminal
@@ -86,4 +93,5 @@ export type AppActions =
 	| AppSetPrompt
 	| AppSetSearch
 	| AppFetchSuggestions
-	| AppSetLoading;
+	| AppSetLoading
+	| AppSetTransition;

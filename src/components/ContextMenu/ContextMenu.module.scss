@@ -26,7 +26,7 @@ $menu-item-height: 2.75em;
     font-size: inherit;
     font-size: 0.9em;
     padding: 0;
-    background: $bg-2;
+    background: $bg;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -35,7 +35,7 @@ $menu-item-height: 2.75em;
     padding: 0 0.5em;
 
     &:hover {
-      background: #bbb;
+      background: $bg-2;
     }
   }
 
@@ -53,11 +53,11 @@ $menu-item-height: 2.75em;
   }
 
   .delete {
-    background: #af5750;
+    background: $red;
     color: $bg;
 
     &:hover {
-      background: $red;
+      background: #af5750;
     }
   }
 }

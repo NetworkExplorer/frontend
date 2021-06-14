@@ -25,10 +25,11 @@
   flex-direction: column;
   // padding: 30px;
   border-radius: 5px;
-  align-items: flex-end;
+  align-items: center;
   // background: $bg-1;
   margin: 20px 0;
   min-width: 20em;
+
   & :local {
     animation: trans-in $dur * 3 cubic-bezier(0.17, 0.67, 0.61, 1.25);
   }

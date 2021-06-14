@@ -13,7 +13,8 @@ import {
 	TerminalActions,
 	AppThunk,
 	AppFetchSuggestions,
-	AppSetLoading
+	AppSetLoading,
+	AppSetTransition
 } from "./types";
 
 export const setAppLoading = (loading: boolean): AppSetLoading => ({
@@ -76,3 +77,16 @@ export const clearSuggestions = (): AppFetchSuggestions => ({
 	type: AppActionTypes.FETCH_SUGGESTIONS,
 	payload: [],
 });
+
+export const setTransition = (transition: boolean): AppSetTransition => ({
+	type: AppActionTypes.SET_TRANSITION,
+	payload: transition
+})
+
+export const enableTransition: AppThunk = (callback: () => void, time = 5000) => async (dispatch) => {
+	dispatch(setTransition(true));
+	setTimeout(() => {
+		callback();
+	}, time / 3);
+	setTimeout(() => dispatch(setTransition(false)), time);
+}

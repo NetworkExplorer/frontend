@@ -30,7 +30,7 @@ export function ManageUsers(): JSX.Element {
     if (bef[index].username === "admin") return;
     bef[index] = {
       ...bef[index],
-      delete: true,
+      delete: !bef[index].delete,
     };
     dispatch(updateUsers(bef));
   };
@@ -99,7 +99,7 @@ const User = ({ user, header, changeUser, remove }: UserProps): JSX.Element => {
       });
   };
   return (
-    <div className={css.user}>
+    <div className={`${css.user} ${user.delete ? css.willBeDeleted : ""}`}>
       <div className={css.name}>
         {user.username} {user.delete ? "(will be deleted)" : ""}
       </div>
@@ -122,7 +122,7 @@ const User = ({ user, header, changeUser, remove }: UserProps): JSX.Element => {
           onClick={() => remove && remove()}
         ></IconButton>
       ) : (
-        <div className={css.delete}></div>
+        <div className={`${css.delete} ${css.noHover}`}></div>
       )}
     </div>
   );
