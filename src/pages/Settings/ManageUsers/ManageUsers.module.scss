@@ -126,8 +126,8 @@ $headerHeight: 5em;
   }
 
   input:focus ~ .pText {
-    box-shadow: -1px -1px 1px $accent, -1px 0 1px $accent, 0 -1px 1px $accent,
-      1px 0 1px $accent, 0 1px 1px $accent, 1px 1px 1px $accent, 0 0 1px $accent;
+    box-shadow: -1px -1px 1px $bg, -1px 0 1px $bg, 0 -1px 1px $bg, 1px 0 1px $bg,
+      0 1px 1px $bg, 1px 1px 1px $bg, 0 0 1px $bg;
   }
 }
 

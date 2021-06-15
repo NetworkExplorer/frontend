@@ -3,7 +3,7 @@ import { faKey, faUser } from "@fortawesome/free-solid-svg-icons";
 /**
  * the duration of the login animation in milliseconds
  */
-export const LOGIN_DURATION = 4000;
+export const LOGIN_DURATION = 3500;
 
 export enum ROUTES {
 	LOGIN = "/login",
