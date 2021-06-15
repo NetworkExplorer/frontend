@@ -13,7 +13,8 @@
   z-index: 10;
 
   & :local {
-    animation: main 4s cubic-bezier(0.17, 0.67, 0.81, 1);
+    animation: main 4s cubic-bezier(0.17, 0.67, 0.81, 1) forwards;
+    animation-play-state: running;
   }
 
   img {
@@ -24,6 +25,14 @@
     top: 50%;
     transform: translate(-50%, -50%);
   }
+}
+
+.paused,
+.paused * {
+  -webkit-animation-play-state: paused !important;
+  -moz-animation-play-state: paused !important;
+  -o-animation-play-state: paused !important;
+  animation-play-state: paused !important;
 }
 
 .background {
@@ -39,20 +48,25 @@
   box-shadow: 1px 1px 5px rgba($color, 0.5);
 
   & :local {
-    animation: bg 4s ease;
+    animation: bg 4s ease forwards;
+    animation-play-state: running;
   }
 }
 
 .transitionWrapper {
-  position: relative;
+  position: absolute;
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   overflow: hidden;
   z-index: 2;
 
   & :local {
-    animation: wrapper 4s ease;
+    animation: wrapper 4s ease forwards;
+    animation-play-state: running;
   }
 }
 
@@ -64,6 +78,7 @@
   100% {
     width: 0;
     height: 0;
+    pointer-events: none;
   }
 }
 
@@ -73,6 +88,9 @@
   }
   20% {
     transform: translateY(0);
+  }
+  100% {
+    pointer-events: none;
   }
 }
 
@@ -100,5 +118,6 @@
   100% {
     width: 0;
     height: 0;
+    pointer-events: none;
   }
 }

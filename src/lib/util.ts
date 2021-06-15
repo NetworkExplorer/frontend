@@ -78,3 +78,9 @@ export function normalizeURL(url: string, endingSlash = true, leadingSlash = fal
 	if (!leadingSlash && url.startsWith("/")) url = url.substring(1);
 	return url;
 }
+
+export function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => {
+		setTimeout(() => resolve(), ms);
+	});
+}

@@ -16,7 +16,7 @@ const initState: AppStateI = {
 		searchingAll: false,
 	},
 	suggestions: [],
-	transition: false
+	transition: "hidden"
 };
 
 export const appReducer = (

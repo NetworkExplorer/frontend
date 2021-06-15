@@ -1,8 +1,8 @@
-import { Endpoints, ROUTES } from "@lib";
+import { Endpoints, LOGIN_DURATION, ROUTES, sleep } from "@lib";
 import { UserI, UserPaylaod } from "@models";
 import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers, UserSetUserPrompt } from "./types";
 import jwtDecode from "jwt-decode";
-import { addBubble, enableTransition, setAppLoading } from "@store/app";
+import { addBubble, setAppLoading, setTransition } from "@store/app";
 import { push } from "connected-react-router";
 
 const Acts = UserActionTypes;
@@ -14,7 +14,11 @@ export const setUser = (user?: UserI): UserSetUser => ({
 
 export const login: UserThunk = (username: string, password: string, autoLogin: boolean, redirect?: string) =>
 	async (dispatch) => {
+		dispatch(setTransition("hidden"));
+		dispatch(setTransition("running"));
 		dispatch(setAppLoading(true))
+		await sleep(LOGIN_DURATION * 0.4);
+		dispatch(setTransition("paused"));
 		try {
 			const { data: { token } } = await Endpoints.getInstance().login(username, password);
 			Endpoints.setToken(token, autoLogin);
@@ -24,13 +28,17 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 				username: d.sub || username,
 				permissions: d.permissions
 			}
-			dispatch(setUser(user))
+			dispatch(setUser(user));
+
 			if (!redirect) {
-				dispatch(enableTransition(() => dispatch(push(ROUTES.FILES))) as any)
+				dispatch(push(ROUTES.FILES) as any);
 			} else {
-				dispatch(enableTransition(() => dispatch(push(redirect))) as any)
+				dispatch(push(redirect) as any);
 			}
-			return dispatch(setAppLoading(false))
+			dispatch(setTransition("running"))
+			dispatch(setAppLoading(false))
+			await sleep(LOGIN_DURATION * 0.6);
+			return dispatch(setTransition("hidden"))
 		} catch (e) {
 			dispatch(addBubble("login-error", {
 				title: "Could not login",

@@ -8,6 +8,8 @@ export type AppThunk<ReturnType = void> = ActionCreator<
 	ThunkAction<ReturnType, AppStateI, unknown, RootActions>
 >;
 
+export type TransitionState = "hidden" | "paused" | "running";
+
 export interface AppStateI {
 	appLoading: boolean;
 	sidebarOpen: boolean;
@@ -16,7 +18,7 @@ export interface AppStateI {
 	prompt?: PromptProps;
 	search: SearchI;
 	suggestions: string[];
-	transition: boolean;
+	transition: TransitionState;
 }
 
 export enum AppActionTypes {
@@ -82,7 +84,7 @@ export interface AppSetLoading {
 
 export interface AppSetTransition {
 	type: typeof Acts.SET_TRANSITION;
-	payload: boolean;
+	payload: TransitionState;
 }
 
 export type AppActions =
