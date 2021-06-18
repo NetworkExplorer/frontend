@@ -1,5 +1,5 @@
 import { Endpoints, LOGIN_DURATION, ROUTES, sleep } from "@lib";
-import { UserI, UserPaylaod } from "@models";
+import { UserI, UserPayload } from "@models";
 import { UserActionTypes, UserThunk, UserSetUser, UserSetUsersLoading, UserUpdateUsers, UserSetUserPrompt } from "./types";
 import jwtDecode from "jwt-decode";
 import { addBubble, setAppLoading, setTransition } from "@store/app";
@@ -22,7 +22,7 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 		try {
 			const { data: { token } } = await Endpoints.getInstance().login(username, password);
 			Endpoints.setToken(token, autoLogin);
-			const d = jwtDecode<UserPaylaod>(token);
+			const d = jwtDecode<UserPayload>(token);
 			const user: UserI = {
 				expires: d.exp,
 				username: d.sub || username,
@@ -44,7 +44,10 @@ export const login: UserThunk = (username: string, password: string, autoLogin: 
 				title: "Could not login",
 				type: "ERROR"
 			}))
-			return dispatch(setAppLoading(false))
+			dispatch(setTransition("running"))
+			dispatch(setAppLoading(false))
+			await sleep(LOGIN_DURATION * 0.6);
+			return dispatch(setTransition("hidden"))
 		}
 	}
 
@@ -53,7 +56,7 @@ export const loginWithToken: UserThunk = (token: string) =>
 		dispatch(setAppLoading(true))
 		try {
 			await Endpoints.getInstance().validate(token);
-			const d = jwtDecode<UserPaylaod>(token);
+			const d = jwtDecode<UserPayload>(token);
 			const user: UserI = {
 				expires: d.exp,
 				username: d.sub || "n/a",

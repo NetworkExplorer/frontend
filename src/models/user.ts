@@ -6,7 +6,7 @@ export enum PermissionE {
 	TERMINAL = "TERMINAL"
 }
 
-export interface UserPaylaod extends JwtPayload {
+export interface UserPayload extends JwtPayload {
 	permissions: PermissionE[];
 }
 
