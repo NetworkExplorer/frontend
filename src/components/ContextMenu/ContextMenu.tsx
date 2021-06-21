@@ -283,7 +283,7 @@ const ContextMenuUI = ({
               total: file.size,
             })
           );
-          dispatch(getFolder() as any);
+          getFolder();
         },
         () =>
           dispatch(

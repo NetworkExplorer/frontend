@@ -28,11 +28,11 @@ export function onRename(
 			fieldName: file.type === "FILE" ? "file name" : "folder name",
 			initial: file.name,
 			type: "INPUT",
-			callback: (val) => {
+			callback: async (val) => {
 				if (file.type !== "header") {
 					const base = normalizeURL(getCurrentFilesPath());
 					try {
-						Endpoints.getInstance().move(base + file.name, base + val);
+						await Endpoints.getInstance().move(base + file.name, base + val);
 						resolve();
 					} catch (err) {
 						addBubble("rename-error", {

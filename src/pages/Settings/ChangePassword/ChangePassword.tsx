@@ -6,7 +6,7 @@ import settings from "../Settings.module.scss";
 import css from "./ChangePassword.module.scss";
 
 export function ChangePassword(): JSX.Element {
-  const [prevPassword, setPrevPassword] = useState("");
+  // const [prevPassword, setPrevPassword] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const dispatch = useAppDispatch();
@@ -24,13 +24,12 @@ export function ChangePassword(): JSX.Element {
       }) as any
     );
   };
-  const canChange =
-    prevPassword && password && passwordAgain && password === passwordAgain;
+  const canChange = password && passwordAgain && password === passwordAgain;
   return (
     <div className={`${settings.settingsMenu} ${css.changePassword}`}>
       <h1>Change your password</h1>
       <form onSubmit={onSubmit}>
-        <label htmlFor="prevPassword">
+        {/* <label htmlFor="prevPassword">
           Previous Password
           <input
             type="password"
@@ -40,7 +39,7 @@ export function ChangePassword(): JSX.Element {
             placeholder="********"
             onChange={(e) => setPrevPassword(e.target.value)}
           />
-        </label>
+        </label> */}
         <label htmlFor="password">
           New Password
           <input

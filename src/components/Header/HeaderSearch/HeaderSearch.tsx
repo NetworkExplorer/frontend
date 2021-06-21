@@ -74,7 +74,7 @@ class HeaderSearchUI extends Component<Props, State> {
       path: e.target.value,
       position: EMPTY_POSITION,
     });
-    this.props.clearSuggestions();
+    // this.props.clearSuggestions();
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.getSuggestions, 500) as unknown as number;
   };
@@ -97,6 +97,8 @@ class HeaderSearchUI extends Component<Props, State> {
           } else {
             this.setState({ position: len - 1 });
           }
+        } else if (this.state.position === 0 && e.key === "ArrowUp") {
+          this.setState({ position: EMPTY_POSITION });
         } else {
           let change = 0;
           if (e.key === "ArrowDown") change = 1;
