@@ -319,11 +319,12 @@ export class Endpoints {
 	 * @param file the file to be downloaded (including folder path)
 	 * @returns the response for a file download (with which you can get the blob)
 	 */
-	getFileBlob(file: string): Promise<Response> {
+	async getFileBlob(file: string): Promise<Response> {
 		if (file.startsWith("/")) file = file.substring(1);
+		const token = await this.getFileToken();
 
-		const url = `${this.baseURL}/download/file?file=${file}`;
-		return fetch(url);
+		const url = `${this.baseURL}/download/file?file=${file}&token=${token.data.token}`;
+		return await fetch(url);
 	}
 
 	/**

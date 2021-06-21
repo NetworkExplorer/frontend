@@ -50,7 +50,7 @@ $r-padding: 1em;
   transition: $dur height ease;
 
   &.open {
-    height: calc(#{$plus-height} * 4);
+    height: calc(#{$plus-height} * 6);
   }
 }
 
@@ -143,6 +143,10 @@ $hoverColor: rgba(#444, 0.2);
     .fileCancel {
       display: block;
     }
+
+    .fileProgressStatus {
+      opacity: 1;
+    }
   }
 
   .name {
@@ -197,4 +201,23 @@ $hoverColor: rgba(#444, 0.2);
   .fileCancel {
     color: $red;
   }
+}
+
+.fileProgressStatus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: $dur opacity ease;
+  height: 1.5rem;
+  font-size: 0.9em;
+  border-radius: 0.625rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.5rem;
+  background-color: $dark-bg-1;
+  color: white;
+  user-select: none;
 }

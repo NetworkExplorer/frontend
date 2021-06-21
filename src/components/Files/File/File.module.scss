@@ -1,6 +1,9 @@
 @import "/src/global/variables";
-$fileHeight: 3.8em;
+$fileHeight: 3.8rem;
+$dateWidth: 6rem;
+$sizeWidth: 5rem;
 // $fileHeight: calc(#{fileHeight} - 3px * 2);
+$actualHeight: calc(#{$fileHeight} - 3px * 2);
 
 .file {
   padding: 0 20px;
@@ -18,6 +21,7 @@ $fileHeight: 3.8em;
 
 .fileWrapperWrapper {
   max-width: 80em;
+  min-width: 20em;
   width: 100%;
   border-top: 1px solid rgba(#444, 0.5);
   margin: 0 auto;
@@ -43,12 +47,12 @@ $hoverColor: rgba(#444, 0.2);
 }
 
 .fileIcon {
-  width: $fileHeight;
-  height: $fileHeight;
+  height: $actualHeight;
+  width: calc(#{$actualHeight} * 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2px 0;
+  flex-shrink: 0;
 
   img {
     height: 100%;
@@ -56,17 +60,23 @@ $hoverColor: rgba(#444, 0.2);
 }
 
 .name {
-  flex-grow: 1;
-  display: flex;
+  width: calc(100% - #{$dateWidth + $sizeWidth} + #{$actualHeight});
+  height: $actualHeight;
+  line-height: $actualHeight;
+  text-align: left;
   align-items: flex-start;
+  display: inline-block;
   user-select: text;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .date {
-  width: 6.5em;
+  width: $dateWidth;
   text-align: center;
   font-size: 0.9em;
+  flex-shrink: 0;
 }
 
 .dateSingleLine {
@@ -75,7 +85,7 @@ $hoverColor: rgba(#444, 0.2);
 }
 
 .size {
-  width: 5em;
+  width: $sizeWidth;
   text-align: center;
 }
 
