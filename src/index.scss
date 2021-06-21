@@ -1,5 +1,10 @@
 @import "global/variables";
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $dark-bg-2 $bg-2;
+}
+
 ::-webkit-scrollbar {
   width: $scrollBarWidth;
 }
@@ -10,6 +15,9 @@
 ::-webkit-scrollbar-thumb {
   background: $dark-bg-2;
   // border-radius: 3px;
+}
+::-webkit-scrollbar-corner {
+  background: $bg-2;
 }
 
 * {
