@@ -5,6 +5,7 @@ import {
   faHome,
   faSignOutAlt,
   faTerminal,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import css from "./Sidebar.module.scss";
@@ -32,6 +33,12 @@ export const Sidebar = (): JSX.Element => {
   return (
     <div className={`${css.sidebar} ${sidebarOpen ? css.opened : ""}`}>
       <div>
+        <SidebarLink
+          aria-label={`User: ${user?.username}`}
+          name={user?.username || ""}
+          icon={faUser}
+          isStatic={true}
+        ></SidebarLink>
         <SidebarLink
           aria-label="Home"
           name="Home"

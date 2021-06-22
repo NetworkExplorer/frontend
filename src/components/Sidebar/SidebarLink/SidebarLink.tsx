@@ -7,6 +7,7 @@ import css from "./SidebarLink.module.scss";
 interface Props {
   icon: IconProp;
   path?: string;
+  isStatic?: boolean;
   name: string;
   "aria-label"?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -17,6 +18,7 @@ export default function SidebarLink({
   icon,
   name,
   onClick,
+  isStatic,
   ...props
 }: Props): JSX.Element {
   if (path) {
@@ -41,6 +43,15 @@ export default function SidebarLink({
         </div>
         {name}
       </button>
+    );
+  } else if (isStatic) {
+    return (
+      <div className={css.link} title={name} aria-label={name}>
+        <div className={css.iconWrapper} aria-hidden="true">
+          <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+        </div>
+        {name}
+      </div>
     );
   } else {
     throw new Error("specify onClick or path for SidebarLink component");

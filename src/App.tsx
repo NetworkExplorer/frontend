@@ -23,6 +23,13 @@ export function App(): JSX.Element {
       localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) dispatch(loginWithToken(token) as any);
     else Endpoints.clearToken();
+    window.addEventListener("unload", () => {
+      if (localStorage.getItem("isAuthenticated")) {
+        localStorage.removeItem("isAuthenticated");
+      } else if (sessionStorage.getItem("isAuthenticated")) {
+        sessionStorage.removeItem("isAuthenticated");
+      }
+    });
   }, []);
   return (
     <div className={css.App}>
