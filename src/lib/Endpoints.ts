@@ -14,7 +14,7 @@ export class Endpoints {
 	/**
 	 * the base of the urls to the api, only needs to be set in development
 	 */
-	BASE = this.dev ? "http://localhost:16091" : "";
+	BASE = this.dev ? "http://localhost:16091" : window.location.origin;
 	/**
 	 * the WebSocket connection for executing terminal commands
 	 */
