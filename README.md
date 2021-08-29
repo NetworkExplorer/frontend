@@ -1,20 +1,23 @@
-# frontend
+<p align="center">
+  <img alt="NetworkExplorer Logo" src="media/nwexp_logo.png" width="125" height="125" />
+</p>
+
+<h1 align="center">NetworkExplorer - frontend</h1>
 
 The frontend for [NetworkExplorer](https://github.com/NetworkExplorer/NetworkExplorer) built with React and TypeScript
 
 ## Table of Contents
 
-- [frontend](#frontend)
-	- [Table of Contents](#table-of-contents)
-	- [Requirements](#requirements)
-	- [Building the project](#building-the-project)
-	- [Explanation](#explanation)
-		- [Technical aspects](#technical-aspects)
-		- [Structure](#structure)
-			- [`src` folder](#src-folder)
-			- [`public` folder](#public-folder)
-			- [`config` folder](#config-folder)
-			- [`scripts` folder](#scripts-folder)
+- [Table of Contents](#table-of-contents)
+- [Requirements](#requirements)
+- [Building the project](#building-the-project)
+- [Explanation](#explanation)
+	- [Technical aspects](#technical-aspects)
+	- [Structure](#structure)
+		- [`src` folder](#src-folder)
+		- [`public` folder](#public-folder)
+		- [`config` folder](#config-folder)
+		- [`scripts` folder](#scripts-folder)
 
 ## Requirements
 
