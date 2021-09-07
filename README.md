@@ -9,6 +9,7 @@ The frontend for [NetworkExplorer](https://github.com/NetworkExplorer/NetworkExp
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Building the project](#building-the-project)
 - [Explanation](#explanation)
@@ -18,6 +19,24 @@ The frontend for [NetworkExplorer](https://github.com/NetworkExplorer/NetworkExp
 		- [`public` folder](#public-folder)
 		- [`config` folder](#config-folder)
 		- [`scripts` folder](#scripts-folder)
+
+## Screenshots
+
+<p align="center">
+	<img src="media/file-list.png" alt="File List" width="600" >
+</p>
+
+<p align="center">
+	the file list
+</p>
+
+<p align="center">
+	<img src="media/search-box.png" alt="Search Box" width="600" >
+</p>
+
+<p align="center">
+	the search box
+</p>
 
 ## Requirements
 
