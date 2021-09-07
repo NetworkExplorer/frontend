@@ -27,7 +27,7 @@ In order to develop and build the frontend you only need Node.
 
 ## Building the project
 
-Building the project is as easy as executing `npm run build`. The output will be in the `build` folder.
+Building the project is as easy as executing `npm run build`. The output will be in the `build` folder. Complete installation combined with the [backend](https://github.com/NetworkExplorer/NetworkExplorer) can be found [here](https://github.com/NetworkExplorer/NetworkExplorer)
 
 ## Explanation
 
